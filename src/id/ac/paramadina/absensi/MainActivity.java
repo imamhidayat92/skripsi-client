@@ -1,6 +1,7 @@
 package id.ac.paramadina.absensi;
 
 import id.ac.paramadina.absensi.reference.CourseAdapter;
+import id.ac.paramadina.absensi.reference.model.Course;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -77,36 +78,39 @@ public class MainActivity extends Activity {
         
         /* TODO: Load course data from Web API. */
         
-        ArrayList<HashMap<String, String>> courses = new ArrayList<HashMap<String,String>>();
+        ArrayList<Course> courses = new ArrayList<Course>();
         
         // Fill in the list with dummy data.
-        HashMap<String, String> dummy1 = new HashMap<String, String>();
-        dummy1.put("major_name", "Teknik Informatika");
-        dummy1.put("major_color", "#FFD400");
-        dummy1.put("course_title", "Algoritma & Pemrograman 1");
-        dummy1.put("course_time_info", "Senin, 09.00 - 11.45 di A 1-10");
+                
+        courses.add(new Course(
+    		"Teknik Informatika",
+    		"#FFD400",
+    		"Algoritma & Pemrograman I",
+    		"Selasa",
+    		"09:45",
+    		"12:15",
+    		"A 2-1"
+		));    
         
-        HashMap<String, String> dummy2 = new HashMap<String, String>();
+        courses.add(new Course(
+    		"Manajemen & Bisnis",
+    		"#00ADEF",
+    		"Manajemen Keuangan",
+    		"Senin",
+    		"09:45",
+    		"12:15",
+    		"A 1-10"
+		));
         
-        dummy2.put("major_name", "Hubungan Internasional");
-        dummy2.put("major_color", "#ED1C24");
-        dummy2.put("course_title", "Diplomasi Asia Tenggara");
-        dummy2.put("course_time_info", "Selasa, 09.00 - 11.45 di A 1-10");
-        
-        HashMap<String, String> dummy3 = new HashMap<String, String>();
-        
-        dummy3.put("major_name", "Manajemen dan Bisnis");
-        dummy3.put("major_color", "#00ADEF");
-        dummy3.put("course_title", "Ekonomi Pasar Bebas");
-        dummy3.put("course_time_info", "Rabu, 09.00 - 11.45 di A 1-10");
-        
-        courses.add(dummy1);
-        courses.add(dummy2);
-        courses.add(dummy3);
-        courses.add(dummy1);
-        courses.add(dummy2);
-        courses.add(dummy3);
-        
+        courses.add(new Course(
+    		"Hubungan Internasional",
+    		"#F9344C",
+    		"Studi Kawasan Asia Tenggara",
+    		"Senin",
+    		"09:45",
+    		"12:15",
+    		"A 2-2"
+		));
         
         courseList = (ListView) findViewById(R.id.course_list);
         

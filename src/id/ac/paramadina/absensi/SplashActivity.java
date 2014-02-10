@@ -17,7 +17,7 @@ public class SplashActivity extends Activity {
 			
 			@Override
 			public void run() {
-				Intent i = new Intent(SplashActivity.this, MainActivity.class);
+				Intent i = new Intent(SplashActivity.this, LoginActivity.class);
 				startActivity(i);
 			}
 		}, SplashActivity.SPLASH_TIME_OUT);

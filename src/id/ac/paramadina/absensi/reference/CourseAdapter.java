@@ -1,6 +1,7 @@
 package id.ac.paramadina.absensi.reference;
 
 import id.ac.paramadina.absensi.R;
+import id.ac.paramadina.absensi.reference.model.Course;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,17 +16,12 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 public class CourseAdapter extends BaseAdapter {
-
-	public static final String KEY_MAJOR_NAME = "major_name";
-	public static final String KEY_MAJOR_COLOR = "major_color";
-	public static final String KEY_COURSE_TITLE = "course_title";
-	public static final String KEY_COURSE_TIME_INFO = "course_time_info";
-		
+	
 	private Activity activity;
-	private ArrayList<HashMap<String, String>> data;
+	private ArrayList<Course> data;
 	private static LayoutInflater inflater = null;
 	
-	public CourseAdapter(Activity activity, ArrayList<HashMap<String, String>> data) {
+	public CourseAdapter(Activity activity, ArrayList<Course> data) {
 		this.activity = activity;
 		this.data = data;
 		
@@ -59,12 +55,12 @@ public class CourseAdapter extends BaseAdapter {
 		TextView courseTitle = (TextView) view.findViewById(R.id.lbl_course_title);
 		TextView courseTimeInfo = (TextView) view.findViewById(R.id.lbl_course_time_info);
 		
-		HashMap<String, String> datum = data.get(arg0);
+		Course datum = data.get(arg0);
 		
-		majorName.setText(datum.get(CourseAdapter.KEY_MAJOR_NAME));
-		majorName.setBackgroundColor(Color.parseColor(datum.get(CourseAdapter.KEY_MAJOR_COLOR)));
-		courseTitle.setText(datum.get(CourseAdapter.KEY_COURSE_TITLE));
-		courseTimeInfo.setText(datum.get(CourseAdapter.KEY_COURSE_TIME_INFO));
+		majorName.setText(datum.getMajorName());
+		majorName.setBackgroundColor(Color.parseColor(datum.getMajorColor()));
+		courseTitle.setText(datum.getCourseTitle());
+		courseTimeInfo.setText(datum.getCourseTime());
 		
 		return view;
 	}
