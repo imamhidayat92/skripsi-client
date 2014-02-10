@@ -5,4 +5,11 @@
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
 
+    <!--  Internationalization -->
+    <string name="lbl_username">Username</string>
+    <string name="lbl_username_hint">Masukkan Username Anda</string>
+    
+    <string name="lbl_password">Password</string>
+    
+    <string name="btn_login_text">Login</string>
 </resources>
