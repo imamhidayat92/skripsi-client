@@ -6,10 +6,19 @@
     <string name="hello_world">Hello world!</string>
 
     <!--  Internationalization -->
+    
+    <string name="drawer_open">Drawer Open</string>
+    <string name="drawer_close">Drawer Close</string>
+    
     <string name="lbl_username">Username</string>
     <string name="lbl_username_hint">Masukkan Username Anda</string>
     
     <string name="lbl_password">Password</string>
     
     <string name="btn_login_text">Login</string>
+    
+    <string-array name="drawer_menu2">
+        <item>Halaman Depan</item>
+        <item>Tentang Aplikasi</item>
+    </string-array>
 </resources>
