@@ -1,11 +1,18 @@
 package id.ac.paramadina.absensi.reference;
 
+import id.ac.paramadina.absensi.reference.model.DrawerMenuItem;
+
+import java.util.ArrayList;
+
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
 public class DrawerListViewAdapter extends BaseAdapter {
 
+	private ArrayList<DrawerMenuItem> data;
+	
+	
 	@Override
 	public int getCount() {
 		// TODO Auto-generated method stub

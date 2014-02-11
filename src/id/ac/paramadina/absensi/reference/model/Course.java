@@ -1,17 +1,24 @@
 package id.ac.paramadina.absensi.reference.model;
 
-import android.text.format.Time;
-
 public class Course {
 	private String majorName;
 	private String majorColorString;
 	private String courseTitle;
+	private String courseSubTitle;
 	private String courseDay;
 	private String courseStartTime;
 	private String courseEndTime;
 	private String courseVenue;
 	
-	public Course(String majorName, String majorColorString, String courseTitle, String courseDay, String courseStartTime, String courseEndTime, String courseVenue) {
+	public Course(
+			String majorName,
+			String majorColorString,
+			String courseTitle,
+			String courseDay,
+			String courseStartTime,
+			String courseEndTime,
+			String courseVenue)
+	{
 		this.majorName = majorName;
 		this.majorColorString = majorColorString;
 		this.courseTitle = courseTitle;
@@ -33,6 +40,10 @@ public class Course {
 	
 	public String getCourseTitle() {
 		return this.courseTitle;
+	}
+	
+	public String getCourseSubTitle() {
+		return this.courseSubTitle;
 	}
 	
 	public String getCourseTime() {
@@ -63,6 +74,10 @@ public class Course {
 	
 	public void setCourseTitle(String courseTitle) {
 		this.courseTitle = courseTitle;
+	}
+	
+	public void setCourseSubTitle(String courseSubTitle) {
+		this.courseSubTitle = courseSubTitle;
 	}
 	
 	public void setCourseStartTime(String courseStartTime) {

@@ -53,16 +53,6 @@
 		    android:layout_below="@+id/txt_password"
 		    android:text="@string/btn_login_text" />
 
-		<TextView
-		    android:id="@+id/textView1"
-		    android:layout_width="wrap_content"
-		    android:layout_height="wrap_content"
-		    android:layout_below="@+id/btn_login"
-		    android:layout_centerHorizontal="true"
-		    android:layout_marginTop="62dp"
-		    android:text="Atau, tap e-KTP Anda"
-		    android:textAppearance="?android:attr/textAppearanceMedium" />
-
 		<ImageView
 		    android:id="@+id/imageView1"
 		    android:layout_width="230dp"
@@ -81,6 +71,16 @@
 		    android:layout_below="@+id/imageView1"
 		    android:layout_marginTop="28dp"
 		    android:text="@string/lbl_username"
+		    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+		<TextView
+		    android:id="@+id/textView1"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:layout_below="@+id/btn_login"
+		    android:layout_centerHorizontal="true"
+		    android:layout_marginTop="16dp"
+		    android:text="Atau, tap e-KTP Anda"
 		    android:textAppearance="?android:attr/textAppearanceMedium" />
 	
 	</RelativeLayout>
