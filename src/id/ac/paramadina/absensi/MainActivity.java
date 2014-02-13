@@ -1,16 +1,26 @@
 package id.ac.paramadina.absensi;
 
+import id.ac.paramadina.absensi.helper.RequestHelper;
+import id.ac.paramadina.absensi.helper.SharedPreferenceHelper;
 import id.ac.paramadina.absensi.reference.CourseAdapter;
 import id.ac.paramadina.absensi.reference.model.Course;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.os.Bundle;
 import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,6 +28,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 public class MainActivity extends Activity {
 
@@ -75,53 +86,83 @@ public class MainActivity extends Activity {
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setHomeButtonEnabled(true);
         
+        SharedPreferences preferences = getApplicationContext().getSharedPreferences("id.ac.paramadina.absensi.SETTINGS", Context.MODE_PRIVATE);
         
-        /* TODO: Load course data from Web API. */
+        final String accessToken = preferences.getString("access_token", "?");
+        final String lecturerId = preferences.getString("id_lecturer", "?");;
+               
+        final Activity thisActivity = this;
         
-        ArrayList<Course> courses = new ArrayList<Course>();
+        final ProgressDialog progress = ProgressDialog.show(this, "Mengambil Data Mata Kuliah", "Harap tunggu..", true, false);
         
-        // Fill in the list with dummy data.
-                
-        courses.add(new Course(
-    		"Teknik Informatika",
-    		"#FFD400",
-    		"Algoritma & Pemrograman I",
-    		"Selasa",
-    		"09:45",
-    		"12:15",
-    		"A 2-1"
-		));    
-        
-        courses.add(new Course(
-    		"Manajemen & Bisnis",
-    		"#00ADEF",
-    		"Manajemen Keuangan",
-    		"Senin",
-    		"09:45",
-    		"12:15",
-    		"A 1-10"
-		));
-        
-        courses.add(new Course(
-    		"Hubungan Internasional",
-    		"#F9344C",
-    		"Studi Kawasan Asia Tenggara",
-    		"Senin",
-    		"09:45",
-    		"12:15",
-    		"A 2-2"
-		));
-        
-        courseList = (ListView) findViewById(R.id.course_list);
-        
-        adapter = new CourseAdapter(this, courses);
-                
-        courseList.setAdapter(adapter);
-        courseList.setOnItemClickListener(new OnItemClickListener() {
-        	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        		
-        	}
-		});
+        /* Load data from server. */
+        new Thread(new Runnable() {
+			        	
+			@Override
+			public void run() {
+				RequestHelper request = new RequestHelper("http://172.124.103.173/upm/api", ".json");
+		        
+		        HashMap<String, String> headers = new HashMap<String, String>();
+		        headers.put("upm-api-access-token", accessToken);
+		        
+		        HashMap<String, String> data = new HashMap<String, String>();
+		        data.put("lecturer_id", lecturerId);
+		        
+		        Log.d("Runnable Exception", "accessToken = " + accessToken);
+		        Log.d("Runnable Exception", "lecturerId = " + lecturerId);
+		        
+		        final JSONObject results = request.post("course_lecturers", "index", new String[]{}, data, headers);
+				
+				runOnUiThread(new Runnable() {
+					
+					@Override
+					public void run() {
+						progress.dismiss();
+						
+						ArrayList<Course> courses = new ArrayList<Course>();
+						
+						try {
+							if (results.getInt("code") == 0) {
+								
+								JSONArray response = results.getJSONArray("response");
+								
+								for (int i = 0; i < response.length(); i++) {
+									JSONObject course = response.getJSONObject(i);
+									
+									courses.add(new Course(
+							    		"Nama Prodi", 
+							    		"#000000",
+							    		course.getString("title"),
+							    		String.valueOf(course.getInt("daycode")),
+							    		course.getString("start_time"), 
+							    		course.getString("end_time"),
+							    		"A 2-1"
+									));
+								}    		        
+							}
+							else {
+								Toast.makeText(getApplicationContext(), results.getString("message"), Toast.LENGTH_LONG).show();
+							}
+							
+							courseList = (ListView) findViewById(R.id.course_list);
+					        
+					        adapter = new CourseAdapter(thisActivity, courses);
+					                
+					        courseList.setAdapter(adapter);
+					        courseList.setOnItemClickListener(new OnItemClickListener() {
+					        	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+					        		
+					        	}
+							});
+						} catch (JSONException e) {
+							e.printStackTrace();
+						} catch (Exception ex) {
+							ex.printStackTrace();
+						}
+					}
+				});
+			}
+		}).start();
     }
 
     @Override

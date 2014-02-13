@@ -1,6 +1,7 @@
 package id.ac.paramadina.absensi;
 
 import id.ac.paramadina.absensi.helper.RequestHelper;
+import id.ac.paramadina.absensi.helper.SharedPreferenceHelper;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -21,8 +22,10 @@ import org.json.JSONObject;
 import android.app.Activity;
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
 import android.os.AsyncTask;
@@ -84,55 +87,19 @@ public class LoginActivity extends Activity {
 	
 	private void login(final String email, final String password) {
 		final ProgressDialog progress = ProgressDialog.show(this, "Melakukan Autentikasi", "Harap tunggu..", true, false);
+		
 		new Thread(
 			new Runnable() {
 				
 				@Override
 				public void run() {
-					
-//					final StringBuilder rawData = new StringBuilder();
-//					
-//					try {
-//						URL url = new URL("http://192.168.88.28/upm/api/users/authenticate.json");
-//						
-//						HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-//						
-//						urlConnection.setDoOutput(true);
-//						
-//						OutputStream outputStream = urlConnection.getOutputStream();
-//						BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
-//						
-//						writer.write("email=" + URLEncoder.encode(email, "UTF-8") + "&password=" + password);
-//						writer.flush();
-//						writer.close();
-//						
-//						outputStream.close();
-//						
-//						urlConnection.connect();
-//						
-//						InputStream inputStream = urlConnection.getInputStream();
-//						BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-//						
-//						String line = null;
-//						while ((line = reader.readLine()) != null) {
-//							rawData.append(line);
-//						}
-//						
-//					} catch (MalformedURLException e1) {
-//						Log.d("Exception", e1.getMessage());
-//						e1.printStackTrace();
-//					} catch (IOException e) {
-//						Log.d("Exception", e.getMessage());
-//						e.printStackTrace();
-//					}						
-					
-					RequestHelper request = new RequestHelper("http://192.168.88.28/upm/api", ".json");
+					RequestHelper request = new RequestHelper("http://172.124.103.173/upm/api", ".json");
 					
 					HashMap<String, String> data = new HashMap<String, String>();
 					data.put("email", email);
 					data.put("password", password);
 					
-					final JSONObject result = request.post("users", "authenticate", new String[]{}, data);
+					final JSONObject result = request.post("users", "authenticate", new String[]{}, data, new HashMap<String, String>());
 					
 					runOnUiThread(new Runnable() {
 						
@@ -142,6 +109,51 @@ public class LoginActivity extends Activity {
 							
 							try {
 								if (result.getInt("code") == 0) {
+									initializeSettings(result.getJSONObject("response"));
+									
+									Intent i = new Intent(getApplicationContext(), MainActivity.class);
+									startActivity(i);
+								}
+								else {
+									Toast.makeText(getApplicationContext(), result.getString("message"), Toast.LENGTH_LONG).show();
+								}
+							} catch (JSONException e) {
+								Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+							}
+														
+						}
+					});
+					
+				}
+			}
+		).start();		
+	}
+	
+	private void login(final String tagId) {
+		final ProgressDialog progress = ProgressDialog.show(this, "Melakukan Autentikasi", "Harap tunggu..", true, false);
+		
+		new Thread(
+			new Runnable() {
+				
+				@Override
+				public void run() {
+					RequestHelper request = new RequestHelper("http://172.124.103.173/upm/api", ".json");
+					
+					HashMap<String, String> data = new HashMap<String, String>();
+					data.put("identification_number", tagId);
+					
+					final JSONObject result = request.post("users", "authenticate", new String[]{}, data, new HashMap<String, String>());
+					
+					runOnUiThread(new Runnable() {
+						
+						@Override
+						public void run() {
+							progress.dismiss();
+							
+							try {
+								if (result.getInt("code") == 0) {
+									initializeSettings(result.getJSONObject("response"));
+									
 									Intent i = new Intent(getApplicationContext(), MainActivity.class);
 									startActivity(i);
 								}
@@ -158,13 +170,23 @@ public class LoginActivity extends Activity {
 				}
 			}
 		).start();
-		
-		
 	}
 	
-	private void login(String tagId) {
-		Intent i = new Intent(this, MainActivity.class);
-		startActivity(i);
+	private void initializeSettings(JSONObject loginData) {
+		try {
+			SharedPreferences preferences = getApplicationContext().getSharedPreferences("id.ac.paramadina.absensi.SETTINGS", Context.MODE_PRIVATE);
+			SharedPreferences.Editor editor = preferences.edit();
+			
+			editor.putString("id_user", loginData.getString("id_user"));
+			editor.putString("id_lecturer", loginData.getString("id_lecturer"));
+			editor.putString("access_token", loginData.getString("access_token"));
+			editor.putString("name", loginData.getString("name"));
+			
+			editor.commit();
+		} catch (JSONException e) {
+			Log.d("LoginActivity initializeSettings JSONException", e.getMessage());
+			e.printStackTrace();
+		} 
 	}
 	
 	@Override
@@ -195,7 +217,6 @@ public class LoginActivity extends Activity {
 	protected void onNewIntent(Intent intent) {
 		Tag tagFromIntent = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
 		String tagId = convertBytesToHex(tagFromIntent.getId());
-		Toast.makeText(this, "Discovered: " + tagId, Toast.LENGTH_LONG).show();
 		
 		login(tagId);
 	}

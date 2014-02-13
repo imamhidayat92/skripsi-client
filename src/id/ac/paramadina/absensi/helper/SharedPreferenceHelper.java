@@ -2,6 +2,7 @@ package id.ac.paramadina.absensi.helper;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.widget.Toast;
 
 public class SharedPreferenceHelper {
@@ -11,8 +12,8 @@ public class SharedPreferenceHelper {
 		String result = null;
 		
 		try {
-			SharedPreferences preference = context.getSharedPreferences(PREFERENCE_FILE_KEY, Context.MODE_PRIVATE);
-			preference.getString(key, result);
+			SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+			preferences.getString(key, result);
 		}
 		catch (Exception ex) {
 			Toast.makeText(context, ex.getMessage(), Toast.LENGTH_LONG).show();
@@ -25,8 +26,8 @@ public class SharedPreferenceHelper {
 		int result = 0;
 		
 		try {
-			SharedPreferences preference = context.getSharedPreferences(PREFERENCE_FILE_KEY, Context.MODE_PRIVATE);
-			preference.getInt(key, result);
+			SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+			preferences.getInt(key, result);
 		}
 		catch (Exception ex) {
 			Toast.makeText(context, ex.getMessage(), Toast.LENGTH_LONG).show();
@@ -37,7 +38,7 @@ public class SharedPreferenceHelper {
 	
 	public static void putString(Context context, String key, String value) {
 		try {
-			SharedPreferences preferences = context.getSharedPreferences(PREFERENCE_FILE_KEY, Context.MODE_PRIVATE);
+			SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
 			SharedPreferences.Editor editor = preferences.edit();
 			
 			editor.putString(key, value);
@@ -50,7 +51,7 @@ public class SharedPreferenceHelper {
 	
 	public static void putInt(Context context, String key, int value) {
 		try {
-			SharedPreferences preferences = context.getSharedPreferences(PREFERENCE_FILE_KEY, Context.MODE_PRIVATE);
+			SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
 			SharedPreferences.Editor editor = preferences.edit();
 			
 			editor.putInt(key, value);

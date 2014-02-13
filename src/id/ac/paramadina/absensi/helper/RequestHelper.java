@@ -28,7 +28,7 @@ public class RequestHelper {
 		this.urlSuffix = urlSuffix;
 	}
 	
-	public JSONObject post(String controller, String action, String[] params, HashMap<String, String> data) {
+	public JSONObject post(String controller, String action, String[] params, HashMap<String, String> data, HashMap<String, String> headers) {
 		StringBuilder rawData = new StringBuilder();
 		
 		try {
@@ -45,6 +45,14 @@ public class RequestHelper {
 			HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
 			
 			urlConnection.setDoOutput(true);
+			
+			if (headers.size() > 0) {
+				Set<String> headerKeys = headers.keySet();
+				
+				for (String s: headerKeys) {
+					urlConnection.setRequestProperty(s, headers.get(s));
+				}				
+			}
 			
 			OutputStream outputStream = urlConnection.getOutputStream();
 			BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
@@ -76,6 +84,11 @@ public class RequestHelper {
 			while ((line = reader.readLine()) != null) {
 				rawData.append(line);
 			}
+			
+			reader.close();
+			inputStream.close();
+			
+			urlConnection.disconnect();
 			
 		} catch (MalformedURLException e1) {
 			Log.d("RequestHelper MalformedURLException", e1.getMessage());
