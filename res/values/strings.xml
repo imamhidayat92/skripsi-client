@@ -10,8 +10,8 @@
     <string name="drawer_open">Drawer Open</string>
     <string name="drawer_close">Drawer Close</string>
     
-    <string name="lbl_username">Username</string>
-    <string name="lbl_username_hint">Masukkan Username Anda</string>
+    <string name="lbl_username">Email</string>
+    <string name="lbl_username_hint">Masukkan Email Anda</string>
     
     <string name="lbl_password">Password</string>
     

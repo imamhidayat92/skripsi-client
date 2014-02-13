@@ -12,7 +12,7 @@
 	    android:padding="10dp">
 
 		<EditText
-		    android:id="@+id/txt_username"
+		    android:id="@+id/txt_email"
 		    android:layout_width="wrap_content"
 		    android:layout_height="wrap_content"
 		    android:layout_alignLeft="@+id/lbl_major_name"
@@ -28,8 +28,8 @@
 		    android:id="@+id/lbl_course_title"
 		    android:layout_width="wrap_content"
 		    android:layout_height="wrap_content"
-		    android:layout_alignLeft="@+id/txt_username"
-		    android:layout_below="@+id/txt_username"
+		    android:layout_alignLeft="@+id/txt_email"
+		    android:layout_below="@+id/txt_email"
 		    android:layout_marginTop="14dp"
 		    android:text="@string/lbl_password"
 		    android:textAppearance="?android:attr/textAppearanceMedium" />
@@ -39,7 +39,7 @@
 		    android:layout_width="wrap_content"
 		    android:layout_height="wrap_content"
 		    android:layout_alignParentLeft="true"
-		    android:layout_alignRight="@+id/txt_username"
+		    android:layout_alignRight="@+id/txt_email"
 		    android:layout_below="@+id/lbl_course_title"
 		    android:ems="10"
 		    android:inputType="textPassword" />

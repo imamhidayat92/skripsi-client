@@ -1,12 +1,33 @@
 package id.ac.paramadina.absensi;
 
+import id.ac.paramadina.absensi.helper.RequestHelper;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.util.HashMap;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.app.Activity;
 import android.app.PendingIntent;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -32,7 +53,7 @@ public class LoginActivity extends Activity {
 		
 		/* Assigning Control */
 		
-		txtUsername = (EditText) findViewById(R.id.txt_username);
+		txtUsername = (EditText) findViewById(R.id.txt_email);
 		txtPassword = (EditText) findViewById(R.id.txt_password);
 		btnLogin = (Button) findViewById(R.id.btn_login);
 		
@@ -40,12 +61,10 @@ public class LoginActivity extends Activity {
 			
 			@Override
 			public void onClick(View arg0) {
-				String username = txtUsername.getText().toString();
+				String email = txtUsername.getText().toString();
 				String password = txtPassword.getText().toString();
 				
-				Toast.makeText(getApplicationContext(), "Try to login with " + username + " and " + password, Toast.LENGTH_LONG).show();
-				
-				login(username, password);
+				login(email, password);
 			}
 		});
 		
@@ -63,9 +82,84 @@ public class LoginActivity extends Activity {
 		filters[0].addCategory(Intent.CATEGORY_DEFAULT);
 	}
 	
-	private void login(String username, String password) {
-		Intent i = new Intent(this, MainActivity.class);
-		startActivity(i);
+	private void login(final String email, final String password) {
+		final ProgressDialog progress = ProgressDialog.show(this, "Melakukan Autentikasi", "Harap tunggu..", true, false);
+		new Thread(
+			new Runnable() {
+				
+				@Override
+				public void run() {
+					
+//					final StringBuilder rawData = new StringBuilder();
+//					
+//					try {
+//						URL url = new URL("http://192.168.88.28/upm/api/users/authenticate.json");
+//						
+//						HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+//						
+//						urlConnection.setDoOutput(true);
+//						
+//						OutputStream outputStream = urlConnection.getOutputStream();
+//						BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
+//						
+//						writer.write("email=" + URLEncoder.encode(email, "UTF-8") + "&password=" + password);
+//						writer.flush();
+//						writer.close();
+//						
+//						outputStream.close();
+//						
+//						urlConnection.connect();
+//						
+//						InputStream inputStream = urlConnection.getInputStream();
+//						BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+//						
+//						String line = null;
+//						while ((line = reader.readLine()) != null) {
+//							rawData.append(line);
+//						}
+//						
+//					} catch (MalformedURLException e1) {
+//						Log.d("Exception", e1.getMessage());
+//						e1.printStackTrace();
+//					} catch (IOException e) {
+//						Log.d("Exception", e.getMessage());
+//						e.printStackTrace();
+//					}						
+					
+					RequestHelper request = new RequestHelper("http://192.168.88.28/upm/api", ".json");
+					
+					HashMap<String, String> data = new HashMap<String, String>();
+					data.put("email", email);
+					data.put("password", password);
+					
+					final JSONObject result = request.post("users", "authenticate", new String[]{}, data);
+					
+					runOnUiThread(new Runnable() {
+						
+						@Override
+						public void run() {
+							progress.dismiss();
+							
+							try {
+								if (result.getInt("code") == 0) {
+									Intent i = new Intent(getApplicationContext(), MainActivity.class);
+									startActivity(i);
+								}
+								else {
+									Toast.makeText(getApplicationContext(), result.getString("message"), Toast.LENGTH_LONG).show();
+								}
+							} catch (JSONException e) {
+								Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+							}
+														
+						}
+					});
+					
+				}
+			}
+		).start();
+		
+		
 	}
 	
 	private void login(String tagId) {

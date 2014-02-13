@@ -1,6 +1,7 @@
 package id.ac.paramadina.absensi.reference.model;
 
 public class Course {
+	private Major[] majors;
 	private String majorName;
 	private String majorColorString;
 	private String courseTitle;
