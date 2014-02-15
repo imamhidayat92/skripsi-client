@@ -30,6 +30,7 @@ import android.nfc.NfcAdapter;
 import android.nfc.Tag;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -96,7 +97,10 @@ public class LoginActivity extends Activity {
 				
 				@Override
 				public void run() {
-					RequestHelper request = new RequestHelper("http://172.124.103.173/upm/api", ".json");
+					SharedPreferences preference = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+					String address = preference.getString("settings_api_address", "?");
+					
+					RequestHelper request = new RequestHelper(address, ".json");
 					
 					HashMap<String, String> data = new HashMap<String, String>();
 					data.put("email", email);
@@ -142,7 +146,10 @@ public class LoginActivity extends Activity {
 				
 				@Override
 				public void run() {
-					RequestHelper request = new RequestHelper("http://172.124.103.173/upm/api", ".json");
+					SharedPreferences preference = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+					String address = preference.getString("settings_api_address", "?");
+					
+					RequestHelper request = new RequestHelper(address, ".json");
 					
 					HashMap<String, String> data = new HashMap<String, String>();
 					data.put("identification_number", tagId);

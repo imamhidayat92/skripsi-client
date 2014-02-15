@@ -13,6 +13,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -100,7 +101,10 @@ public class MainActivity extends Activity {
 			        	
 			@Override
 			public void run() {
-				RequestHelper request = new RequestHelper("http://172.124.103.173/upm/api", ".json");
+				SharedPreferences preference = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+				String address = preference.getString("settings_api_address", "?");
+				
+				RequestHelper request = new RequestHelper(address, ".json");
 		        
 		        HashMap<String, String> headers = new HashMap<String, String>();
 		        headers.put("upm-api-access-token", accessToken);

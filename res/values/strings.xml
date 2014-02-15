@@ -26,4 +26,5 @@
     <string name="settings_connection_title">Pengaturan Koneksi</string>
     
     <string name="settings_api_address_title">Alamat API Server Paramadina</string>
+    <string name="settings_api_address_summary">Pengaturan alamat URL API Server Paramadina</string>
 </resources>

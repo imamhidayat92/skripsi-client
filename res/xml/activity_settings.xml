@@ -7,6 +7,7 @@
         <EditTextPreference 
             android:key="settings_api_address"  
             android:title="@string/settings_api_address_title"
+            android:summary="@string/settings_api_address_summary"
             android:defaultValue="http://api.paramadina.ac.id" />
         
     </PreferenceCategory>
