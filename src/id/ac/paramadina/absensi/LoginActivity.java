@@ -31,6 +31,9 @@ import android.nfc.Tag;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -113,6 +116,8 @@ public class LoginActivity extends Activity {
 									
 									Intent i = new Intent(getApplicationContext(), MainActivity.class);
 									startActivity(i);
+									
+									finish();
 								}
 								else {
 									Toast.makeText(getApplicationContext(), result.getString("message"), Toast.LENGTH_LONG).show();
@@ -156,6 +161,8 @@ public class LoginActivity extends Activity {
 									
 									Intent i = new Intent(getApplicationContext(), MainActivity.class);
 									startActivity(i);
+									
+									finish();
 								}
 								else {
 									Toast.makeText(getApplicationContext(), result.getString("message"), Toast.LENGTH_LONG).show();
@@ -224,5 +231,27 @@ public class LoginActivity extends Activity {
 	@Override
 	public void onBackPressed() {
 		// Disable back button!
+	}
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.main, menu);
+		
+		return true;
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.action_settings:
+			Intent i = new Intent(this, SettingsActivity.class);
+			startActivity(i);
+			
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+		
 	}
 }

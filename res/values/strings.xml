@@ -2,8 +2,7 @@
 <resources>
 
     <string name="app_name">Absensi Paramadina</string>
-    <string name="action_settings">Settings</string>
-    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Pengaturan</string>
 
     <!--  Internationalization -->
     
@@ -21,4 +20,10 @@
         <item>Halaman Depan</item>
         <item>Tentang Aplikasi</item>
     </string-array>
+    
+    <!-- Settings Related -->
+    
+    <string name="settings_connection_title">Pengaturan Koneksi</string>
+    
+    <string name="settings_api_address_title">Alamat API Server Paramadina</string>
 </resources>

@@ -58,6 +58,13 @@
 			</intent-filter>
         </activity>
         
+        <activity 
+            android:name="id.ac.paramadina.absensi.SettingsActivity"
+            android:label="@string/app_name"
+            android:parentActivityName="id.ac.paramadina.absensi.LoginActivity" >
+            
+        </activity>
+        
     </application>
 
 </manifest>
