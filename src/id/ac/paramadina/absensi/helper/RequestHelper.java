@@ -98,7 +98,6 @@ public class RequestHelper {
 			e.printStackTrace();
 		}
 		
-		
 		try {
 			JSONObject result = new JSONObject(rawData.toString());
 			return result;

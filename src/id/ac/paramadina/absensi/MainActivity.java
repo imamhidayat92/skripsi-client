@@ -1,9 +1,11 @@
 package id.ac.paramadina.absensi;
 
 import id.ac.paramadina.absensi.helper.RequestHelper;
-import id.ac.paramadina.absensi.helper.SharedPreferenceHelper;
 import id.ac.paramadina.absensi.reference.CourseAdapter;
+import id.ac.paramadina.absensi.reference.DrawerListViewAdapter;
 import id.ac.paramadina.absensi.reference.model.Course;
+import id.ac.paramadina.absensi.reference.model.DrawerMenuItem;
+import id.ac.paramadina.absensi.reference.model.Major;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,6 +19,7 @@ import android.preference.PreferenceManager;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.support.v4.app.ActionBarDrawerToggle;
@@ -42,23 +45,26 @@ public class MainActivity extends Activity {
 	private ListView mDrawerListView;
 	private ActionBarDrawerToggle mDrawerToggle;
 	
-	private String[] mMenuItems;
-	
+	private ArrayList<DrawerMenuItem> mMenuItems;
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         
-        /*
-         * Initialize Drawer Layout
-         * */
+        setTitle("Kelas Hari Ini");
+        
+        /* Initialize Drawer Layout */
     
-        mMenuItems = getResources().getStringArray(R.array.drawer_menu2);
+        mMenuItems = new ArrayList<DrawerMenuItem>();
+        
+        mMenuItems.add(new DrawerMenuItem("Test 1"));
+        mMenuItems.add(new DrawerMenuItem("Test 2"));
+        mMenuItems.add(new DrawerMenuItem("Test 3"));
         
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerListView = (ListView) findViewById(R.id.left_drawer);
-        
+
         mDrawerToggle = new ActionBarDrawerToggle(
         		this,
         		mDrawerLayout,
@@ -82,10 +88,12 @@ public class MainActivity extends Activity {
         
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
-        mDrawerListView.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, mMenuItems));
+        mDrawerListView.setAdapter(new DrawerListViewAdapter(this, mMenuItems));
         
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setHomeButtonEnabled(true);
+        
+        /* Initialize Settings */
         
         SharedPreferences preferences = getApplicationContext().getSharedPreferences("id.ac.paramadina.absensi.SETTINGS", Context.MODE_PRIVATE);
         
@@ -97,6 +105,7 @@ public class MainActivity extends Activity {
         final ProgressDialog progress = ProgressDialog.show(this, "Mengambil Data Mata Kuliah", "Harap tunggu..", true, false);
         
         /* Load data from server. */
+        
         new Thread(new Runnable() {
 			        	
 			@Override
@@ -133,15 +142,24 @@ public class MainActivity extends Activity {
 								for (int i = 0; i < response.length(); i++) {
 									JSONObject course = response.getJSONObject(i);
 									
+									JSONArray majors = course.getJSONArray("majors");
+									
+									ArrayList<Major> majorArray = new ArrayList<Major>(); 
+									for (int j = 0; j < majors.length(); j++) {
+										majorArray.add(new Major(majors.getJSONObject(j).getString("name"), majors.getJSONObject(j).getString("color")));
+									}
+									
 									courses.add(new Course(
-							    		"Nama Prodi", 
-							    		"#000000",
+										course.getInt("id_course_lecturer"),
+										majorArray,
 							    		course.getString("title"),
-							    		String.valueOf(course.getInt("daycode")),
+							    		"Pertemuan ke-?",
 							    		course.getString("start_time"), 
 							    		course.getString("end_time"),
 							    		"A 2-1"
 									));
+									
+									Log.d("id.ac.paramadina.absensi", course.toString());
 								}    		        
 							}
 							else {
@@ -152,10 +170,19 @@ public class MainActivity extends Activity {
 					        
 					        adapter = new CourseAdapter(thisActivity, courses);
 					                
+					        final ArrayList<Course> _courses = courses;
+					        
+					        if (courses.size() == 0) {
+					        	Toast.makeText(getApplicationContext(), "Tidak ada mata kuliah untuk hari ini.", Toast.LENGTH_LONG).show();
+					        }
+					        
 					        courseList.setAdapter(adapter);
 					        courseList.setOnItemClickListener(new OnItemClickListener() {
 					        	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+					        		Intent i = new Intent(MainActivity.this, CourseDetailActivity.class);
+					        		i.putExtra("course_lecturer_id", _courses.get(position).getId());
 					        		
+					        		startActivity(i);
 					        	}
 							});
 						} catch (JSONException e) {

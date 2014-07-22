@@ -3,30 +3,27 @@
     android:layout_width="fill_parent"
     android:layout_height="wrap_content" 
     android:padding="10dp">
-
-    <TextView
-        android:id="@+id/lbl_major_name"
+    
+    <RelativeLayout android:id="@+id/majors"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
-        android:text="Hubungan Internasional"
-        android:background="#838383"
-        android:paddingTop="30dp"
+        android:background="#ebebeb"
+        android:paddingTop="10dp"
         android:paddingBottom="10dp"
         android:paddingRight="10dp"
-        android:paddingLeft="10dp"
-        android:textColor="#ffffff"
-        android:textStyle="bold"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        android:paddingLeft="10dp" >
+        
+    </RelativeLayout>
 
     <TextView
         android:id="@+id/lbl_course_title"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_below="@+id/lbl_major_name"
+        android:layout_below="@+id/majors"
         android:paddingTop="10dp"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
@@ -53,7 +50,7 @@
 		android:layout_below="@+id/lbl_course_subtitle"
 		android:layout_alignParentRight="true"
         android:layout_marginTop="10dp"
-        android:text="Senin, 07.00 - 09.30 di A 1-10"
+        android:text="07.00 - 09.30, A 1-10"
         android:textAppearance="?android:attr/textAppearanceSmall" />
     
 </RelativeLayout>

@@ -13,6 +13,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.RelativeLayout;
+import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
 
 public class CourseAdapter extends BaseAdapter {
@@ -51,16 +53,36 @@ public class CourseAdapter extends BaseAdapter {
 			view = inflater.inflate(R.layout.list_course, null);
 		}
 		
-		TextView majorName = (TextView) view.findViewById(R.id.lbl_major_name);
+		RelativeLayout majors = (RelativeLayout) view.findViewById(R.id.majors);
+		
 		TextView courseTitle = (TextView) view.findViewById(R.id.lbl_course_title);
+		TextView courseSubTitle = (TextView) view.findViewById(R.id.lbl_course_subtitle);
 		TextView courseTimeInfo = (TextView) view.findViewById(R.id.lbl_course_time_info);
 		
 		Course datum = data.get(arg0);
 		
-		majorName.setText(datum.getMajorName());
-		majorName.setBackgroundColor(Color.parseColor(datum.getMajorColor()));
+		for (int i = 0; i < datum.getNumberOfMajors(); i++) {
+			RelativeLayout.LayoutParams majorTextViewParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+			TextView major = new TextView(view.getContext());  
+			
+			major.setText(datum.getMajorName(i));
+			major.setBackgroundColor(Color.parseColor(datum.getMajorColor(i)));
+			major.setPadding(5, 5, 5, 5);
+			
+			if (i == 0) {
+				majorTextViewParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+				majorTextViewParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+			}
+			else {
+				
+			}
+			
+			majors.addView(major, majorTextViewParams);
+		}
+		
 		courseTitle.setText(datum.getCourseTitle());
-		courseTimeInfo.setText(datum.getCourseTime());
+		courseSubTitle.setText(datum.getCourseSubTitle());
+		courseTimeInfo.setText(datum.getCourseInfo());
 		
 		return view;
 	}

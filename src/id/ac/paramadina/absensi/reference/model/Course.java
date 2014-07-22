@@ -1,29 +1,29 @@
 package id.ac.paramadina.absensi.reference.model;
 
+import java.util.ArrayList;
+
 public class Course {
-	private Major[] majors;
-	private String majorName;
-	private String majorColorString;
+	private ArrayList<Major> majors;
+	private int id;
 	private String courseTitle;
 	private String courseSubTitle;
-	private String courseDay;
 	private String courseStartTime;
 	private String courseEndTime;
 	private String courseVenue;
 	
 	public Course(
-			String majorName,
-			String majorColorString,
+			int id,
+			ArrayList<Major> majors,
 			String courseTitle,
-			String courseDay,
+			String courseSubTitle,
 			String courseStartTime,
 			String courseEndTime,
 			String courseVenue)
 	{
-		this.majorName = majorName;
-		this.majorColorString = majorColorString;
+		this.id = id;
+		this.majors = majors;
 		this.courseTitle = courseTitle;
-		this.courseDay = courseDay;
+		this.courseSubTitle = courseSubTitle;
 		this.courseStartTime = courseStartTime;
 		this.courseEndTime = courseEndTime;
 		this.courseVenue = courseVenue;
@@ -31,12 +31,20 @@ public class Course {
 	
 	/* Accessor Method */
 	
-	public String getMajorName() {
-		return this.majorName;
+	public int getId() {
+		return this.id;
 	}
 	
-	public String getMajorColor() {
-		return this.majorColorString;
+	public int getNumberOfMajors() {
+		return this.majors.size();
+	}
+	
+	public String getMajorName(int index) {
+		return this.majors.get(index).getName();
+	}
+	
+	public String getMajorColor(int index) {
+		return this.majors.get(index).getColor();
 	}
 	
 	public String getCourseTitle() {
@@ -47,49 +55,11 @@ public class Course {
 		return this.courseSubTitle;
 	}
 	
-	public String getCourseTime() {
-		return this.courseDay + ", " + this.courseStartTime + " - " + this.courseEndTime;
-	}
-	
 	public String getCourseVenue() {
 		return this.courseVenue;
 	}
 	
 	public String getCourseInfo() {
-		return "";
-	}
-	
-	/* Mutator Method */
-	
-	public void setMajorName(String majorName) {
-		this.majorName = majorName;
-	}
-	
-	public void setMajorColor(String majorColorString) {
-		this.majorColorString = majorColorString;
-	}
-	
-	public void setCourseDay(String day) {
-		this.courseDay = day;
-	}
-	
-	public void setCourseTitle(String courseTitle) {
-		this.courseTitle = courseTitle;
-	}
-	
-	public void setCourseSubTitle(String courseSubTitle) {
-		this.courseSubTitle = courseSubTitle;
-	}
-	
-	public void setCourseStartTime(String courseStartTime) {
-		this.courseStartTime = courseStartTime;
-	}
-	
-	public void setCourseEndTime(String courseEndTime) {
-		this.courseStartTime = courseEndTime;
-	}
-	
-	public void setCourseVenue(String courseVenue) {
-		this.courseVenue = courseVenue;
+		return this.courseStartTime + " - " + this.courseEndTime + ", " + this.courseVenue;
 	}
 }

@@ -1,19 +1,6 @@
 package id.ac.paramadina.absensi;
 
 import id.ac.paramadina.absensi.helper.RequestHelper;
-import id.ac.paramadina.absensi.helper.SharedPreferenceHelper;
-
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLEncoder;
 import java.util.HashMap;
 
 import org.json.JSONException;
@@ -28,7 +15,6 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -37,6 +23,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -63,6 +50,10 @@ public class LoginActivity extends Activity {
 		txtUsername = (EditText) findViewById(R.id.txt_email);
 		txtPassword = (EditText) findViewById(R.id.txt_password);
 		btnLogin = (Button) findViewById(R.id.btn_login);
+		
+		InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+		inputMethodManager.hideSoftInputFromWindow(txtUsername.getWindowToken(), 0);
+		inputMethodManager.hideSoftInputFromWindow(txtPassword.getWindowToken(), 0);
 		
 		btnLogin.setOnClickListener(new OnClickListener() {
 			
