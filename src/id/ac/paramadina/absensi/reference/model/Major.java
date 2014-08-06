@@ -1,4 +1,4 @@
-package id.ac.paramadina.absensi.reference.model;
+package id.ac.paramadina.absensi.reference.Model;
 
 public class Major {
 	private String name;

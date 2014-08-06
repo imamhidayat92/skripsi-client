@@ -1,10 +1,9 @@
-package id.ac.paramadina.absensi.reference;
+package id.ac.paramadina.absensi.reference.ModelAdapter;
 
 import id.ac.paramadina.absensi.R;
-import id.ac.paramadina.absensi.reference.model.Course;
+import id.ac.paramadina.absensi.reference.Model.Course;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import android.app.Activity;
 import android.content.Context;
@@ -50,7 +49,7 @@ public class CourseAdapter extends BaseAdapter {
 		View view = arg1;
 		
 		if (arg1 == null) {
-			view = inflater.inflate(R.layout.list_course, null);
+			view = inflater.inflate(R.layout.list_item_course, null);
 		}
 		
 		RelativeLayout majors = (RelativeLayout) view.findViewById(R.id.majors);

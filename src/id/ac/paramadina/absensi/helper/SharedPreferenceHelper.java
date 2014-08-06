@@ -1,4 +1,4 @@
-package id.ac.paramadina.absensi.helper;
+package id.ac.paramadina.absensi.Helper;
 
 import android.content.Context;
 import android.content.SharedPreferences;

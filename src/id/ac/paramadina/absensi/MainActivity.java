@@ -1,25 +1,17 @@
 package id.ac.paramadina.absensi;
 
-import id.ac.paramadina.absensi.helper.RequestHelper;
-import id.ac.paramadina.absensi.reference.CourseAdapter;
-import id.ac.paramadina.absensi.reference.DrawerListViewAdapter;
-import id.ac.paramadina.absensi.reference.model.Course;
-import id.ac.paramadina.absensi.reference.model.DrawerMenuItem;
-import id.ac.paramadina.absensi.reference.model.Major;
+import id.ac.paramadina.absensi.Runner.CourseListThread;
+import id.ac.paramadina.absensi.reference.Model.DrawerMenuItem;
+import id.ac.paramadina.absensi.reference.ModelAdapter.DrawerListViewAdapter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.support.v4.app.ActionBarDrawerToggle;
@@ -28,18 +20,11 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
 public class MainActivity extends Activity {
 
 	/* Controls */
-	private ListView courseList;
-	
-	private CourseAdapter adapter;
 	
 	private DrawerLayout mDrawerLayout;
 	private ListView mDrawerListView;
@@ -53,6 +38,7 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
         
         setTitle("Kelas Hari Ini");
+        
         
         /* Initialize Drawer Layout */
     
@@ -93,107 +79,35 @@ public class MainActivity extends Activity {
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setHomeButtonEnabled(true);
         
-        /* Initialize Settings */
+        
+        /* Initialize and Load Settings */
         
         SharedPreferences preferences = getApplicationContext().getSharedPreferences("id.ac.paramadina.absensi.SETTINGS", Context.MODE_PRIVATE);
         
-        final String accessToken = preferences.getString("access_token", "?");
-        final String lecturerId = preferences.getString("id_lecturer", "?");;
+        String accessToken = preferences.getString("access_token", "?");
+        String lecturerId = preferences.getString("id_lecturer", "?");;
                
-        final Activity thisActivity = this;
+        ProgressDialog progress = ProgressDialog.show(this, "Mengambil Data Mata Kuliah", "Harap tunggu..", true, false);
         
-        final ProgressDialog progress = ProgressDialog.show(this, "Mengambil Data Mata Kuliah", "Harap tunggu..", true, false);
+        SharedPreferences preference = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        
         
         /* Load data from server. */
+		
+        String address = preference.getString("settings_api_address", "?");
+		
+        HashMap<String, String> headers = new HashMap<String, String>();
+        headers.put("upm-api-access-token", accessToken);
         
-        new Thread(new Runnable() {
-			        	
-			@Override
-			public void run() {
-				SharedPreferences preference = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-				String address = preference.getString("settings_api_address", "?");
-				
-				RequestHelper request = new RequestHelper(address, ".json");
-		        
-		        HashMap<String, String> headers = new HashMap<String, String>();
-		        headers.put("upm-api-access-token", accessToken);
-		        
-		        HashMap<String, String> data = new HashMap<String, String>();
-		        data.put("lecturer_id", lecturerId);
-		        
-		        Log.d("Runnable Exception", "accessToken = " + accessToken);
-		        Log.d("Runnable Exception", "lecturerId = " + lecturerId);
-		        
-		        final JSONObject results = request.post("course_lecturers", "index", new String[]{}, data, headers);
-				
-				runOnUiThread(new Runnable() {
-					
-					@Override
-					public void run() {
-						progress.dismiss();
-						
-						ArrayList<Course> courses = new ArrayList<Course>();
-						
-						try {
-							if (results.getInt("code") == 0) {
-								
-								JSONArray response = results.getJSONArray("response");
-								
-								for (int i = 0; i < response.length(); i++) {
-									JSONObject course = response.getJSONObject(i);
-									
-									JSONArray majors = course.getJSONArray("majors");
-									
-									ArrayList<Major> majorArray = new ArrayList<Major>(); 
-									for (int j = 0; j < majors.length(); j++) {
-										majorArray.add(new Major(majors.getJSONObject(j).getString("name"), majors.getJSONObject(j).getString("color")));
-									}
-									
-									courses.add(new Course(
-										course.getInt("id_course_lecturer"),
-										majorArray,
-							    		course.getString("title"),
-							    		"Pertemuan ke-?",
-							    		course.getString("start_time"), 
-							    		course.getString("end_time"),
-							    		"A 2-1"
-									));
-									
-									Log.d("id.ac.paramadina.absensi", course.toString());
-								}    		        
-							}
-							else {
-								Toast.makeText(getApplicationContext(), results.getString("message"), Toast.LENGTH_LONG).show();
-							}
-							
-							courseList = (ListView) findViewById(R.id.course_list);
-					        
-					        adapter = new CourseAdapter(thisActivity, courses);
-					                
-					        final ArrayList<Course> _courses = courses;
-					        
-					        if (courses.size() == 0) {
-					        	Toast.makeText(getApplicationContext(), "Tidak ada mata kuliah untuk hari ini.", Toast.LENGTH_LONG).show();
-					        }
-					        
-					        courseList.setAdapter(adapter);
-					        courseList.setOnItemClickListener(new OnItemClickListener() {
-					        	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-					        		Intent i = new Intent(MainActivity.this, CourseDetailActivity.class);
-					        		i.putExtra("course_lecturer_id", _courses.get(position).getId());
-					        		
-					        		startActivity(i);
-					        	}
-							});
-						} catch (JSONException e) {
-							e.printStackTrace();
-						} catch (Exception ex) {
-							ex.printStackTrace();
-						}
-					}
-				});
-			}
-		}).start();
+        HashMap<String, String> data = new HashMap<String, String>();
+        data.put("lecturer_id", lecturerId);
+        
+        Log.d("Runnable Exception", "accessToken = " + accessToken);
+        Log.d("Runnable Exception", "lecturerId = " + lecturerId);
+        
+        CourseListThread thread = new CourseListThread(this, (ListView) findViewById(R.id.course_list), progress, headers, data);
+        thread.setApiAddress(address);
+        thread.start();
     }
 
     @Override

@@ -1,8 +1,8 @@
-package id.ac.paramadina.absensi.reference;
+package id.ac.paramadina.absensi.reference.ModelAdapter;
 
 import id.ac.paramadina.absensi.R;
-import id.ac.paramadina.absensi.reference.model.Course;
-import id.ac.paramadina.absensi.reference.model.DrawerMenuItem;
+import id.ac.paramadina.absensi.reference.Model.Course;
+import id.ac.paramadina.absensi.reference.Model.DrawerMenuItem;
 
 import java.util.ArrayList;
 
@@ -55,7 +55,7 @@ public class DrawerListViewAdapter extends BaseAdapter {
 		View view = arg1;
 		
 		if (arg1 == null) {
-			view = inflater.inflate(R.layout.list_drawer_menu_item, null);
+			view = inflater.inflate(R.layout.list_item_drawer_menu, null);
 		}
 		
 		TextView menuTitle = (TextView) view.findViewById(R.id.menu_title);

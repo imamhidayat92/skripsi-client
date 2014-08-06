@@ -1,4 +1,4 @@
-package id.ac.paramadina.absensi.helper;
+package id.ac.paramadina.absensi.Helper;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -108,7 +108,7 @@ public class RequestHelper {
 		return null;
 	}
 	
-	public JSONObject get(String controller, String action, String... params) {
+	public JSONObject get(String controller, String action, String[] params) {
 		JSONObject result = null;
 		
 		return result;
