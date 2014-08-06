@@ -46,15 +46,12 @@ public class LoginActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
 		
+		
 		/* Assigning Control */
 		
 		txtUsername = (EditText) findViewById(R.id.txt_email);
 		txtPassword = (EditText) findViewById(R.id.txt_password);
 		btnLogin = (Button) findViewById(R.id.btn_login);
-		
-		InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-		inputMethodManager.hideSoftInputFromWindow(txtUsername.getWindowToken(), 0);
-		inputMethodManager.hideSoftInputFromWindow(txtPassword.getWindowToken(), 0);
 		
 		btnLogin.setOnClickListener(new OnClickListener() {
 			
@@ -67,11 +64,14 @@ public class LoginActivity extends Activity {
 			}
 		});
 		
+		
 		/* Preparing NFC Reader */
 		
 		mNfcAdapter = NfcAdapter.getDefaultAdapter(this);
 		
+		
 		/* Handle NFC */
+		
 		pendingIntent = PendingIntent.getActivity(this, 0, new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
 		
 		filters = new IntentFilter[1];

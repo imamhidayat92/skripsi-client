@@ -67,7 +67,8 @@ public class CourseListRunnable implements Runnable {
 			    		"A 2-1"
 					));
 					
-					Log.d("id.ac.paramadina.absensi", course.toString());
+					Log.d("skripsi", course.toString());
+					Log.d("skripsi", "size = " + majorArray.size());
 				}    		        
 			}
 			else {

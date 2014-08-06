@@ -36,9 +36,7 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        
-        setTitle("Kelas Hari Ini");
-        
+                
         
         /* Initialize Drawer Layout */
     
@@ -79,8 +77,52 @@ public class MainActivity extends Activity {
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setHomeButtonEnabled(true);
         
+        this.getCourseList();        
+    }
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+    	super.onPostCreate(savedInstanceState);
+    	mDrawerToggle.syncState();
+    }
+    
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        mDrawerToggle.onConfigurationChanged(newConfig);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Pass the event to ActionBarDrawerToggle, if it returns
+        // true, then it has handled the app icon touch event
+        if (mDrawerToggle.onOptionsItemSelected(item)) {
+        	return true;
+        }
+        // Handle your other action bar items...
+
+        switch (item.getItemId()) {
+        	case R.id.action_refresh:
+        		this.getCourseList();
+        		return true;
+        	default:
+        		return super.onOptionsItemSelected(item);
+        }
         
-        /* Initialize and Load Settings */
+        
+    }
+    
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
+    
+    /* Operations */
+    
+    private void getCourseList() {
+    	/* Initialize and Load Settings */
         
         SharedPreferences preferences = getApplicationContext().getSharedPreferences("id.ac.paramadina.absensi.SETTINGS", Context.MODE_PRIVATE);
         
@@ -102,43 +144,8 @@ public class MainActivity extends Activity {
         HashMap<String, String> data = new HashMap<String, String>();
         data.put("lecturer_id", lecturerId);
         
-        Log.d("Runnable Exception", "accessToken = " + accessToken);
-        Log.d("Runnable Exception", "lecturerId = " + lecturerId);
-        
         CourseListThread thread = new CourseListThread(this, (ListView) findViewById(R.id.course_list), progress, headers, data);
         thread.setApiAddress(address);
         thread.start();
     }
-
-    @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
-    	super.onPostCreate(savedInstanceState);
-    	mDrawerToggle.syncState();
-    }
-    
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        mDrawerToggle.onConfigurationChanged(newConfig);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Pass the event to ActionBarDrawerToggle, if it returns
-        // true, then it has handled the app icon touch event
-        if (mDrawerToggle.onOptionsItemSelected(item)) {
-          return true;
-        }
-        // Handle your other action bar items...
-
-        return super.onOptionsItemSelected(item);
-    }
-    
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-    
 }

@@ -15,7 +15,8 @@
     <!-- Application theme. -->
     <style name="AppTheme" parent="AppBaseTheme">
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
-        
+	    <item name="android:actionOverflowButtonStyle">@android:style/Widget.Holo.ActionButton.Overflow</item>
+	    <item name="android:actionBarWidgetTheme">@android:style/Theme.Holo</item>
     </style>
 
 </resources>
