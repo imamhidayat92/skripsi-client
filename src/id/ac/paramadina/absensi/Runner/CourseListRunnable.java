@@ -1,9 +1,12 @@
 package id.ac.paramadina.absensi.Runner;
 
 import id.ac.paramadina.absensi.CourseDetailActivity;
+import id.ac.paramadina.absensi.reference.Model.ClassLocation;
 import id.ac.paramadina.absensi.reference.Model.Course;
 import id.ac.paramadina.absensi.reference.Model.Major;
+import id.ac.paramadina.absensi.reference.Model.Schedule;
 import id.ac.paramadina.absensi.reference.ModelAdapter.CourseAdapter;
+import id.ac.paramadina.absensi.reference.ModelAdapter.ScheduleAdapter;
 
 import java.util.ArrayList;
 
@@ -29,11 +32,54 @@ public class CourseListRunnable implements Runnable {
 	private ListView targetListView;
 	private ProgressDialog progress;
 	
-	public CourseListRunnable(Activity activity, JSONObject response, ListView targetListView, ProgressDialog progress) {
+	final private ArrayList<Schedule> schedules;
+	
+	public CourseListRunnable(	Activity activity, 
+								JSONObject response, 
+								ListView targetListView, 
+								ProgressDialog progress) 
+	{
 		this.activity = activity;
 		this.response = response;
 		this.targetListView = targetListView;
 		this.progress = progress;
+		
+		this.schedules = new ArrayList<Schedule>();
+		
+		try {
+			JSONArray results = this.response.getJSONArray("results");
+			
+			for (int i = 0; i < results.length(); i++) {
+				JSONObject jsonSchedule = results.getJSONObject(i);
+				JSONObject jsonCourse = results.getJSONObject(i).getJSONObject("course");
+				JSONObject jsonMajor = results.getJSONObject(i).getJSONObject("course").getJSONObject("major");
+				
+				Major major = new Major( jsonMajor.getString("name"),
+										 jsonMajor.getString("color"));
+				
+				ClassLocation location = new ClassLocation(	jsonSchedule.getJSONObject("location").getString("name"),
+															jsonSchedule.getJSONObject("location").getString("description"));
+				
+				Course course = new Course(	jsonCourse.getString("_id"),
+											jsonCourse.getString("name"), 
+											jsonCourse.getString("description"), 
+											jsonCourse.getInt("credits"), 
+											major);
+				
+				Schedule schedule = new Schedule( 	jsonSchedule.getString("_id"),
+													jsonSchedule.getInt("day_code"),
+													jsonSchedule.getString("start_time"),
+													jsonSchedule.getString("end_time"),
+													course,
+													location,
+													jsonSchedule.getJSONArray("meetings").length());
+				
+				this.schedules.add(schedule);
+			}
+		}
+		catch (JSONException x) {
+			// TODO: Show message or do something.
+		}
 	}
 	
 	@Override
@@ -43,63 +89,26 @@ public class CourseListRunnable implements Runnable {
 		ArrayList<Course> courses = new ArrayList<Course>();
 		
 		try {
-			if (this.response.getInt("code") == 0) {
-				
-				JSONArray responseData = this.response.getJSONArray("response");
-				
-				for (int i = 0; i < responseData.length(); i++) {
-					JSONObject course = responseData.getJSONObject(i);
-					
-					JSONArray majors = course.getJSONArray("majors");
-					
-					ArrayList<Major> majorArray = new ArrayList<Major>(); 
-					for (int j = 0; j < majors.length(); j++) {
-						majorArray.add(new Major(majors.getJSONObject(j).getString("name"), majors.getJSONObject(j).getString("color")));
-					}
-					
-					courses.add(new Course(
-						course.getInt("id_course_lecturer"),
-						majorArray,
-			    		course.getString("title"),
-			    		"Pertemuan ke-?",
-			    		course.getString("start_time"), 
-			    		course.getString("end_time"),
-			    		"A 2-1"
-					));
-					
-					Log.d("skripsi", course.toString());
-					Log.d("skripsi", "size = " + majorArray.size());
-				}    		        
-			}
-			else {
-				Toast.makeText(this.activity, this.response.getString("message"), Toast.LENGTH_LONG).show();
-			}
-			
-	        CourseAdapter adapter = new CourseAdapter(this.activity, courses);
-	                
-	        /* Clumsy 'forward' like declaration. -_- */
-	        final ArrayList<Course> _courses = courses;
-	        
 	        if (courses.size() == 0) {
 	        	Toast.makeText(this.activity, "Tidak ada mata kuliah untuk hari ini.", Toast.LENGTH_LONG).show();
 	        }
+	        
+	        ScheduleAdapter adapter = new ScheduleAdapter(this.activity, this.schedules);
 	        
 	        this.targetListView.setAdapter(adapter);
 	        this.targetListView.setOnItemClickListener(new OnItemClickListener() {
 	        	
 	        	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 	        		Intent i = new Intent(activity, CourseDetailActivity.class);
-	        		i.putExtra("course_lecturer_id", _courses.get(position).getId());
+	        		i.putExtra("schedule", schedules.get(position).getId());
 	        		
 	        		activity.startActivity(i);
 	        	}
 	        	
 			});
 	        
-		} catch (JSONException e) {
-			e.printStackTrace();
-		} catch (Exception ex) {
-			ex.printStackTrace();
+		} catch (Exception e) {
+			// TODO: Show message or do something.
 		}
 		
 	}

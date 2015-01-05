@@ -24,7 +24,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -45,7 +44,6 @@ public class LoginActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
-		
 		
 		/* Assigning Control */
 		
@@ -92,13 +90,13 @@ public class LoginActivity extends Activity {
 					SharedPreferences preference = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 					String address = preference.getString("settings_api_address", "?");
 					
-					RequestHelper request = new RequestHelper(address, ".json");
+					RequestHelper request = new RequestHelper(address);
 					
 					HashMap<String, String> data = new HashMap<String, String>();
 					data.put("email", email);
 					data.put("password", password);
 					
-					final JSONObject result = request.post("users", "authenticate", new String[]{}, data, new HashMap<String, String>());
+					final JSONObject result = request.post("/users/authentication", new HashMap<String, String>(), data, new HashMap<String, String>());
 					
 					runOnUiThread(new Runnable() {
 						
@@ -107,16 +105,21 @@ public class LoginActivity extends Activity {
 							progress.dismiss();
 							
 							try {
-								if (result.getInt("code") == 0) {
-									initializeSettings(result.getJSONObject("response"));
-									
-									Intent i = new Intent(getApplicationContext(), MainActivity.class);
-									startActivity(i);
-									
-									finish();
+								if (result == null) {
+									Toast.makeText(getApplicationContext(), "Gagal melakukan koneksi ke server.", Toast.LENGTH_LONG);
 								}
 								else {
-									Toast.makeText(getApplicationContext(), result.getString("message"), Toast.LENGTH_LONG).show();
+									if (result.getBoolean("success")) {
+										initializeSettings(result.getJSONObject("result"));
+										
+										Intent i = new Intent(getApplicationContext(), MainActivity.class);
+										startActivity(i);
+										
+										finish();
+									}
+									else {
+										Toast.makeText(getApplicationContext(), result.getString("message"), Toast.LENGTH_LONG).show();
+									}
 								}
 							} catch (JSONException e) {
 								Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
@@ -141,12 +144,12 @@ public class LoginActivity extends Activity {
 					SharedPreferences preference = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 					String address = preference.getString("settings_api_address", "?");
 					
-					RequestHelper request = new RequestHelper(address, ".json");
+					RequestHelper request = new RequestHelper(address);
 					
 					HashMap<String, String> data = new HashMap<String, String>();
-					data.put("identification_number", tagId);
+					data.put("identifier", tagId);
 					
-					final JSONObject result = request.post("users", "authenticate", new String[]{}, data, new HashMap<String, String>());
+					final JSONObject result = request.post("/users/authentication", new HashMap<String, String>(), data, new HashMap<String, String>());
 					
 					runOnUiThread(new Runnable() {
 						
@@ -155,16 +158,21 @@ public class LoginActivity extends Activity {
 							progress.dismiss();
 							
 							try {
-								if (result.getInt("code") == 0) {
-									initializeSettings(result.getJSONObject("response"));
-									
-									Intent i = new Intent(getApplicationContext(), MainActivity.class);
-									startActivity(i);
-									
-									finish();
+								if (result == null) {
+									Toast.makeText(getApplicationContext(), "Gagal melakukan koneksi ke server.", Toast.LENGTH_LONG);
 								}
 								else {
-									Toast.makeText(getApplicationContext(), result.getString("message"), Toast.LENGTH_LONG).show();
+									if (result.getBoolean("success")) {
+										initializeSettings(result.getJSONObject("result"));
+										
+										Intent i = new Intent(getApplicationContext(), MainActivity.class);
+										startActivity(i);
+										
+										finish();
+									}
+									else {
+										Toast.makeText(getApplicationContext(), result.getString("message"), Toast.LENGTH_LONG).show();
+									}
 								}
 							} catch (JSONException e) {
 								Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
@@ -183,13 +191,15 @@ public class LoginActivity extends Activity {
 			SharedPreferences preferences = getApplicationContext().getSharedPreferences("id.ac.paramadina.absensi.SETTINGS", Context.MODE_PRIVATE);
 			SharedPreferences.Editor editor = preferences.edit();
 			
-			editor.putString("id_user", loginData.getString("id_user"));
-			editor.putString("id_lecturer", loginData.getString("id_lecturer"));
-			editor.putString("access_token", loginData.getString("access_token"));
+			editor.putString("access_token", loginData.getString("token"));
 			editor.putString("name", loginData.getString("name"));
+			editor.putString("display_name", loginData.getString("display_name"));
 			
 			editor.commit();
 		} catch (JSONException e) {
+			// Failed here means fatal error.
+			// TODO: Do "System.exit();" with message
+			
 			Log.d("LoginActivity initializeSettings JSONException", e.getMessage());
 			e.printStackTrace();
 		} 

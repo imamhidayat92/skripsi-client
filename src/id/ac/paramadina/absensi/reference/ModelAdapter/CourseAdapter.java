@@ -51,32 +51,16 @@ public class CourseAdapter extends BaseAdapter {
 		View view = arg1;
 		
 		if (arg1 == null) {
-			view = inflater.inflate(R.layout.list_item_course, null);
+			view = inflater.inflate(R.layout.listview_item_course, null);
 		}
 		
 		LinearLayout majors = (LinearLayout) view.findViewById(R.id.majors);
 		
 		TextView courseTitle = (TextView) view.findViewById(R.id.lbl_course_title);
-		TextView courseSubTitle = (TextView) view.findViewById(R.id.lbl_course_subtitle);
-		TextView courseTimeInfo = (TextView) view.findViewById(R.id.lbl_course_time_info);
 		
 		Course datum = data.get(arg0);
 				
-		for (int i = 0; i < datum.getNumberOfMajors(); i++) {
-			RelativeLayout.LayoutParams majorTextViewParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-			TextView major = new TextView(view.getContext());  
-			
-			major.setId((int) System.currentTimeMillis());
-			major.setText(datum.getMajorName(i));
-			major.setBackgroundColor(Color.parseColor(datum.getMajorColor(i)));
-			major.setPadding(15, 15, 15, 15);
-							
-			majors.addView(major, majorTextViewParams);			
-		}
-		
-		courseTitle.setText(datum.getCourseTitle());
-		courseSubTitle.setText(datum.getCourseSubTitle());
-		courseTimeInfo.setText(datum.getCourseInfo());
+		courseTitle.setText(datum.getName());
 		
 		return view;
 	}

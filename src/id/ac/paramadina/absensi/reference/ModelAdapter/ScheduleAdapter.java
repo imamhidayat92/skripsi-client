@@ -1,8 +1,7 @@
 package id.ac.paramadina.absensi.reference.ModelAdapter;
 
 import id.ac.paramadina.absensi.R;
-import id.ac.paramadina.absensi.reference.Model.Course;
-import id.ac.paramadina.absensi.reference.Model.DrawerMenuItem;
+import id.ac.paramadina.absensi.reference.Model.Schedule;
 
 import java.util.ArrayList;
 
@@ -13,17 +12,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.RelativeLayout.LayoutParams;
 
-public class DrawerListViewAdapter extends BaseAdapter {
-
+public class ScheduleAdapter extends BaseAdapter {
 	private Activity activity;
-	private ArrayList<DrawerMenuItem> data;
+	private ArrayList<Schedule> data;
 	private static LayoutInflater inflater = null;
 	
-	public DrawerListViewAdapter(Activity activity, ArrayList<DrawerMenuItem> data) {
+	public ScheduleAdapter(Activity activity, ArrayList<Schedule> data) {
 		this.activity = activity;
 		this.data = data;
 		
@@ -46,25 +42,24 @@ public class DrawerListViewAdapter extends BaseAdapter {
 	}
 
 	@Override
-	public int getItemViewType(int position) {
-		return super.getItemViewType(position);
-	}
-	
-	@Override
 	public View getView(int arg0, View arg1, ViewGroup arg2) {
 		View view = arg1;
 		
 		if (arg1 == null) {
-			view = inflater.inflate(R.layout.listview_item_drawer_menu, null);
+			view = inflater.inflate(R.layout.listview_item_schedule, null);
 		}
 		
-		TextView menuTitle = (TextView) view.findViewById(R.id.menu_title);
+		TextView scheduleCourseName = (TextView) view.findViewById(R.id.lbl_schedule_course_name);
+		TextView scheduleDetail = (TextView) view.findViewById(R.id.lbl_schedule_detail);
+		TextView scheduleInfo = (TextView) view.findViewById(R.id.lbl_schedule_info);
 		
-		DrawerMenuItem datum = data.get(arg0);
+		Schedule datum = data.get(arg0);		
 		
-		menuTitle.setText(datum.getName());
+		scheduleCourseName.setText(datum.getCourse().getName());
+		scheduleCourseName.setBackgroundColor(Color.parseColor(datum.getCourse().getMajor().getColor()));
+		scheduleDetail.setText("Pertemuan ke-" + datum.getMeetingCount());
+		scheduleInfo.setText(datum.getInfo());
 		
 		return view;
 	}
-	
 }

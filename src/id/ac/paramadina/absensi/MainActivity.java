@@ -16,10 +16,10 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 public class MainActivity extends Activity {
@@ -32,19 +32,49 @@ public class MainActivity extends Activity {
 	
 	private ArrayList<DrawerMenuItem> mMenuItems;
 	
+	/* Navigation Drawer Menu Item Click Handler */
+	
+	private class DrawerItemClickListener implements AdapterView.OnItemClickListener {
+
+		@Override
+		public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+			/* 
+			 * Menu from Top to Bottom
+			 * 1. Kuliah Hari Ini
+			 * 2. Kuliah Pengganti
+			 * 3. Laporan Mengajar
+			 * 4. Keluar
+			 */
+			
+			switch (position) {
+				case 0:
+					break;
+				case 1:
+					break;
+				case 2:
+					break;
+				case 3:
+					break;
+				default:
+					break;
+			}
+		}
+
+	}
+	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
                 
-        
         /* Initialize Drawer Layout */
     
         mMenuItems = new ArrayList<DrawerMenuItem>();
         
-        mMenuItems.add(new DrawerMenuItem("Test 1"));
-        mMenuItems.add(new DrawerMenuItem("Test 2"));
-        mMenuItems.add(new DrawerMenuItem("Test 3"));
+        mMenuItems.add(new DrawerMenuItem("Kuliah Hari Ini"));
+        mMenuItems.add(new DrawerMenuItem("Kuliah Pengganti"));
+        mMenuItems.add(new DrawerMenuItem("Laporan Mengajar"));
+        mMenuItems.add(new DrawerMenuItem("Keluar"));
         
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerListView = (ListView) findViewById(R.id.left_drawer);
@@ -73,11 +103,13 @@ public class MainActivity extends Activity {
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
         mDrawerListView.setAdapter(new DrawerListViewAdapter(this, mMenuItems));
+        mDrawerListView.setOnItemClickListener(new DrawerItemClickListener());        
         
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setHomeButtonEnabled(true);
+        getActionBar().setTitle("Kelas Hari Ini");
         
-        this.getCourseList();        
+        this.getSchedules();        
     }
 
     @Override
@@ -103,13 +135,11 @@ public class MainActivity extends Activity {
 
         switch (item.getItemId()) {
         	case R.id.action_refresh:
-        		this.getCourseList();
+        		this.getSchedules();
         		return true;
         	default:
         		return super.onOptionsItemSelected(item);
         }
-        
-        
     }
     
     @Override
@@ -121,30 +151,23 @@ public class MainActivity extends Activity {
     
     /* Operations */
     
-    private void getCourseList() {
+    private void getSchedules() {
     	/* Initialize and Load Settings */
         
         SharedPreferences preferences = getApplicationContext().getSharedPreferences("id.ac.paramadina.absensi.SETTINGS", Context.MODE_PRIVATE);
-        
         String accessToken = preferences.getString("access_token", "?");
-        String lecturerId = preferences.getString("id_lecturer", "?");;
-               
-        ProgressDialog progress = ProgressDialog.show(this, "Mengambil Data Mata Kuliah", "Harap tunggu..", true, false);
         
         SharedPreferences preference = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        
+        String address = preference.getString("settings_api_address", "?");
         
         /* Load data from server. */
-		
-        String address = preference.getString("settings_api_address", "?");
-		
-        HashMap<String, String> headers = new HashMap<String, String>();
-        headers.put("upm-api-access-token", accessToken);
         
-        HashMap<String, String> data = new HashMap<String, String>();
-        data.put("lecturer_id", lecturerId);
+        ProgressDialog progress = ProgressDialog.show(this, "Mengambil Data Jadwal Mata Kuliah", "Harap tunggu..", true, false);
+				
+        HashMap<String, String> params = new HashMap<String, String>();
+        params.put("access_token", accessToken);
         
-        CourseListThread thread = new CourseListThread(this, (ListView) findViewById(R.id.course_list), progress, headers, data);
+        CourseListThread thread = new CourseListThread(this, (ListView) findViewById(R.id.listview_schedule), progress, params);
         thread.setApiAddress(address);
         thread.start();
     }

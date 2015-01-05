@@ -1,65 +1,38 @@
 package id.ac.paramadina.absensi.reference.Model;
 
-import java.util.ArrayList;
-
 public class Course {
-	private ArrayList<Major> majors;
-	private int id;
-	private String courseTitle;
-	private String courseSubTitle;
-	private String courseStartTime;
-	private String courseEndTime;
-	private String courseVenue;
+	private String id;
+	private String name;
+	private String description;
+	private int credits;
 	
-	public Course(
-			int id,
-			ArrayList<Major> majors,
-			String courseTitle,
-			String courseSubTitle,
-			String courseStartTime,
-			String courseEndTime,
-			String courseVenue)
-	{
+	private Major major;
+
+	public Course(String id, String name, String description, int credits, Major major) {
 		this.id = id;
-		this.majors = majors;
-		this.courseTitle = courseTitle;
-		this.courseSubTitle = courseSubTitle;
-		this.courseStartTime = courseStartTime;
-		this.courseEndTime = courseEndTime;
-		this.courseVenue = courseVenue;
+		this.name = name;
+		this.description = description;
+		this.credits = credits;
+		this.major = major;
 	}
 	
-	/* Accessor Method */
-	
-	public int getId() {
-		return this.id;
+	public String getId() {
+		return id;
 	}
-	
-	public int getNumberOfMajors() {
-		return this.majors.size();
+
+	public String getName() {
+		return name;
 	}
-	
-	public String getMajorName(int index) {
-		return this.majors.get(index).getName();
+
+	public String getDescription() {
+		return description;
 	}
-	
-	public String getMajorColor(int index) {
-		return this.majors.get(index).getColor();
+
+	public int getCredits() {
+		return credits;
 	}
-	
-	public String getCourseTitle() {
-		return this.courseTitle;
-	}
-	
-	public String getCourseSubTitle() {
-		return this.courseSubTitle;
-	}
-	
-	public String getCourseVenue() {
-		return this.courseVenue;
-	}
-	
-	public String getCourseInfo() {
-		return this.courseStartTime + " - " + this.courseEndTime + ", " + this.courseVenue;
+
+	public Major getMajor() {
+		return major;
 	}
 }
