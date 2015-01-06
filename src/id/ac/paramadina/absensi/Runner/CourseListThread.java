@@ -9,6 +9,7 @@ import org.json.JSONObject;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.util.Log;
 import android.widget.ListView;
 
 public class CourseListThread extends Thread {
@@ -28,6 +29,8 @@ public class CourseListThread extends Thread {
 		this.targetListView = targetListView;
 		
 		this.params = params;
+		
+		Log.d("skripsi-client", "CourseListThread initialized.");
 	}
 	
 	public void setApiAddress(String url) {
@@ -36,21 +39,23 @@ public class CourseListThread extends Thread {
 	
 	@Override
 	public void run() {
-		RequestHelper request = new RequestHelper(this.API_ADDRESS, ".json");
+		RequestHelper request = new RequestHelper(this.API_ADDRESS);
 		JSONObject response = request.get(this.RESOURCE_URL, params, new HashMap<String, String>());
 		
 		if (response == null) {
+			Log.d("skripsi-client", "Got null response from server.");
 			// TODO: Put a message or do something.
 		}
 		else {
 			try {
 				if (!response.getBoolean("success")) {
+					Log.d("skripsi-client", "Unsuccessful request.");
 					// TODO: Put a message or do something.
 				}
 				else {
 					CourseListRunnable runnable = new CourseListRunnable(this.activity, response, this.targetListView, progress);
 					
-					this.activity.runOnUiThread(runnable);
+					this.activity.runOnUiThread(runnable); 
 				}
 			} catch (JSONException e) {
 				// TODO Auto-generated catch block

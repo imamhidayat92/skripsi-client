@@ -72,7 +72,7 @@ public class CourseListRunnable implements Runnable {
 													jsonSchedule.getString("end_time"),
 													course,
 													location,
-													jsonSchedule.getJSONArray("meetings").length());
+													jsonSchedule.getJSONArray("meetings").length() + 1);
 				
 				this.schedules.add(schedule);
 			}
@@ -86,10 +86,8 @@ public class CourseListRunnable implements Runnable {
 	public void run() {
 		this.progress.dismiss();
 		
-		ArrayList<Course> courses = new ArrayList<Course>();
-		
 		try {
-	        if (courses.size() == 0) {
+	        if (this.schedules.size() == 0) {
 	        	Toast.makeText(this.activity, "Tidak ada mata kuliah untuk hari ini.", Toast.LENGTH_LONG).show();
 	        }
 	        

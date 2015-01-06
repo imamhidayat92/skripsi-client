@@ -16,6 +16,7 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -72,8 +73,7 @@ public class MainActivity extends Activity {
         mMenuItems = new ArrayList<DrawerMenuItem>();
         
         mMenuItems.add(new DrawerMenuItem("Kuliah Hari Ini"));
-        mMenuItems.add(new DrawerMenuItem("Kuliah Pengganti"));
-        mMenuItems.add(new DrawerMenuItem("Laporan Mengajar"));
+        mMenuItems.add(new DrawerMenuItem("Arsip Laporan Mengajar"));
         mMenuItems.add(new DrawerMenuItem("Keluar"));
         
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -162,11 +162,14 @@ public class MainActivity extends Activity {
         
         /* Load data from server. */
         
-        ProgressDialog progress = ProgressDialog.show(this, "Mengambil Data Jadwal Mata Kuliah", "Harap tunggu..", true, false);
+        ProgressDialog progress = ProgressDialog.show(this, "Mengambil Jadwal Kuliah", "Harap tunggu..", true, false);
 				
         HashMap<String, String> params = new HashMap<String, String>();
         params.put("access_token", accessToken);
         
+        Log.d("skripsi-client", "Access Token obtained: " + accessToken);
+        Log.d("skripsi-client", "API Address URL: " + address);
+                
         CourseListThread thread = new CourseListThread(this, (ListView) findViewById(R.id.listview_schedule), progress, params);
         thread.setApiAddress(address);
         thread.start();

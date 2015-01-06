@@ -34,7 +34,6 @@ public class RequestHelper {
 		this.urlSuffix = urlSuffix;
 	}
 	
-
 	public JSONObject get(	String resourceUrl, 
 							HashMap<String, String> params, 
 							HashMap<String, String> headers) 
@@ -50,11 +49,12 @@ public class RequestHelper {
 			
 			resourceUrl += urlSuffix;
 			
-			URL url = new URL(resourceUrl);
+			URL url = new URL(this.rootUrl + resourceUrl);
+
+			Log.d("skripsi-client", "Connecting to " + this.rootUrl + resourceUrl);
 			
 			HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
 			
-			urlConnection.setDoOutput(true);
 			urlConnection.setRequestMethod("GET");
 			
 			if (headers.size() > 0) {
@@ -64,14 +64,6 @@ public class RequestHelper {
 					urlConnection.setRequestProperty(s, headers.get(s));
 				}				
 			}
-			
-			OutputStream outputStream = urlConnection.getOutputStream();
-			BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
-						
-			writer.flush();
-			writer.close();
-			
-			outputStream.close();
 			
 			urlConnection.connect();
 			
@@ -87,20 +79,26 @@ public class RequestHelper {
 			inputStream.close();
 			
 			urlConnection.disconnect();
+
+			Log.d("skripsi-client", "Obtained data: " + rawData.toString());
 			
 			JSONObject result = new JSONObject(rawData.toString());
 			return result;
 		}
-		catch (MalformedURLException x1) {
+		catch (MalformedURLException e) {
+			Log.d("skripsi-client", "MalformedURLException: " + e.getMessage());
 			return null;
 		} 
 		catch (ProtocolException e) {
+			Log.d("skripsi-client", "ProtocolException: " + e.getMessage());
 			return null;
 		} 
 		catch (IOException e) {
+			Log.d("skripsi-client", "IOException: " + e.getMessage());
 			return null;
 		} 
 		catch (JSONException e) {
+			Log.d("skripsi-client", "JSONException: " + e.getMessage());
 			return null;
 		}
 	}
