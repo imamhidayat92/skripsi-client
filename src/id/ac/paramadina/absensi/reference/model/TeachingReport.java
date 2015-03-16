@@ -2,14 +2,14 @@ package id.ac.paramadina.absensi.reference.Model;
 
 import java.util.Calendar;
 
-public class LecturerReport {
+public class TeachingReport {
 	private String subject;
 	private String description;
 	
 	private Calendar created;
 	private Calendar modified;
 	
-	public LecturerReport(String subject, String description, Calendar created, Calendar modified) {
+	public TeachingReport(String subject, String description, Calendar created, Calendar modified) {
 		this.subject = subject;
 		this.description = description;
 		this.created = created;

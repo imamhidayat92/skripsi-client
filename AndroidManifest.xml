@@ -59,7 +59,7 @@
             android:parentActivityName="id.ac.paramadina.absensi.LoginActivity" >
         </activity>
         <activity
-            android:name="id.ac.paramadina.absensi.AddNewLecturerReportActivity"
+            android:name="id.ac.paramadina.absensi.AddNewTeachingReportActivity"
             android:label="@string/title_activity_add_new_lecturer_report" >
         </activity>
     </application>

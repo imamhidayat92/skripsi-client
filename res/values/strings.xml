@@ -2,7 +2,11 @@
 <resources>
 
     <string name="app_name">Absensi Paramadina</string>
+    
+    <!-- Menu Related -->
+    
     <string name="action_refresh">Muat Ulang</string>
+    <string name="action_send">Kirim</string>
     <string name="action_settings">Pengaturan</string>
 
     <!-- Internationalization -->
