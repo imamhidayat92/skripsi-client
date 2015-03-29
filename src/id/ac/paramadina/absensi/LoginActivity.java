@@ -1,6 +1,9 @@
 package id.ac.paramadina.absensi;
 
+import id.ac.paramadina.absensi.fetcher.AuthenticationDataFetcher;
 import id.ac.paramadina.absensi.helper.RequestHelper;
+import id.ac.paramadina.absensi.listener.AuthenticationDataListener;
+import id.ac.paramadina.absensi.reference.spec.AuthenticationDataSpec;
 
 import java.util.HashMap;
 
@@ -31,6 +34,7 @@ import android.widget.Toast;
 public class LoginActivity extends Activity {
 	
 	/* Controls */
+	
 	private EditText txtUsername;
 	private EditText txtPassword;
 	private Button btnLogin;
@@ -39,6 +43,42 @@ public class LoginActivity extends Activity {
 	
 	PendingIntent pendingIntent;
 	IntentFilter[] filters;
+	
+	/* Event Listener */
+	
+	private OnClickListener btnLoginOnClickListener = new OnClickListener() {
+		
+		@Override
+		public void onClick(View v) {
+			String email = txtUsername.getText().toString();
+			String password = txtPassword.getText().toString();
+			
+			AuthenticationDataSpec spec = new AuthenticationDataSpec(email, password);
+			
+			AuthenticationDataListener taskListener = new AuthenticationDataListener(LoginActivity.this, MainActivity.class);
+			
+			AuthenticationDataFetcher fetcher = new AuthenticationDataFetcher(LoginActivity.this, spec);
+			fetcher.setListener(taskListener);
+			fetcher.stripAuthenticationData();
+			fetcher.fetch();
+		}
+	};
+
+	/* Utility Methods */
+
+	final protected static char[] hexArray = {'0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F'};
+	public static String convertBytesToHex(byte[] bytes) {
+	    char[] hexChars = new char[bytes.length * 2];
+	    int v;
+	    for ( int j = 0; j < bytes.length; j++ ) {
+	        v = bytes[j] & 0xFF;
+	        hexChars[j * 2] = hexArray[v >>> 4];
+	        hexChars[j * 2 + 1] = hexArray[v & 0x0F];
+	    }
+	    return new String(hexChars);
+	}
+
+	/* Overridden Methods */
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -51,22 +91,11 @@ public class LoginActivity extends Activity {
 		txtPassword = (EditText) findViewById(R.id.txt_password);
 		btnLogin = (Button) findViewById(R.id.btn_login);
 		
-		btnLogin.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View arg0) {
-				String email = txtUsername.getText().toString();
-				String password = txtPassword.getText().toString();
-				
-				login(email, password);
-			}
-		});
-		
+		btnLogin.setOnClickListener(btnLoginOnClickListener);
 		
 		/* Preparing NFC Reader */
 		
 		mNfcAdapter = NfcAdapter.getDefaultAdapter(this);
-		
 		
 		/* Handle NFC */
 		
@@ -77,132 +106,6 @@ public class LoginActivity extends Activity {
 		filters[0] = new IntentFilter();
 		filters[0].addAction(NfcAdapter.ACTION_TAG_DISCOVERED);
 		filters[0].addCategory(Intent.CATEGORY_DEFAULT);
-	}
-	
-	private void login(final String email, final String password) {
-		final ProgressDialog progress = ProgressDialog.show(this, "Melakukan Autentikasi", "Harap tunggu..", true, false);
-		
-		new Thread(
-			new Runnable() {
-				
-				@Override
-				public void run() {
-					SharedPreferences preference = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-					String address = preference.getString("settings_api_address", "?");
-					
-					RequestHelper request = new RequestHelper(address);
-					
-					HashMap<String, String> data = new HashMap<String, String>();
-					data.put("email", email);
-					data.put("password", password);
-					
-					final JSONObject result = request.post("/users/authentication", new HashMap<String, String>(), data, new HashMap<String, String>());
-					
-					runOnUiThread(new Runnable() {
-						
-						@Override
-						public void run() {
-							progress.dismiss();
-							
-							try {
-								if (result == null) {
-									Toast.makeText(getApplicationContext(), "Gagal melakukan koneksi ke server.", Toast.LENGTH_LONG);
-								}
-								else {
-									if (result.getBoolean("success")) {
-										initializeSettings(result.getJSONObject("result"));
-										
-										Intent i = new Intent(getApplicationContext(), MainActivity.class);
-										startActivity(i);
-										
-										finish();
-									}
-									else {
-										Toast.makeText(getApplicationContext(), result.getString("message"), Toast.LENGTH_LONG).show();
-									}
-								}
-							} catch (JSONException e) {
-								Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
-							}
-														
-						}
-					});
-					
-				}
-			}
-		).start();		
-	}
-	
-	private void login(final String tagId) {
-		final ProgressDialog progress = ProgressDialog.show(this, "Melakukan Autentikasi", "Harap tunggu..", true, false);
-		
-		new Thread(
-			new Runnable() {
-				
-				@Override
-				public void run() {
-					SharedPreferences preference = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-					String address = preference.getString("settings_api_address", "?");
-					
-					RequestHelper request = new RequestHelper(address);
-					
-					HashMap<String, String> data = new HashMap<String, String>();
-					data.put("identifier", tagId);
-					
-					final JSONObject result = request.post("/users/authentication", new HashMap<String, String>(), data, new HashMap<String, String>());
-					
-					runOnUiThread(new Runnable() {
-						
-						@Override
-						public void run() {
-							progress.dismiss();
-							
-							try {
-								if (result == null) {
-									Toast.makeText(getApplicationContext(), "Gagal melakukan koneksi ke server.", Toast.LENGTH_LONG);
-								}
-								else {
-									if (result.getBoolean("success")) {
-										initializeSettings(result.getJSONObject("result"));
-										
-										Intent i = new Intent(getApplicationContext(), MainActivity.class);
-										startActivity(i);
-										
-										finish();
-									}
-									else {
-										Toast.makeText(getApplicationContext(), result.getString("message"), Toast.LENGTH_LONG).show();
-									}
-								}
-							} catch (JSONException e) {
-								Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
-							}
-														
-						}
-					});
-					
-				}
-			}
-		).start();
-	}
-	
-	private void initializeSettings(JSONObject loginData) {
-		try {
-			SharedPreferences preferences = getApplicationContext().getSharedPreferences("id.ac.paramadina.absensi.SETTINGS", Context.MODE_PRIVATE);
-			SharedPreferences.Editor editor = preferences.edit();
-			
-			editor.putString("access_token", loginData.getString("token"));
-			editor.putString("name", loginData.getString("name"));
-			editor.putString("display_name", loginData.getString("display_name"));
-			
-			editor.commit();
-		} catch (JSONException e) {
-			// Failed here means fatal error.
-			// TODO: Do "System.exit();" with message
-			
-			Log.d("LoginActivity initializeSettings JSONException", e.getMessage());
-			e.printStackTrace();
-		} 
 	}
 	
 	@Override
@@ -217,24 +120,17 @@ public class LoginActivity extends Activity {
 		mNfcAdapter.disableForegroundDispatch(this);
 	}
 	
-	final protected static char[] hexArray = {'0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F'};
-	public static String convertBytesToHex(byte[] bytes) {
-	    char[] hexChars = new char[bytes.length * 2];
-	    int v;
-	    for ( int j = 0; j < bytes.length; j++ ) {
-	        v = bytes[j] & 0xFF;
-	        hexChars[j * 2] = hexArray[v >>> 4];
-	        hexChars[j * 2 + 1] = hexArray[v & 0x0F];
-	    }
-	    return new String(hexChars);
-	}
-	
 	@Override
 	protected void onNewIntent(Intent intent) {
 		Tag tagFromIntent = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
 		String tagId = convertBytesToHex(tagFromIntent.getId());
 		
-		login(tagId);
+		AuthenticationDataSpec spec = new AuthenticationDataSpec(tagId);
+		
+		AuthenticationDataListener taskListener = new AuthenticationDataListener(this, MainActivity.class);
+		AuthenticationDataFetcher fetcher = new AuthenticationDataFetcher(this, spec);
+		fetcher.setListener(taskListener);
+		fetcher.fetch();
 	}
 	
 	@Override

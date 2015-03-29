@@ -13,7 +13,6 @@ import android.widget.Toast;
 
 public class AuthenticationDataFetcher extends BaseFetcher {
 
-	private Activity destinationActivity;
 	private AuthenticationDataSpec spec;
 	
 	public AuthenticationDataFetcher(Activity activity, AuthenticationDataSpec spec) {
@@ -23,8 +22,7 @@ public class AuthenticationDataFetcher extends BaseFetcher {
 		this.setResourceUrl("/users/authentication");
 	}
 	
-	public final void fetchAndStartActivity(Activity destinationActivity) {
-		this.destinationActivity = destinationActivity;
+	public final void fetch() {
 		this.execute(this.API_ADDRESS, this.API_RESOURCE_URL);
 	}
 	
@@ -33,6 +31,8 @@ public class AuthenticationDataFetcher extends BaseFetcher {
 		progress.setTitle("Harap Tunggu");
 		progress.setMessage("Sedang melakukan autentikasi..");
 		progress.show();
+		
+		super.onPreExecute();
 	}
 	
 	@Override
@@ -51,20 +51,11 @@ public class AuthenticationDataFetcher extends BaseFetcher {
 	protected void onPostExecute(JSONObject response) {
 		this.progress.dismiss();
 		
-		try {
-			if (response.getBoolean("success")) {
-				// Login successful.
-				Intent i = new Intent(this.activity, destinationActivity.getClass());
-				this.activity.startActivity(i);
-				this.activity.finish();
-			}
-			else {
-				// Login failed.
-				Toast.makeText(this.activity, "Gagal. Cek kembali identitas Anda.", Toast.LENGTH_LONG).show();
-			}
-		} catch (JSONException e) {
-			// Something bad happened.
-			e.printStackTrace();
+		if (response != null) {
+			super.onPostExecute(response);
+		}
+		else {
+			Toast.makeText(this.activity, "Gagal mengambil data dari server. Cek pengaturan aplikasi.", Toast.LENGTH_LONG).show();
 		}
 	}
 }

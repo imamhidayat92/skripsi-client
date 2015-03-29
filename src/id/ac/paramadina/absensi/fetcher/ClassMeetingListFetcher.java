@@ -4,16 +4,10 @@ import org.json.JSONObject;
 
 import android.app.Activity;
 
-public class UserDataFetcher extends BaseFetcher {
-	
-	public UserDataFetcher(Activity activity, String studentId) {
+public class ClassMeetingListFetcher extends BaseFetcher {
+
+	public ClassMeetingListFetcher(Activity activity) {
 		super(activity);
-		
-		this.setResourceUrl("/users/" + studentId);
-	}
-	
-	public void fetch() {
-		
 	}
 	
 	@Override
@@ -23,7 +17,7 @@ public class UserDataFetcher extends BaseFetcher {
 	}
 
 	@Override
-	protected JSONObject doInBackground(String... params) {
+	protected JSONObject doInBackground(String... arg0) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -33,4 +27,5 @@ public class UserDataFetcher extends BaseFetcher {
 		// TODO Auto-generated method stub
 		super.onPostExecute(result);
 	}
+
 }

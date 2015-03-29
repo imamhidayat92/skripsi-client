@@ -1,6 +1,7 @@
 package id.ac.paramadina.absensi;
 
 import id.ac.paramadina.absensi.fetcher.CourseListFetcher;
+import id.ac.paramadina.absensi.listener.CourseListDataListener;
 import id.ac.paramadina.absensi.reference.adapter.DrawerListViewAdapter;
 import id.ac.paramadina.absensi.reference.model.DrawerMenuItem;
 import id.ac.paramadina.absensi.runner.CourseListThread;
@@ -34,6 +35,8 @@ public class MainActivity extends Activity {
 	
 	private ArrayList<DrawerMenuItem> mMenuItems;
 	
+	private ListView scheduleListView;
+	
 	/* Navigation Drawer Menu Item Click Handler */
 	
 	private class DrawerItemClickListener implements AdapterView.OnItemClickListener {
@@ -63,6 +66,18 @@ public class MainActivity extends Activity {
 		}
 
 	}
+
+	/* Main Methods */
+	
+	private void fetchCourseList() {
+		this.scheduleListView = (ListView) findViewById(R.id.listview_schedule);
+		CourseListDataListener listener = new CourseListDataListener(this, this.scheduleListView);
+		CourseListFetcher fetcher = new CourseListFetcher(this);
+		fetcher.setListener(listener);
+		fetcher.fetch();
+	}
+	
+	/* Overridden Methods */
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,7 +125,7 @@ public class MainActivity extends Activity {
         getActionBar().setHomeButtonEnabled(true);
         getActionBar().setTitle("Kelas Hari Ini");
         
-                
+        this.fetchCourseList();
     }
 
     @Override
@@ -136,7 +151,7 @@ public class MainActivity extends Activity {
 
         switch (item.getItemId()) {
         	case R.id.action_refresh:
-        		this.getSchedules();
+        		this.fetchCourseList();
         		return true;
         	default:
         		return super.onOptionsItemSelected(item);
@@ -148,31 +163,5 @@ public class MainActivity extends Activity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
-    }
-    
-    /* Operations */
-    
-    private void getSchedules() {
-    	/* Initialize and Load Settings */
-        
-        SharedPreferences preferences = getApplicationContext().getSharedPreferences("id.ac.paramadina.absensi.SETTINGS", Context.MODE_PRIVATE);
-        String accessToken = preferences.getString("access_token", "?");
-        
-        SharedPreferences preference = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        String address = preference.getString("settings_api_address", "?");
-        
-        /* Load data from server. */
-        
-        ProgressDialog progress = ProgressDialog.show(this, "Mengambil Jadwal Kuliah", "Harap tunggu..", true, false);
-				
-        HashMap<String, String> params = new HashMap<String, String>();
-        params.put("access_token", accessToken);
-        
-        Log.d("skripsi-client", "Access Token obtained: " + accessToken);
-        Log.d("skripsi-client", "API Address URL: " + address);
-                
-        CourseListThread thread = new CourseListThread(this, (ListView) findViewById(R.id.listview_schedule), progress, params);
-        thread.setApiAddress(address);
-        thread.start();
     }
 }
