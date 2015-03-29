@@ -1,10 +1,10 @@
-package id.ac.paramadina.absensi.reference.ModelAdapter;
+package id.ac.paramadina.absensi.reference.adapter;
 
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
-public class StudentListAdapter extends BaseAdapter {
+public class LecturerReportAdapter extends BaseAdapter {
 
 	@Override
 	public int getCount() {

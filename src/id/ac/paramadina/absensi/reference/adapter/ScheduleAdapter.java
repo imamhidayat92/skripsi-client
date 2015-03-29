@@ -1,7 +1,7 @@
-package id.ac.paramadina.absensi.reference.ModelAdapter;
+package id.ac.paramadina.absensi.reference.adapter;
 
 import id.ac.paramadina.absensi.R;
-import id.ac.paramadina.absensi.reference.Model.Schedule;
+import id.ac.paramadina.absensi.reference.model.Schedule;
 
 import java.util.ArrayList;
 

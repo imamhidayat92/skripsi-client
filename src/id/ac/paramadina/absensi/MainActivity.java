@@ -1,8 +1,9 @@
 package id.ac.paramadina.absensi;
 
-import id.ac.paramadina.absensi.Runner.CourseListThread;
-import id.ac.paramadina.absensi.reference.Model.DrawerMenuItem;
-import id.ac.paramadina.absensi.reference.ModelAdapter.DrawerListViewAdapter;
+import id.ac.paramadina.absensi.fetcher.CourseListFetcher;
+import id.ac.paramadina.absensi.reference.adapter.DrawerListViewAdapter;
+import id.ac.paramadina.absensi.reference.model.DrawerMenuItem;
+import id.ac.paramadina.absensi.runner.CourseListThread;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -109,7 +110,7 @@ public class MainActivity extends Activity {
         getActionBar().setHomeButtonEnabled(true);
         getActionBar().setTitle("Kelas Hari Ini");
         
-        this.getSchedules();        
+                
     }
 
     @Override

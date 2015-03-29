@@ -1,4 +1,4 @@
-package id.ac.paramadina.absensi.Helper;
+package id.ac.paramadina.absensi.helper;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -103,6 +103,12 @@ public class RequestHelper {
 		}
 	}
 	
+	public JSONObject get(	String resourceUrl, 
+			HashMap<String, String> params) 
+	{
+		return this.get(resourceUrl, params, new HashMap<String, String>());
+	}
+	
 	public JSONObject post(	String resourceUrl, 
 							HashMap<String, String> params, 
 							HashMap<String, String> data, 
@@ -193,5 +199,12 @@ public class RequestHelper {
 			Log.d("skripsi-client", "JSONException: " + e.getMessage());
 			return null;
 		}
+	}
+	
+	public JSONObject post(	String resourceUrl, 
+			HashMap<String, String> params, 
+			HashMap<String, String> data) 
+	{
+		return this.post(resourceUrl, params, data, new HashMap<String, String>());
 	}
 }

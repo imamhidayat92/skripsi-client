@@ -1,11 +1,11 @@
-package id.ac.paramadina.absensi.reference.Model;
+package id.ac.paramadina.absensi.reference.model;
 
 import java.util.Calendar;
 
-import id.ac.paramadina.absensi.reference.Enum.AttendanceStatusEnum;
+import id.ac.paramadina.absensi.reference.enumeration.AttendanceStatusType;
 
 public class Attendance {
-	private AttendanceStatusEnum type;
+	private AttendanceStatusType type;
 	private String remarks;
 	
 	private ClassMeeting classMeeting;
@@ -15,11 +15,11 @@ public class Attendance {
 	private Calendar created;
 	private Calendar modified;
 	
-	public AttendanceStatusEnum getType() {
+	public AttendanceStatusType getType() {
 		return type;
 	}
 	
-	public void setType(AttendanceStatusEnum type) {
+	public void setType(AttendanceStatusType type) {
 		this.type = type;
 	}
 

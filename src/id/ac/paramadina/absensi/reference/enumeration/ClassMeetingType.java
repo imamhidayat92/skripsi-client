@@ -1,6 +1,6 @@
-package id.ac.paramadina.absensi.reference.Enum;
+package id.ac.paramadina.absensi.reference.enumeration;
 
-public enum ClassMeetingEnum {
+public enum ClassMeetingType {
 	DEFAULT("default"),
 	GENERAL("general"),
 	MID_TEST("mid-test"),
@@ -8,7 +8,7 @@ public enum ClassMeetingEnum {
 	
 	private final String text;
 	
-	private ClassMeetingEnum(final String text) {
+	private ClassMeetingType(final String text) {
 		this.text = text;
 	}
 	

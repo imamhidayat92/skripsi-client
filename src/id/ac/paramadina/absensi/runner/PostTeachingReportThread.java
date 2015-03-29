@@ -1,8 +1,8 @@
-package id.ac.paramadina.absensi.Runner;
+package id.ac.paramadina.absensi.runner;
 
 import org.json.JSONObject;
 
-import id.ac.paramadina.absensi.Helper.RequestHelper;
+import id.ac.paramadina.absensi.helper.RequestHelper;
 
 public class PostTeachingReportThread extends BaseThread {
 	
@@ -11,6 +11,6 @@ public class PostTeachingReportThread extends BaseThread {
 	@Override
 	public void run() {
 		RequestHelper request = new RequestHelper(this.API_ADDRESS);
-		JSONObject response = request.post(resourceUrl, params, data, headers);
+		// JSONObject response = request.post(RESOURCE_URL, params, data, headers);
 	}
 }

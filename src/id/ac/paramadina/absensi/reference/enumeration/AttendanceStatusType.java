@@ -1,13 +1,13 @@
-package id.ac.paramadina.absensi.reference.Enum;
+package id.ac.paramadina.absensi.reference.enumeration;
 
-public enum AttendanceStatusEnum {
+public enum AttendanceStatusType {
 	PRESENT("present"),
 	UNKNOWN("unknown"),
 	SPECIAL_PERSMISSION("special_permission");
 	
 	private final String text;
 	
-	private AttendanceStatusEnum(final String text) {
+	private AttendanceStatusType(final String text) {
 		this.text = text;
 	}
 	

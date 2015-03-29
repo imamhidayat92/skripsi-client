@@ -1,4 +1,4 @@
-package id.ac.paramadina.absensi.Runner;
+package id.ac.paramadina.absensi.runner;
 
 import java.util.HashMap;
 

@@ -1,6 +1,6 @@
-package id.ac.paramadina.absensi.Runner;
+package id.ac.paramadina.absensi.runner;
 
-import id.ac.paramadina.absensi.Helper.RequestHelper;
+import id.ac.paramadina.absensi.helper.RequestHelper;
 
 import java.util.HashMap;
 

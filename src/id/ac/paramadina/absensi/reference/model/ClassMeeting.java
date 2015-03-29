@@ -1,11 +1,11 @@
-package id.ac.paramadina.absensi.reference.Model;
+package id.ac.paramadina.absensi.reference.model;
 
 import java.util.Calendar;
 
-import id.ac.paramadina.absensi.reference.Enum.ClassMeetingEnum;
+import id.ac.paramadina.absensi.reference.enumeration.ClassMeetingType;
 
 public class ClassMeeting {
-	private ClassMeetingEnum type;
+	private ClassMeetingType type;
 	
 	private Course course;
 	private User lecturer;
@@ -16,11 +16,11 @@ public class ClassMeeting {
 	private Calendar created;
 	private Calendar modified;
 	
-	public ClassMeetingEnum getType() {
+	public ClassMeetingType getType() {
 		return type;
 	}
 	
-	public void setType(ClassMeetingEnum type) {
+	public void setType(ClassMeetingType type) {
 		this.type = type;
 	}
 

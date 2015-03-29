@@ -1,12 +1,12 @@
-package id.ac.paramadina.absensi.Runner;
+package id.ac.paramadina.absensi.runner;
 
 import id.ac.paramadina.absensi.CourseDetailActivity;
-import id.ac.paramadina.absensi.reference.Model.ClassLocation;
-import id.ac.paramadina.absensi.reference.Model.Course;
-import id.ac.paramadina.absensi.reference.Model.Major;
-import id.ac.paramadina.absensi.reference.Model.Schedule;
-import id.ac.paramadina.absensi.reference.ModelAdapter.CourseAdapter;
-import id.ac.paramadina.absensi.reference.ModelAdapter.ScheduleAdapter;
+import id.ac.paramadina.absensi.reference.adapter.CourseAdapter;
+import id.ac.paramadina.absensi.reference.adapter.ScheduleAdapter;
+import id.ac.paramadina.absensi.reference.model.ClassLocation;
+import id.ac.paramadina.absensi.reference.model.Course;
+import id.ac.paramadina.absensi.reference.model.Major;
+import id.ac.paramadina.absensi.reference.model.Schedule;
 
 import java.util.ArrayList;
 

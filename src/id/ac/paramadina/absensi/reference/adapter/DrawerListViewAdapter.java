@@ -1,10 +1,10 @@
-package id.ac.paramadina.absensi.reference.ModelAdapter;
+package id.ac.paramadina.absensi.reference.adapter;
 
 import id.ac.paramadina.absensi.R;
-import id.ac.paramadina.absensi.reference.Model.Course;
+import id.ac.paramadina.absensi.reference.model.Course;
+import id.ac.paramadina.absensi.reference.model.DrawerMenuItem;
 
 import java.util.ArrayList;
-import java.util.Stack;
 
 import android.app.Activity;
 import android.content.Context;
@@ -13,18 +13,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
+import android.widget.RelativeLayout.LayoutParams;
 
-public class CourseAdapter extends BaseAdapter {
-	
+public class DrawerListViewAdapter extends BaseAdapter {
+
 	private Activity activity;
-	private ArrayList<Course> data;
+	private ArrayList<DrawerMenuItem> data;
 	private static LayoutInflater inflater = null;
 	
-	public CourseAdapter(Activity activity, ArrayList<Course> data) {
+	public DrawerListViewAdapter(Activity activity, ArrayList<DrawerMenuItem> data) {
 		this.activity = activity;
 		this.data = data;
 		
@@ -47,20 +46,23 @@ public class CourseAdapter extends BaseAdapter {
 	}
 
 	@Override
+	public int getItemViewType(int position) {
+		return super.getItemViewType(position);
+	}
+	
+	@Override
 	public View getView(int arg0, View arg1, ViewGroup arg2) {
 		View view = arg1;
 		
 		if (arg1 == null) {
-			view = inflater.inflate(R.layout.listview_item_course, null);
+			view = inflater.inflate(R.layout.listview_item_drawer_menu, null);
 		}
 		
-		LinearLayout majors = (LinearLayout) view.findViewById(R.id.majors);
+		TextView menuTitle = (TextView) view.findViewById(R.id.menu_title);
 		
-		TextView courseTitle = (TextView) view.findViewById(R.id.lbl_course_title);
+		DrawerMenuItem datum = data.get(arg0);
 		
-		Course datum = data.get(arg0);
-				
-		courseTitle.setText(datum.getName());
+		menuTitle.setText(datum.getName());
 		
 		return view;
 	}
