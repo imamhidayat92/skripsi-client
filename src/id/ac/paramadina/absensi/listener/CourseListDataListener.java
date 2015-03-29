@@ -28,7 +28,7 @@ public class CourseListDataListener implements AsyncTaskListener<JSONObject> {
 		this.listView = listView;
 	}
 	
-	public void setListViewListener(OnItemClickListener listener) {
+	public void setListViewOnItemClickListener(OnItemClickListener listener) {
 		this.listener = listener;
 	}
 	
@@ -85,5 +85,4 @@ public class CourseListDataListener implements AsyncTaskListener<JSONObject> {
 			x.printStackTrace();
 		}
 	}
-
 }

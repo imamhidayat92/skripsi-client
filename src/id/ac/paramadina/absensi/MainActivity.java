@@ -3,6 +3,7 @@ package id.ac.paramadina.absensi;
 import id.ac.paramadina.absensi.fetcher.CourseListFetcher;
 import id.ac.paramadina.absensi.listener.CourseListDataListener;
 import id.ac.paramadina.absensi.reference.adapter.DrawerListViewAdapter;
+import id.ac.paramadina.absensi.reference.model.Course;
 import id.ac.paramadina.absensi.reference.model.DrawerMenuItem;
 import id.ac.paramadina.absensi.runner.CourseListThread;
 
@@ -14,6 +15,7 @@ import android.preference.PreferenceManager;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.support.v4.app.ActionBarDrawerToggle;
@@ -64,14 +66,30 @@ public class MainActivity extends Activity {
 					break;
 			}
 		}
-
+	}
+	
+	private class CourseItemClickListener implements AdapterView.OnItemClickListener {
+		
+		@Override
+		public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+			Course selectedCourse = (Course) MainActivity.this.scheduleListView.getAdapter().getItem(position);
+			
+			Intent i = new Intent(MainActivity.this, CourseDetailActivity.class);
+    		i.putExtra("courseId", selectedCourse.getId());
+    		
+    		MainActivity.this.startActivity(i);
+		}
+		
 	}
 
 	/* Main Methods */
 	
 	private void fetchCourseList() {
 		this.scheduleListView = (ListView) findViewById(R.id.listview_schedule);
+		
 		CourseListDataListener listener = new CourseListDataListener(this, this.scheduleListView);
+		listener.setListViewOnItemClickListener(new CourseItemClickListener());
+		
 		CourseListFetcher fetcher = new CourseListFetcher(this);
 		fetcher.setListener(listener);
 		fetcher.fetch();

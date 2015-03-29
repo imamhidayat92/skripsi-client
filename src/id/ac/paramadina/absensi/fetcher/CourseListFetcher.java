@@ -43,7 +43,7 @@ public class CourseListFetcher extends BaseFetcher {
 	@Override
 	protected JSONObject doInBackground(String... params) {
 		RequestHelper request = new RequestHelper(params[0]);
-		JSONObject response = request.get(params[1], this.getRequestParams());
+		JSONObject response = request.get(params[1], this.getRequestQueryStrings());
 		
 		if (response == null) {
 			Log.d("skripsi-client", "Got null response from server.");

@@ -38,7 +38,7 @@ public class AuthenticationDataFetcher extends BaseFetcher {
 	@Override
 	protected JSONObject doInBackground(String... params) {
 		RequestHelper request = new RequestHelper(params[0]);
-		JSONObject response = request.post(params[1], this.getRequestParams(), this.spec.toHashMap());
+		JSONObject response = request.post(params[1], this.getRequestQueryStrings(), this.spec.toHashMap());
 		
 		if (response == null) {
 			Log.d("skripsi-client", "Got null response from server.");

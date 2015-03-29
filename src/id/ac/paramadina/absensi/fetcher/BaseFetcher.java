@@ -61,7 +61,7 @@ public abstract class BaseFetcher extends AsyncTask<String, Void, JSONObject> {
 		this.API_RESOURCE_URL = resourceUrl;
 	}
 	
-	protected final HashMap<String, String> getRequestParams() {
+	protected final HashMap<String, String> getRequestQueryStrings() {
 		HashMap<String, String> params = new HashMap<String, String>();
 		if (this.needAuthenticationData) {
 			params.put("access_token", this.API_ACCESS_TOKEN);
@@ -71,6 +71,10 @@ public abstract class BaseFetcher extends AsyncTask<String, Void, JSONObject> {
 	
 	public final void setListener(AsyncTaskListener<JSONObject> listener) {
 		this.listener = listener;
+	}
+	
+	public void fetch() {
+		this.execute(this.API_ADDRESS, this.API_RESOURCE_URL);
 	}
 	
 	@Override
