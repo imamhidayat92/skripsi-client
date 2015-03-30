@@ -60,6 +60,20 @@ public class DiscoverTagActivity extends Activity {
 		
 	}
 	
+	/* Utility Methods */
+	
+	final protected static char[] hexArray = {'0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F'};
+	public static String convertBytesToHex(byte[] bytes) {
+	    char[] hexChars = new char[bytes.length * 2];
+	    int v;
+	    for ( int j = 0; j < bytes.length; j++ ) {
+	        v = bytes[j] & 0xFF;
+	        hexChars[j * 2] = hexArray[v >>> 4];
+	        hexChars[j * 2 + 1] = hexArray[v & 0x0F];
+	    }
+	    return new String(hexChars);
+	}
+	
 	/* Overridden Methods */
 	
 	@Override
@@ -81,20 +95,27 @@ public class DiscoverTagActivity extends Activity {
 		filters[0].addAction(NfcAdapter.ACTION_TAG_DISCOVERED);
 		filters[0].addCategory(Intent.CATEGORY_DEFAULT);
 	}
-	
+
 	@Override
 	protected void onResume() {
 		super.onResume();
-		
-		if (NfcAdapter.ACTION_TAG_DISCOVERED.equals(getIntent().getAction())) {
-			Tag tag = getIntent().getParcelableExtra(NfcAdapter.EXTRA_TAG);
-			
-			byte[] tagId = tag.getId();
-			
-			Log.d("skripsi-client", "New tag discovered: " + tagId);
-			
-			Toast toast = Toast.makeText(this, tagId.toString(), Toast.LENGTH_LONG);
-			toast.show();
-		}
+		mNfcAdapter.enableForegroundDispatch(this, pendingIntent, filters, new String[][]{});
 	}
+	
+	@Override
+	protected void onPause() {
+		super.onPause();
+		mNfcAdapter.disableForegroundDispatch(this);
+	}
+	
+	@Override
+	protected void onNewIntent(Intent intent) {
+		Tag tagFromIntent = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
+		String tagId = convertBytesToHex(tagFromIntent.getId());
+		
+		Log.d("skripsi-client", "New tag discovered: " + tagId);
+		
+		Toast toast = Toast.makeText(this, tagId.toString(), Toast.LENGTH_LONG);
+		toast.show();
+	};
 }
