@@ -18,7 +18,10 @@ public class UserDataFetcher extends BaseFetcher {
 	
 	@Override
 	protected void onPreExecute() {
-		// TODO Auto-generated method stub
+		progress.setTitle("Harap Tunggu");
+		progress.setMessage("Sedang mengambil data pengguna..");
+		progress.show();
+		
 		super.onPreExecute();
 	}
 

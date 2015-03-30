@@ -1,10 +1,11 @@
 package id.ac.paramadina.absensi;
 
-import id.ac.paramadina.absensi.fetcher.CourseListFetcher;
-import id.ac.paramadina.absensi.listener.CourseListDataListener;
+import id.ac.paramadina.absensi.fetcher.ScheduleListFetcher;
+import id.ac.paramadina.absensi.listener.ScheduleListDataListener;
 import id.ac.paramadina.absensi.reference.adapter.DrawerListViewAdapter;
 import id.ac.paramadina.absensi.reference.model.Course;
 import id.ac.paramadina.absensi.reference.model.DrawerMenuItem;
+import id.ac.paramadina.absensi.reference.model.Schedule;
 import id.ac.paramadina.absensi.runner.CourseListThread;
 
 import java.util.ArrayList;
@@ -68,14 +69,15 @@ public class MainActivity extends Activity {
 		}
 	}
 	
-	private class CourseItemClickListener implements AdapterView.OnItemClickListener {
+	private class ScheduleItemClickListener implements AdapterView.OnItemClickListener {
 		
 		@Override
 		public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-			Course selectedCourse = (Course) MainActivity.this.scheduleListView.getAdapter().getItem(position);
+			Schedule selectedSchedule = (Schedule) MainActivity.this.scheduleListView.getAdapter().getItem(position);
 			
-			Intent i = new Intent(MainActivity.this, CourseDetailActivity.class);
-    		i.putExtra("courseId", selectedCourse.getId());
+			Intent i = new Intent(MainActivity.this, ScheduleDetailActivity.class);
+    		i.putExtra("courseId", selectedSchedule.getCourse().getId());
+    		i.putExtra("scheduleId", selectedSchedule.getId());
     		
     		MainActivity.this.startActivity(i);
 		}
@@ -87,10 +89,10 @@ public class MainActivity extends Activity {
 	private void fetchCourseList() {
 		this.scheduleListView = (ListView) findViewById(R.id.listview_schedule);
 		
-		CourseListDataListener listener = new CourseListDataListener(this, this.scheduleListView);
-		listener.setListViewOnItemClickListener(new CourseItemClickListener());
+		ScheduleListDataListener listener = new ScheduleListDataListener(this, this.scheduleListView);
+		listener.setListViewOnItemClickListener(new ScheduleItemClickListener());
 		
-		CourseListFetcher fetcher = new CourseListFetcher(this);
+		ScheduleListFetcher fetcher = new ScheduleListFetcher(this);
 		fetcher.setListener(listener);
 		fetcher.fetch();
 	}

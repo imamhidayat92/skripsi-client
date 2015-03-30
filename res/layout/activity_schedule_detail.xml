@@ -60,7 +60,7 @@
 		        android:textAppearance="?android:attr/textAppearanceSmall"
 		        android:textStyle="bold" />
 		    <TextView
-		        android:id="@+id/lbl_course_detail_value_enrollments_count"
+		        android:id="@+id/lbl_schedule_value_enrollments_count"
 		        android:layout_width="wrap_content"
 		        android:layout_height="wrap_content"
 				android:layout_below="@+id/lbl_course_detail_title_enrollments"
@@ -74,7 +74,7 @@
 		        android:id="@+id/lbl_course_detail_title_meetings"
 		        android:layout_width="wrap_content"
 		        android:layout_height="wrap_content"
-				android:layout_below="@+id/lbl_course_detail_value_enrollments_count"
+				android:layout_below="@+id/lbl_schedule_value_enrollments_count"
 				android:layout_alignParentLeft="true"
 		        android:layout_marginTop="10dp"
 		        android:layout_marginLeft="10dp"

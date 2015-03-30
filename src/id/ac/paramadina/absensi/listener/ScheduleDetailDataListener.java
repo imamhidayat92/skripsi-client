@@ -4,14 +4,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
-import id.ac.paramadina.absensi.CourseDetailActivity;
+import id.ac.paramadina.absensi.ScheduleDetailActivity;
 import id.ac.paramadina.absensi.reference.AsyncTaskListener;
 
-public class CourseDetailDataListener implements AsyncTaskListener<JSONObject> {
+public class ScheduleDetailDataListener implements AsyncTaskListener<JSONObject> {
 
 	private Activity activity;
 	
-	public CourseDetailDataListener(CourseDetailActivity activity) {
+	public ScheduleDetailDataListener(ScheduleDetailActivity activity) {
 		this.activity = activity;
 	}
 	

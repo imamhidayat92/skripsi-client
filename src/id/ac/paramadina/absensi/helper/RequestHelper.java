@@ -55,7 +55,7 @@ public class RequestHelper {
 			
 			url = new URL(this.rootUrl + resourceUrl);
 
-			Log.d("skripsi-client", "Connecting to " + this.rootUrl + resourceUrl);
+			Log.d("skripsi-client", "(GET) Connecting to " + this.rootUrl + resourceUrl);
 			
 			urlConnection = (HttpURLConnection) url.openConnection();
 			urlConnection.setRequestMethod("GET");
@@ -133,7 +133,7 @@ public class RequestHelper {
 			
 			url = new URL(this.rootUrl + resourceUrl);
 			
-			Log.d("skripsi-client", "Connecting to " + this.rootUrl + resourceUrl);
+			Log.d("skripsi-client", "(POST) Connecting to " + this.rootUrl + resourceUrl);
 			
 			urlConnection = (HttpURLConnection) url.openConnection();
 			
@@ -152,13 +152,16 @@ public class RequestHelper {
 			BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
 			
 			Set<String> keys = data.keySet();
+			StringBuilder strPostedData = new StringBuilder();
 			
 			int i = 0;
 			for (String s : keys) {
 				writer.write(s + "=" + URLEncoder.encode(data.get(s), "UTF-8"));
+				strPostedData.append(s + "=" + data.get(s));
 				
 				if (i < data.size() -1) {
 					writer.write('&'); 
+					strPostedData.append('&');
 				}
 				
 				i++;
@@ -168,6 +171,8 @@ public class RequestHelper {
 			writer.close();
 			
 			outputStream.close();
+			
+			Log.d("skripsi-client", "Posted data: " + strPostedData.toString());
 			
 			urlConnection.connect();
 			

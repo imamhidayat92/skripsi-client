@@ -157,6 +157,5 @@ public class LoginActivity extends Activity {
 		default:
 			return super.onOptionsItemSelected(item);
 		}
-		
 	}
 }

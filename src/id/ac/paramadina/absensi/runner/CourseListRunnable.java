@@ -1,6 +1,6 @@
 package id.ac.paramadina.absensi.runner;
 
-import id.ac.paramadina.absensi.CourseDetailActivity;
+import id.ac.paramadina.absensi.ScheduleDetailActivity;
 import id.ac.paramadina.absensi.reference.adapter.CourseAdapter;
 import id.ac.paramadina.absensi.reference.adapter.ScheduleAdapter;
 import id.ac.paramadina.absensi.reference.model.ClassLocation;
@@ -97,7 +97,7 @@ public class CourseListRunnable implements Runnable {
 	        this.targetListView.setOnItemClickListener(new OnItemClickListener() {
 	        	
 	        	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-	        		Intent i = new Intent(activity, CourseDetailActivity.class);
+	        		Intent i = new Intent(activity, ScheduleDetailActivity.class);
 	        		i.putExtra("schedule", schedules.get(position).getId());
 	        		
 	        		activity.startActivity(i);

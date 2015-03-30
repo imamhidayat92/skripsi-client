@@ -8,12 +8,12 @@ import android.app.Activity;
 import android.util.Log;
 import android.widget.Toast;
 
-public class CourseDetailFetcher extends BaseFetcher {
+public class ScheduleDetailFetcher extends BaseFetcher {
 	
-	public CourseDetailFetcher(Activity activity, String courseId) {
+	public ScheduleDetailFetcher(Activity activity, String scheduleId) {
 		super(activity);
 		
-		this.setResourceUrl("/courses/" + courseId); 
+		this.setResourceUrl("/schedules/" + scheduleId); 
 	}
 	
 	@Override

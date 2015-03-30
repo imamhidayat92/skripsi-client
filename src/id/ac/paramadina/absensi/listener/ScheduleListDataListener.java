@@ -17,13 +17,13 @@ import id.ac.paramadina.absensi.reference.model.Course;
 import id.ac.paramadina.absensi.reference.model.Major;
 import id.ac.paramadina.absensi.reference.model.Schedule;
 
-public class CourseListDataListener implements AsyncTaskListener<JSONObject> {
+public class ScheduleListDataListener implements AsyncTaskListener<JSONObject> {
 
 	private Activity activity;
 	private ListView listView;
 	private OnItemClickListener listener;
 	
-	public CourseListDataListener(Activity activity, ListView listView) {
+	public ScheduleListDataListener(Activity activity, ListView listView) {
 		this.activity = activity;
 		this.listView = listView;
 	}

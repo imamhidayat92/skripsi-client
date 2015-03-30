@@ -33,7 +33,7 @@ public class ScheduleAdapter extends BaseAdapter {
 
 	@Override
 	public Object getItem(int arg0) {
-		return arg0;
+		return data.get(arg0);
 	}
 
 	@Override

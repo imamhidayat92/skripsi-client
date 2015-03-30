@@ -19,9 +19,9 @@ import android.widget.ListView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 
-public class CourseListFetcher extends BaseFetcher {	
+public class ScheduleListFetcher extends BaseFetcher {	
 	
-	public CourseListFetcher(Activity activity) {
+	public ScheduleListFetcher(Activity activity) {
 		super(activity);
 		
 		this.setResourceUrl("/schedules");

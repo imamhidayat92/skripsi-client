@@ -12,7 +12,10 @@ public class ClassMeetingListFetcher extends BaseFetcher {
 	
 	@Override
 	protected void onPreExecute() {
-		// TODO Auto-generated method stub
+		this.progress.setTitle("Harap Tunggu");
+		this.progress.setMessage("Sedang mengambil data pertemuan..");
+		this.progress.show();
+		
 		super.onPreExecute();
 	}
 

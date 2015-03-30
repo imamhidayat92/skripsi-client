@@ -4,7 +4,7 @@ import id.ac.paramadina.absensi.reference.enumeration.AuthenticationType;
 
 import java.util.HashMap;
 
-public class AuthenticationDataSpec {
+public class AuthenticationDataSpec extends BaseSpec {
 	private AuthenticationType type;
 	private String identifier;
 	private String email;

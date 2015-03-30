@@ -42,7 +42,7 @@
             android:label="@string/app_name" >
         </activity>
         <activity
-            android:name="id.ac.paramadina.absensi.CourseDetailActivity"
+            android:name="id.ac.paramadina.absensi.ScheduleDetailActivity"
             android:label="@string/app_name"
             android:parentActivityName="id.ac.paramadina.absensi.MainActivity" >
         </activity>
