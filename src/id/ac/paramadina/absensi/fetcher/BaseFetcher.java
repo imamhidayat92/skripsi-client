@@ -1,6 +1,7 @@
 package id.ac.paramadina.absensi.fetcher;
 
 import java.util.HashMap;
+import java.util.concurrent.ExecutionException;
 
 import id.ac.paramadina.absensi.reference.AsyncTaskListener;
 import id.ac.paramadina.absensi.reference.GlobalData;
@@ -75,6 +76,10 @@ public abstract class BaseFetcher extends AsyncTask<String, Void, JSONObject> {
 	
 	public void fetch() {
 		this.execute(this.API_ADDRESS, this.API_RESOURCE_URL);
+	}
+	
+	public JSONObject fetchAndGet() throws InterruptedException, ExecutionException {
+		return this.execute(this.API_ADDRESS, this.API_RESOURCE_URL).get();
 	}
 	
 	@Override
