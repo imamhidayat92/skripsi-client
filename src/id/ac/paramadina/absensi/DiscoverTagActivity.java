@@ -1,11 +1,18 @@
 package id.ac.paramadina.absensi;
 
+import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import id.ac.paramadina.absensi.fetcher.UserTagDataFetcher;
 import id.ac.paramadina.absensi.reference.AsyncTaskListener;
+import id.ac.paramadina.absensi.reference.adapter.AttendanceAdapter;
+import id.ac.paramadina.absensi.reference.model.Attendance;
 import id.ac.paramadina.absensi.reference.model.Major;
 import id.ac.paramadina.absensi.reference.model.Student;
+import id.ac.paramadina.absensi.reference.spec.UserTagDataSpec;
 import android.app.Activity;
 import android.app.PendingIntent;
 import android.content.Intent;
@@ -24,41 +31,16 @@ public class DiscoverTagActivity extends Activity {
 	PendingIntent pendingIntent;
 	IntentFilter[] filters;
 	
+	private ArrayList<Attendance> attendanceData;
+	private AttendanceAdapter adapter;
+	
 	/* Controls */
 	
-	private ListView studentsListView;
+	private ListView attendanceListView;
 	
 	/* Event Listener */
+
 	
-	private class UserTagDataListener implements AsyncTaskListener<JSONObject> {
-
-		@Override
-		public void onPreExecute() {
-			// Do nothing here.
-		}
-
-		@Override
-		public void onPostExecute(JSONObject response) {
-			try {
-				if (response.getBoolean("success")) {
-					JSONObject studentData = response.getJSONObject("result");
-					JSONObject majorData = studentData.getJSONObject("major");
-					
-					Student student = new Student(
-							studentData.getString("_id"), 
-							studentData.getString("display_name"), 
-							new Major(majorData.getString("name"), majorData.getString("color")));
-				}
-				else {
-					
-				}
-			} catch (JSONException e) {
-				// Something bad happened.
-				e.printStackTrace();
-			}
-		}
-		
-	}
 	
 	/* Utility Methods */
 	
@@ -94,6 +76,16 @@ public class DiscoverTagActivity extends Activity {
 		filters[0] = new IntentFilter();
 		filters[0].addAction(NfcAdapter.ACTION_TAG_DISCOVERED);
 		filters[0].addCategory(Intent.CATEGORY_DEFAULT);
+		
+		/* Initialization */
+		
+		this.attendanceListView = (ListView) findViewById(R.id.attendance_list);
+		
+		this.attendanceData = new ArrayList<Attendance>();
+		
+		this.adapter = new AttendanceAdapter(this, attendanceData);
+		
+		attendanceListView.setAdapter(adapter);
 	}
 
 	@Override
@@ -115,7 +107,27 @@ public class DiscoverTagActivity extends Activity {
 		
 		Log.d("skripsi-client", "New tag discovered: " + tagId);
 		
-		Toast toast = Toast.makeText(this, tagId.toString(), Toast.LENGTH_LONG);
-		toast.show();
+		try {
+			UserTagDataSpec spec = new UserTagDataSpec(tagId);
+			UserTagDataFetcher fetcher = new UserTagDataFetcher(this, spec);
+			JSONObject response = fetcher.fetchAndGet();
+			
+			if (response.getBoolean("success")) {
+				JSONObject userData = response.getJSONObject("result");
+				
+			}
+			else {
+				
+			}
+		} catch (InterruptedException e) {
+			Toast.makeText(this, "Gagal mengambil data. Cobalah beberapa saat lagi.", Toast.LENGTH_LONG).show();
+			e.printStackTrace();
+		} catch (ExecutionException e) {
+			Toast.makeText(this, "Gagal mengambil data. Cobalah beberapa saat lagi.", Toast.LENGTH_LONG).show();
+			e.printStackTrace();
+		} catch (JSONException e) {
+			Toast.makeText(this, "Gagal mengolah data dari server.", Toast.LENGTH_LONG).show();
+			e.printStackTrace();
+		}
 	};
 }

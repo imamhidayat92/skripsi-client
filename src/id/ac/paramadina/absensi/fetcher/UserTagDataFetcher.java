@@ -15,6 +15,8 @@ public class UserTagDataFetcher extends BaseFetcher {
 	public UserTagDataFetcher(Activity activity, UserTagDataSpec spec) {
 		super(activity);
 		this.spec = spec;
+		
+		this.setResourceUrl("/users/identity");
 	}
 
 	@Override

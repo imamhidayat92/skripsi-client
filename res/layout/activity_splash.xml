@@ -5,7 +5,7 @@
     android:background="#0067b2" >
 
     <ImageView
-        android:id="@+id/imageView1"
+        android:id="@+id/img_avatar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"

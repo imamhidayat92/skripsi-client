@@ -5,7 +5,7 @@
     android:padding="7dp" >
 
     <ImageView
-        android:id="@+id/imageView1"
+        android:id="@+id/img_avatar"
         android:layout_width="70dp"
         android:layout_height="70dp"
         android:layout_alignParentLeft="true"
@@ -14,30 +14,30 @@
         android:layout_marginRight="10dp" />
 
     <TextView
-        android:id="@+id/lbl_schedule_detail"
+        android:id="@+id/lbl_attendance_user_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_toRightOf="@+id/imageView1"
+        android:layout_toRightOf="@+id/img_avatar"
         android:text="Mokhamad Syamsul Latif Imam H."
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:layout_marginBottom="5dp" />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/lbl_attendance_user_idnumber"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/lbl_schedule_detail"
-        android:layout_toRightOf="@+id/imageView1"
+        android:layout_below="@+id/lbl_attendance_user_name"
+        android:layout_toRightOf="@+id/img_avatar"
         android:text="#########"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView
-        android:id="@+id/textView3"
+        android:id="@+id/lbl_attendance_created"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:layout_below="@+id/textView2"
+        android:layout_below="@+id/lbl_attendance_user_idnumber"
         android:text="Time Info"
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
