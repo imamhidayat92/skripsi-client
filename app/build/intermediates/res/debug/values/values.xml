@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- From: file:/home/traveloka/AndroidstudioProjects/skripsi-client/app/src/main/res/values/array.xml -->
+    <eat-comment/>
+    <string-array name="drawer_menu">
+        <item>Halaman Depan</item>
+        <item>Tentang Aplikasi</item>
+    </string-array>
+    <!-- From: file:/home/traveloka/AndroidstudioProjects/skripsi-client/app/src/main/res/values/strings.xml -->
+    <eat-comment/>
+    <string-array name="drawer_menu2">
+        <item>Halaman Depan</item>
+        <item>Tentang Aplikasi</item>
+    </string-array>
+    <!-- From: file:/home/traveloka/AndroidstudioProjects/skripsi-client/app/src/main/res/values/dimens.xml -->
+    <eat-comment/>
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <!-- From: file:/home/traveloka/AndroidstudioProjects/skripsi-client/app/src/main/res/values/strings.xml -->
+    <eat-comment/>
+    <string name="action_refresh">Muat Ulang</string>
+    <string name="action_send">Kirim</string>
+    <string name="action_settings">Pengaturan</string>
+    <string name="app_name">Absensi Paramadina</string>
+    <string name="btn_login_text">Login</string>
+    <string name="drawer_close">Drawer Close</string>
+    <string name="drawer_open">Drawer Open</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="lbl_password">Password</string>
+    <string name="lbl_username">Email</string>
+    <string name="lbl_username_hint">Masukkan Email Anda</string>
+    <string name="settings_api_address_summary">Pengaturan alamat URL API Server Paramadina</string>
+    <string name="settings_api_address_title">Alamat API Server Paramadina</string>
+    <string name="settings_connection_title">Pengaturan Koneksi</string>
+    <string name="title_activity_add_new_lecturer_report">Buat Laporan Mengajar</string>
+    <string name="title_activity_teaching_report_detail">TeachingReportDetailActivity</string>
+    <string name="title_activity_teaching_report_list">TeachingReportListActivity</string>
+    <!-- From: file:/home/traveloka/AndroidstudioProjects/skripsi-client/app/src/main/res/values/styles.xml -->
+    <eat-comment/>
+    <style name="AppBaseTheme" parent="android:Theme.Holo.Light">
+        <!--
+            Theme customizations available in newer API levels can go in
+            res/values-vXX/styles.xml, while customizations related to
+            backward-compatibility can go here.
+        -->
+    </style>
+    <style name="AppTheme" parent="AppBaseTheme">
+        <!-- All customizations that are NOT specific to a particular API-level can go here. -->
+	    <item name="android:actionOverflowButtonStyle">@android:style/Widget.Holo.ActionButton.Overflow</item>
+	    <item name="android:actionBarWidgetTheme">@android:style/Theme.Holo</item>
+    </style>
+</resources>

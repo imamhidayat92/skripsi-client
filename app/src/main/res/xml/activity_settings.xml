@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory 
+        android:key="settings_connection"
+        android:title="@string/settings_connection_title" >
+        
+        <EditTextPreference 
+            android:key="settings_api_address"  
+            android:title="@string/settings_api_address_title"
+            android:summary="@string/settings_api_address_summary"
+            android:defaultValue="http://hosting.morenite.com/imam/skripsi-server/api" />
+        
+    </PreferenceCategory>
+</PreferenceScreen>
