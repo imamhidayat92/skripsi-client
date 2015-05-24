@@ -1,27 +1,15 @@
 package id.ac.paramadina.absensi;
 
 import id.ac.paramadina.absensi.fetcher.AuthenticationDataFetcher;
-import id.ac.paramadina.absensi.helper.RequestHelper;
 import id.ac.paramadina.absensi.listener.AuthenticationDataListener;
 import id.ac.paramadina.absensi.reference.spec.AuthenticationDataSpec;
-
-import java.util.HashMap;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.app.Activity;
 import android.app.PendingIntent;
-import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -29,7 +17,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 public class LoginActivity extends Activity {
 	

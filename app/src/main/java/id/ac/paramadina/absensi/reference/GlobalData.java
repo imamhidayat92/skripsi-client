@@ -9,11 +9,7 @@ public class GlobalData {
 	public static final String PREFERENCE_API_ADDRESS = "settings_api_address";
 	
 	private static HashMap<String, Object> temporaryObjectHolder;
-	
-	public static int getDrawerLayoutAdapter() {
-		return 0;
-	}
-	
+
 	public static void putTemporaryObject(String id, Object val) {
 		if (temporaryObjectHolder == null) {
 			temporaryObjectHolder = new HashMap<String, Object>();

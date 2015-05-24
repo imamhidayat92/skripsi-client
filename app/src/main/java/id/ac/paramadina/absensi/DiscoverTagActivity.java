@@ -12,6 +12,7 @@ import id.ac.paramadina.absensi.reference.adapter.AttendanceAdapter;
 import id.ac.paramadina.absensi.reference.model.Attendance;
 import id.ac.paramadina.absensi.reference.model.Major;
 import id.ac.paramadina.absensi.reference.model.Student;
+import id.ac.paramadina.absensi.reference.model.User;
 import id.ac.paramadina.absensi.reference.spec.UserTagDataSpec;
 import android.app.Activity;
 import android.app.PendingIntent;
@@ -25,7 +26,14 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 public class DiscoverTagActivity extends Activity {
-	
+
+    /* General Data */
+
+    private String scheduleId;
+    private String classMeetingId;
+
+    /* Activity Data */
+
 	private NfcAdapter mNfcAdapter;
 	
 	PendingIntent pendingIntent;
@@ -114,7 +122,14 @@ public class DiscoverTagActivity extends Activity {
 			
 			if (response.getBoolean("success")) {
 				JSONObject userData = response.getJSONObject("result");
-				
+
+                String name = userData.getString("name");
+                String displayName = userData.getString("display_name");
+                String idNumber = userData.getString("id_number");
+                String identifier = userData.getString("identifier");
+                String avatar = userData.getString("avatar"); // TODO: Url?
+
+                User user = new User(name, displayName, idNumber, identifier, avatar);
 			}
 			else {
 				

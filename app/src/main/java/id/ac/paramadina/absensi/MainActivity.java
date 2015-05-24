@@ -3,25 +3,15 @@ package id.ac.paramadina.absensi;
 import id.ac.paramadina.absensi.fetcher.ScheduleListFetcher;
 import id.ac.paramadina.absensi.listener.ScheduleListDataListener;
 import id.ac.paramadina.absensi.reference.adapter.DrawerListViewAdapter;
-import id.ac.paramadina.absensi.reference.model.Course;
 import id.ac.paramadina.absensi.reference.model.DrawerMenuItem;
 import id.ac.paramadina.absensi.reference.model.Schedule;
-import id.ac.paramadina.absensi.runner.CourseListThread;
-
 import java.util.ArrayList;
-import java.util.HashMap;
-
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.app.Activity;
-import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;

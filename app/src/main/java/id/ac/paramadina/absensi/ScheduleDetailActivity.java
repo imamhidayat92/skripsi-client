@@ -5,6 +5,7 @@ import org.json.JSONObject;
 
 import id.ac.paramadina.absensi.fetcher.ScheduleDetailFetcher;
 import id.ac.paramadina.absensi.reference.AsyncTaskListener;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -33,10 +34,14 @@ public class ScheduleDetailActivity extends Activity {
 		
 		@Override
 		public void onClick(View v) {
+            // TODO: Need to contact server to create new ClassMeeting data.
+            // If something wrong, we can't record our data.
+
 			Intent i = new Intent(ScheduleDetailActivity.this, DiscoverTagActivity.class);
 			i.putExtra("courseId", ScheduleDetailActivity.this.courseId);
 			i.putExtra("scheduleId", ScheduleDetailActivity.this.scheduleId);
-			
+			i.putExtra("classMeetingId", "<to be filled by remote call response>");
+
 			ScheduleDetailActivity.this.startActivity(i);
 		}
 	};
@@ -52,8 +57,6 @@ public class ScheduleDetailActivity extends Activity {
 		public void onPostExecute(JSONObject response) {
 			try {
 				if (response.getBoolean("success")) {
-					btnRecordAttendance.setOnClickListener(btnRecordAttendanceOnClickListener);
-					
 					JSONObject scheduleData = response.getJSONObject("result");
 					ScheduleDetailActivity.this.updateDetailView(scheduleData);
 				}
@@ -92,6 +95,7 @@ public class ScheduleDetailActivity extends Activity {
 		setContentView(R.layout.activity_schedule_detail);
 
 		this.btnRecordAttendance = (Button) findViewById(R.id.btn_record_attendance);
+        btnRecordAttendance.setOnClickListener(btnRecordAttendanceOnClickListener);
 		this.txtCourseName = (TextView) findViewById(R.id.lbl_course_title);
 		this.txtCourseDescription = (TextView) findViewById(R.id.lbl_course_description);
 		this.txtScheduleDetail = (TextView) findViewById(R.id.lbl_schedule_detail);

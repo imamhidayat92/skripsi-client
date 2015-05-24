@@ -77,22 +77,33 @@
 		        android:layout_height="wrap_content"
 				android:layout_below="@+id/lbl_schedule_value_enrollments_count"
 				android:layout_alignParentLeft="true"
-		        android:layout_marginTop="10dp"
+		        android:layout_marginTop="30dp"
 		        android:layout_marginLeft="10dp"
-		        android:text="Daftar Pertemuan"
+		        android:text="Jenis Pertemuan"
 		        android:textAppearance="?android:attr/textAppearanceSmall"
 		        android:textStyle="bold" />
 
-	        <Button
-	            android:id="@+id/btn_record_attendance"
-	            android:layout_width="match_parent"
-	            android:layout_height="wrap_content"
-	            android:layout_marginTop="20dp"
-	            android:layout_below="@+id/lbl_course_detail_title_meetings"
-	            android:layout_alignParentBottom="true"
-	            android:text="Mulai Absensi" />
-	        
-	    </RelativeLayout>
+            <Spinner
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/class_type_spinner"
+                android:layout_below="@+id/lbl_course_detail_title_meetings"
+                android:layout_alignLeft="@+id/lbl_course_detail_title_meetings"
+                android:layout_alignStart="@+id/lbl_course_detail_title_meetings"
+                android:layout_alignRight="@+id/btn_record_attendance"
+                android:layout_alignEnd="@+id/btn_record_attendance" />
+
+            <Button
+                android:id="@+id/btn_record_attendance"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_below="@+id/class_type_spinner"
+                android:layout_alignParentBottom="true"
+                android:text="Mulai Absensi" />
+
+
+        </RelativeLayout>
 	
 	    
 	
