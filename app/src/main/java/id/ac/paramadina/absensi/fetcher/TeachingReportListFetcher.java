@@ -7,12 +7,12 @@ import org.json.JSONObject;
 import android.app.Activity;
 import android.util.Log;
 
-public class LecturerReportListFetcher extends BaseFetcher {
+public class TeachingReportListFetcher extends BaseFetcher {
 
-	public LecturerReportListFetcher(Activity activity) {
+	public TeachingReportListFetcher(Activity activity) {
 		super(activity);
 		
-		this.setResourceUrl("/lecturer_reports");
+		this.setResourceUrl("/teaching_reports");
 	}
 
 	@Override

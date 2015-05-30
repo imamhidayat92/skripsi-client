@@ -117,22 +117,17 @@ public class DiscoverTagActivity extends Activity {
 		
 		try {
 			UserTagDataSpec spec = new UserTagDataSpec(tagId);
-			UserTagDataFetcher fetcher = new UserTagDataFetcher(this, spec);
+			UserTagDataFetcher fetcher = new UserTagDataFetcher(this, this.classMeetingId, spec);
 			JSONObject response = fetcher.fetchAndGet();
 			
 			if (response.getBoolean("success")) {
-				JSONObject userData = response.getJSONObject("result");
+                User student = User.createInstance(response);
 
-                String name = userData.getString("name");
-                String displayName = userData.getString("display_name");
-                String idNumber = userData.getString("id_number");
-                String identifier = userData.getString("identifier");
-                String avatar = userData.getString("avatar"); // TODO: Url?
-
-                User user = new User(name, displayName, idNumber, identifier, avatar);
+                Attendance attendance = new Attendance();
+                attendance.setStudent(student);
 			}
 			else {
-				
+				Toast.makeText(this, response.getString("message"), Toast.LENGTH_LONG).show();
 			}
 		} catch (InterruptedException e) {
 			Toast.makeText(this, "Gagal mengambil data. Cobalah beberapa saat lagi.", Toast.LENGTH_LONG).show();

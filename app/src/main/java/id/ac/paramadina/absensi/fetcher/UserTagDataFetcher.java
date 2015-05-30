@@ -9,14 +9,16 @@ import android.app.Activity;
 import android.util.Log;
 
 public class UserTagDataFetcher extends BaseFetcher {
+
+    private String classMeetingId;
+	private UserTagDataSpec spec;
 	
-	private UserTagDataSpec spec;	
-	
-	public UserTagDataFetcher(Activity activity, UserTagDataSpec spec) {
+	public UserTagDataFetcher(Activity activity, String classMeetingId, UserTagDataSpec spec) {
 		super(activity);
 		this.spec = spec;
+        this.classMeetingId = classMeetingId;
 		
-		this.setResourceUrl("/users/identity");
+		this.setResourceUrl("/class_meetings/" + this.classMeetingId + "/attendances");
 	}
 
 	@Override

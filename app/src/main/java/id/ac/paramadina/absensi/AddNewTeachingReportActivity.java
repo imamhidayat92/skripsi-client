@@ -6,7 +6,16 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 
+import org.json.JSONObject;
+
+import java.util.concurrent.ExecutionException;
+
+import id.ac.paramadina.absensi.fetcher.NewTeachingReportFetcher;
+import id.ac.paramadina.absensi.reference.spec.TeachingReportDataSpec;
+
 public class AddNewTeachingReportActivity extends Activity {
+
+    private String classMeetingId;
 
 	private EditText txtSubject;
 	private EditText txtDescription;
@@ -33,7 +42,7 @@ public class AddNewTeachingReportActivity extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.action_send:
-				this.sendReport();
+				this.sendTeachingReport();
 				
 				return true;
 				
@@ -42,11 +51,21 @@ public class AddNewTeachingReportActivity extends Activity {
 		}
 	}
 	
-	private void sendReport() {
+	private void sendTeachingReport() {
 		String subject = this.txtSubject.getText().toString();
 		String description = this.txtDescription.getText().toString();
-		
-		
-	}
+
+        TeachingReportDataSpec spec = new TeachingReportDataSpec(subject, description);
+
+        NewTeachingReportFetcher fetcher = new NewTeachingReportFetcher(this, this.classMeetingId, spec);
+
+        try {
+            JSONObject response = fetcher.fetchAndGet();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+    }
 
 }

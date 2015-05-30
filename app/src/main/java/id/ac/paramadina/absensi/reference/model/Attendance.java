@@ -1,6 +1,10 @@
 package id.ac.paramadina.absensi.reference.model;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 import id.ac.paramadina.absensi.reference.enumeration.AttendanceStatusType;
 
@@ -62,6 +66,18 @@ public class Attendance {
 	public void setCreated(Calendar created) {
 		this.created = created;
 	}
+
+    public void setCreated(String strDate) {
+        DateFormat formatter = new SimpleDateFormat("");
+        try {
+            Date date = formatter.parse(strDate);
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date);
+            this.created = calendar;
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+    }
 
 	public Calendar getModified() {
 		return modified;

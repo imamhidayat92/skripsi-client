@@ -1,12 +1,27 @@
 package id.ac.paramadina.absensi.reference.model;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class User {
 	private String name;
 	private String displayName;
 	private String idNumber;
 	private String identifier;
 	private String avatar;
-	
+
+    public static User createInstance(JSONObject response) throws JSONException {
+        JSONObject userData = response.getJSONObject("result");
+
+        String name = userData.getString("name");
+        String displayName = userData.getString("display_name");
+        String idNumber = userData.getString("id_number");
+        String identifier = userData.getString("identifier");
+        String avatar = userData.getString("avatar"); // TODO: Url?
+
+        return new User(name, displayName, idNumber, identifier, avatar);
+    }
+
 	public User(String name, String displayName, String idNumber, String identifier, String avatar) {
 		this.setName(name);
 		this.setDisplayName(displayName);
