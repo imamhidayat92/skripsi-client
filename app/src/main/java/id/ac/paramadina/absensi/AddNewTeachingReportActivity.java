@@ -2,10 +2,12 @@ package id.ac.paramadina.absensi;
 
 import android.os.Bundle;
 import android.app.Activity;
+import android.telephony.SmsManager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.concurrent.ExecutionException;
@@ -43,7 +45,6 @@ public class AddNewTeachingReportActivity extends Activity {
 		switch (item.getItemId()) {
 			case R.id.action_send:
 				this.sendTeachingReport();
-				
 				return true;
 				
 			default:
@@ -61,9 +62,19 @@ public class AddNewTeachingReportActivity extends Activity {
 
         try {
             JSONObject response = fetcher.fetchAndGet();
+            if (response.getBoolean("success")) {
+                SmsManager smsManager = SmsManager.getDefault();
+
+
+            }
+            else {
+                // Something wrong happened.
+            }
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
             e.printStackTrace();
         }
     }

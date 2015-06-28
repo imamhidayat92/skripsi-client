@@ -20,7 +20,7 @@ public class ClassMeetingListFetcher extends BaseFetcher {
 	}
 
 	@Override
-	protected JSONObject doInBackground(String... arg0) {
+	protected JSONObject doInBackground(String... params) {
 		// TODO Auto-generated method stub
 		return null;
 	}

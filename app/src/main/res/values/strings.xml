@@ -32,5 +32,8 @@
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_teaching_report_list">TeachingReportListActivity</string>
     <string name="title_activity_teaching_report_detail">TeachingReportDetailActivity</string>
+    <string name="title_activity_class_meeting_list">ClassMeetingListActivity</string>
+    <string name="title_activity_class_meeting_detail">ClassMeetingDetailActivity</string>
+    <string name="title_activity_pending_class_meeting">PendingClassMeetingActivity</string>
 
 </resources>

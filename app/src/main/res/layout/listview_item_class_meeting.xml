@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:padding="20dp">
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Sebuah Judul Mata Kuliah yang Mungkin Agak Panjang"
+        android:id="@+id/class_meeting_course_name"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:textStyle="bold"
+        android:layout_marginBottom="5dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Schedule Detail"
+        android:id="@+id/class_meeting_schedule_detail"
+        android:layout_below="@+id/class_meeting_course_name"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="Created"
+        android:id="@+id/class_meeting_time_info"
+        android:layout_below="@+id/class_meeting_schedule_detail"
+        android:layout_alignRight="@+id/class_meeting_course_name"
+        android:layout_alignEnd="@+id/class_meeting_course_name" />
+</RelativeLayout>

@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.concurrent.ExecutionException;
 
 import id.ac.paramadina.absensi.reference.AsyncTaskListener;
+import id.ac.paramadina.absensi.reference.Constants;
 import id.ac.paramadina.absensi.reference.GlobalData;
 
 import org.json.JSONObject;
@@ -28,7 +29,9 @@ public abstract class BaseFetcher extends AsyncTask<String, Void, JSONObject> {
 	protected String API_ACCESS_TOKEN;
 	protected String API_ADDRESS;
 	protected String API_RESOURCE_URL;
-	
+
+    private HashMap<String, String> additionalParams;
+
 	private AsyncTaskListener<JSONObject> listener = null;
 	
 	public BaseFetcher(Activity activity) {
@@ -41,7 +44,7 @@ public abstract class BaseFetcher extends AsyncTask<String, Void, JSONObject> {
 		this.API_ACCESS_TOKEN = userPreferences.getString(GlobalData.PREFERENCE_ACCESS_TOKEN, null);
 		this.API_ADDRESS = preferences.getString(GlobalData.PREFERENCE_API_ADDRESS, null);
 		
-		Log.d("skripsi-client", "Initializing fetcher. Access Token = " + this.API_ACCESS_TOKEN +
+		Log.d(Constants.LOGGER_TAG, "Initializing fetcher. Access Token = " + this.API_ACCESS_TOKEN +
 				                ", API Address = " + this.API_ADDRESS);
 	}
 	
@@ -61,12 +64,21 @@ public abstract class BaseFetcher extends AsyncTask<String, Void, JSONObject> {
 	protected final void setResourceUrl(String resourceUrl) {
 		this.API_RESOURCE_URL = resourceUrl;
 	}
-	
+
+    protected final void setResourceUrl(String resourceUrl, HashMap<String, String> params) {
+        this.setResourceUrl(resourceUrl);
+        this.additionalParams = params;
+    }
+
+
 	protected final HashMap<String, String> getRequestQueryStrings() {
 		HashMap<String, String> params = new HashMap<String, String>();
 		if (this.needAuthenticationData) {
 			params.put("access_token", this.API_ACCESS_TOKEN);
 		}
+        if (this.additionalParams != null) {
+            params.putAll(this.additionalParams);
+        }
 		return params;
 	}
 	
@@ -79,9 +91,10 @@ public abstract class BaseFetcher extends AsyncTask<String, Void, JSONObject> {
 	}
 	
 	public JSONObject fetchAndGet() throws InterruptedException, ExecutionException {
-		return this.execute(this.API_ADDRESS, this.API_RESOURCE_URL).get();
+		Log.d(Constants.LOGGER_TAG, "Fetching " + this.API_ADDRESS + ", " + this.API_RESOURCE_URL);
+        return this.execute(this.API_ADDRESS, this.API_RESOURCE_URL).get();
 	}
-	
+
 	@Override
 	protected void onPreExecute() {
 		if (listener != null) {

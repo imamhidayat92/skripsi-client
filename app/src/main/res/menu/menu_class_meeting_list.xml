@@ -1,5 +1,5 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="id.ac.paramadina.absensi.TeachingReportDetailActivity" >
+    tools:context="id.ac.paramadina.absensi.ClassMeetingListActivity">
 
 </menu>

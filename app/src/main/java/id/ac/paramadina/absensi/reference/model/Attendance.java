@@ -1,5 +1,7 @@
 package id.ac.paramadina.absensi.reference.model;
 
+import org.json.JSONObject;
+
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -18,7 +20,13 @@ public class Attendance {
 	
 	private Calendar created;
 	private Calendar modified;
-	
+
+    public static Attendance createInstance(JSONObject response) {
+        Attendance attendance = new Attendance();
+
+        return attendance;
+    }
+
 	public AttendanceStatusType getType() {
 		return type;
 	}

@@ -45,10 +45,10 @@ public class TeachingReportAdapter extends BaseAdapter {
 		View view = arg1;
 		
 		if (arg1 == null) {
-			// view = inflater.inflate(R.layout.listview_item_course, null);
+			view = inflater.inflate(R.layout.listview_item_teaching_report, null);
 		}
 		
-		return null;
+		return view;
 	}
 
 }

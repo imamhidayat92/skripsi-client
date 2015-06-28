@@ -38,22 +38,23 @@ public class MainActivity extends Activity {
 		public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 			/* 
 			 * Menu from Top to Bottom
-			 * 1. Kuliah Hari Ini
-			 * 2. Kuliah Pengganti
-			 * 3. Laporan Mengajar
-			 * 4. Keluar
+			 * 1. Jadwal Hari Ini
+			 * 2. Pertemuan yang Tertunda
+			 * 3. Pertemuan Kelas
 			 */
+            Intent i;
 			
 			switch (position) {
 				case 0:
-					break;
+                    i = new Intent(MainActivity.this, MainActivity.class);
+                    MainActivity.this.startActivity(i);
+                    break;
 				case 1:
-					break;
+                    i = new Intent(MainActivity.this, PendingClassMeetingActivity.class);
+                    MainActivity.this.startActivity(i);                    break;
 				case 2:
-					break;
-				case 3:
-					break;
-				default:
+                    i = new Intent(MainActivity.this, ClassMeetingListActivity.class);
+                    MainActivity.this.startActivity(i);
 					break;
 			}
 		}

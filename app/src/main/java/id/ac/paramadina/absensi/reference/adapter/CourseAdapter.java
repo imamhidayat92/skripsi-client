@@ -4,18 +4,14 @@ import id.ac.paramadina.absensi.R;
 import id.ac.paramadina.absensi.reference.model.Course;
 
 import java.util.ArrayList;
-import java.util.Stack;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
 
 public class CourseAdapter extends BaseAdapter {
@@ -51,7 +47,7 @@ public class CourseAdapter extends BaseAdapter {
 		View view = arg1;
 		
 		if (arg1 == null) {
-			view = inflater.inflate(R.layout.listview_item_course, null);
+			view = inflater.inflate(R.layout.listview_item_schedule, null);
 		}
 		
 		LinearLayout majors = (LinearLayout) view.findViewById(R.id.majors);

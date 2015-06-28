@@ -5,7 +5,7 @@
     android:versionName="1.0" >
 
     <uses-sdk
-        android:minSdkVersion="14"
+        android:minSdkVersion="16"
         android:targetSdkVersion="19" />
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -14,6 +14,15 @@
     <uses-feature
         android:name="android.hardware.nfc"
         android:required="true" />
+
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="18" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="18" />
+    <uses-permission android:name="android.permission.SEND_SMS" />
 
     <application
         android:allowBackup="true"
@@ -69,6 +78,18 @@
         <activity
             android:name=".TeachingReportDetailActivity"
             android:label="@string/title_activity_teaching_report_detail" >
+        </activity>
+        <activity
+            android:name=".ClassMeetingListActivity"
+            android:label="@string/title_activity_class_meeting_list" >
+        </activity>
+        <activity
+            android:name=".ClassMeetingDetailActivity"
+            android:label="@string/title_activity_class_meeting_detail" >
+        </activity>
+        <activity
+            android:name=".PendingClassMeetingActivity"
+            android:label="@string/title_activity_pending_class_meeting" >
         </activity>
     </application>
 

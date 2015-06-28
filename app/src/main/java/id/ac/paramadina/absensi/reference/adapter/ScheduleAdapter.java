@@ -46,7 +46,7 @@ public class ScheduleAdapter extends BaseAdapter {
 		View view = arg1;
 		
 		if (arg1 == null) {
-			view = inflater.inflate(R.layout.listview_item_schedule, null);
+			view = inflater.inflate(R.layout.listview_item_schedule_big, null);
 		}
 		
 		TextView scheduleCourseName = (TextView) view.findViewById(R.id.lbl_schedule_course_name);
