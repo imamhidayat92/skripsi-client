@@ -1,6 +1,7 @@
 package id.ac.paramadina.absensi.fetcher;
 
 import id.ac.paramadina.absensi.helper.RequestHelper;
+import id.ac.paramadina.absensi.reference.Constants;
 import id.ac.paramadina.absensi.reference.spec.AuthenticationDataSpec;
 
 import org.json.JSONException;
@@ -41,7 +42,7 @@ public class AuthenticationDataFetcher extends BaseFetcher {
 		JSONObject response = request.post(params[1], this.getRequestQueryStrings(), this.spec.toHashMap());
 		
 		if (response == null) {
-			Log.d("skripsi-client", "Got null response from server.");
+			Log.d(Constants.LOGGER_TAG, "Got null response from server.");
 		}
 		
 		return response;

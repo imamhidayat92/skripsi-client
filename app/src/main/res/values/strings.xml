@@ -5,9 +5,18 @@
 
     <!-- Menu Related -->
 
+    <string name="action_add">Tambah</string>
+    <string name="action_add_manually">Tambah Secara Manual</string>
     <string name="action_refresh">Muat Ulang</string>
     <string name="action_send">Kirim</string>
     <string name="action_settings">Pengaturan</string>
+
+    <!-- Messages -->
+
+    <string name="data_get_error">Gagal mengambil data. Cobalah beberapa saat lagi.</string>
+    <string name="data_get_message">Sedang mengambil data..</string>
+    <string name="data_parse_error">Gagal mengolah data dari server.</string>
+    <string name="loading_message">Harap tunggu..</string>
 
     <!-- Internationalization -->
 

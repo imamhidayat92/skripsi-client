@@ -11,7 +11,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 import id.ac.paramadina.absensi.reference.AsyncTaskListener;
-import id.ac.paramadina.absensi.reference.adapter.ScheduleAdapter;
+import id.ac.paramadina.absensi.reference.adapter.ScheduleListAdapter;
 import id.ac.paramadina.absensi.reference.model.ClassLocation;
 import id.ac.paramadina.absensi.reference.model.Course;
 import id.ac.paramadina.absensi.reference.model.Major;
@@ -76,7 +76,7 @@ public class ScheduleListDataListener implements AsyncTaskListener<JSONObject> {
 	        	Toast.makeText(this.activity, "Tidak ada mata kuliah untuk hari ini.", Toast.LENGTH_LONG).show();
 	        }
 	        
-	        ScheduleAdapter adapter = new ScheduleAdapter(this.activity, schedules);
+	        ScheduleListAdapter adapter = new ScheduleListAdapter(this.activity, schedules);
 	        
 	        this.listView.setAdapter(adapter);
 	        this.listView.setOnItemClickListener(this.listener);

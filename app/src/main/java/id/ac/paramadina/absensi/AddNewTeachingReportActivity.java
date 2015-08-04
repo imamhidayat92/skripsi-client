@@ -13,7 +13,7 @@ import org.json.JSONObject;
 import java.util.concurrent.ExecutionException;
 
 import id.ac.paramadina.absensi.fetcher.NewTeachingReportFetcher;
-import id.ac.paramadina.absensi.reference.spec.TeachingReportDataSpec;
+import id.ac.paramadina.absensi.reference.spec.NewTeachingReportDataSpec;
 
 public class AddNewTeachingReportActivity extends Activity {
 
@@ -56,7 +56,7 @@ public class AddNewTeachingReportActivity extends Activity {
 		String subject = this.txtSubject.getText().toString();
 		String description = this.txtDescription.getText().toString();
 
-        TeachingReportDataSpec spec = new TeachingReportDataSpec(subject, description);
+        NewTeachingReportDataSpec spec = new NewTeachingReportDataSpec(subject, description);
 
         NewTeachingReportFetcher fetcher = new NewTeachingReportFetcher(this, this.classMeetingId, spec);
 

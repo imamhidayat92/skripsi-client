@@ -4,10 +4,14 @@ import org.json.JSONObject;
 
 import android.app.Activity;
 
+import id.ac.paramadina.absensi.helper.RequestHelper;
+
 public class ClassMeetingListFetcher extends BaseFetcher {
 
 	public ClassMeetingListFetcher(Activity activity) {
 		super(activity);
+
+        this.setResourceUrl("/class_meetings");
 	}
 	
 	@Override
@@ -21,13 +25,16 @@ public class ClassMeetingListFetcher extends BaseFetcher {
 
 	@Override
 	protected JSONObject doInBackground(String... params) {
-		// TODO Auto-generated method stub
-		return null;
+        RequestHelper request = new RequestHelper(params[0]);
+        JSONObject response = request.get(this.getResourceUrl(), this.getRequestQueryStrings());
+
+		return response;
 	}
 	
 	@Override
 	protected void onPostExecute(JSONObject result) {
-		// TODO Auto-generated method stub
+		this.progress.dismiss();
+
 		super.onPostExecute(result);
 	}
 

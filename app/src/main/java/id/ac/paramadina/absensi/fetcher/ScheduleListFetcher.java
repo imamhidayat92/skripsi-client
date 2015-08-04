@@ -1,23 +1,11 @@
 package id.ac.paramadina.absensi.fetcher;
 
 import id.ac.paramadina.absensi.helper.RequestHelper;
-import id.ac.paramadina.absensi.reference.adapter.ScheduleAdapter;
-import id.ac.paramadina.absensi.reference.model.ClassLocation;
-import id.ac.paramadina.absensi.reference.model.Course;
-import id.ac.paramadina.absensi.reference.model.Major;
-import id.ac.paramadina.absensi.reference.model.Schedule;
 
-import java.util.ArrayList;
-
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
 import android.util.Log;
-import android.widget.ListView;
-import android.widget.Toast;
-import android.widget.AdapterView.OnItemClickListener;
 
 public class ScheduleListFetcher extends BaseFetcher {	
 	

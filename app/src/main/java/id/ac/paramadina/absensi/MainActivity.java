@@ -50,7 +50,7 @@ public class MainActivity extends Activity {
                     MainActivity.this.startActivity(i);
                     break;
 				case 1:
-                    i = new Intent(MainActivity.this, PendingClassMeetingActivity.class);
+                    i = new Intent(MainActivity.this, PendingClassMeetingListActivity.class);
                     MainActivity.this.startActivity(i);                    break;
 				case 2:
                     i = new Intent(MainActivity.this, ClassMeetingListActivity.class);

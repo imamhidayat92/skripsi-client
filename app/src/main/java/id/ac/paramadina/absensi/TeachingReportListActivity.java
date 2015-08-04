@@ -14,6 +14,8 @@ public class TeachingReportListActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_teaching_report_list);
+
+        getTeachingReportData();
 	}
 
 	@Override
@@ -28,10 +30,18 @@ public class TeachingReportListActivity extends Activity {
 		// Handle action bar item clicks here. The action bar will
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
-		int id = item.getItemId();
-		if (id == R.id.action_settings) {
-			return true;
-		}
+
+        switch (item.getItemId()) {
+            case R.id.action_refresh:
+                this.getTeachingReportData();
+                return true;
+            default:
+        }
+
 		return super.onOptionsItemSelected(item);
 	}
+
+    private void getTeachingReportData() {
+
+    }
 }

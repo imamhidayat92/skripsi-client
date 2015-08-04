@@ -6,6 +6,8 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 
+import id.ac.paramadina.absensi.helper.RequestHelper;
+
 public class PendingClassMeetingDataFetcher extends BaseFetcher {
 
     public PendingClassMeetingDataFetcher(Activity activity) {
@@ -19,16 +21,25 @@ public class PendingClassMeetingDataFetcher extends BaseFetcher {
 
     @Override
     protected void onPreExecute() {
+        this.progress.setTitle("Harap Tunggu");
+        this.progress.setMessage("Sedang mengambil data pertemuan kelas.");
+        this.progress.show();
+
         super.onPreExecute();
     }
 
     @Override
     protected JSONObject doInBackground(String... params) {
-        return null;
+        RequestHelper request = new RequestHelper(params[0]);
+        JSONObject response = request.get(this.getResourceUrl(), this.getRequestQueryStrings());
+
+        return response;
     }
 
     @Override
     protected void onPostExecute(JSONObject result) {
+        this.progress.dismiss();
+
         super.onPostExecute(result);
     }
 }

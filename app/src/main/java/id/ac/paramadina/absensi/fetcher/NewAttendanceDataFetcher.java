@@ -1,19 +1,20 @@
 package id.ac.paramadina.absensi.fetcher;
 
+import id.ac.paramadina.absensi.R;
 import id.ac.paramadina.absensi.helper.RequestHelper;
-import id.ac.paramadina.absensi.reference.spec.UserTagDataSpec;
+import id.ac.paramadina.absensi.reference.spec.NewAttendanceDataSpec;
 
 import org.json.JSONObject;
 
 import android.app.Activity;
 import android.util.Log;
 
-public class UserTagDataFetcher extends BaseFetcher {
+public class NewAttendanceDataFetcher extends BaseFetcher {
 
     private String classMeetingId;
-	private UserTagDataSpec spec;
+	private NewAttendanceDataSpec spec;
 	
-	public UserTagDataFetcher(Activity activity, String classMeetingId, UserTagDataSpec spec) {
+	public NewAttendanceDataFetcher(Activity activity, String classMeetingId, NewAttendanceDataSpec spec) {
 		super(activity);
 		this.spec = spec;
         this.classMeetingId = classMeetingId;
@@ -23,8 +24,8 @@ public class UserTagDataFetcher extends BaseFetcher {
 
 	@Override
 	protected void onPreExecute() {
-		this.progress.setTitle("Harap Tunggu");
-		this.progress.setMessage("Sedang mengambil data identitas pemilik tag..");
+		this.progress.setTitle(R.string.loading_message);
+		this.progress.setMessage(this.activity.getString(R.string.data_get_message));
 		this.progress.show();
 		
 		super.onPreExecute();

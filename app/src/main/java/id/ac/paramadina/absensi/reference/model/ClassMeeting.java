@@ -1,21 +1,34 @@
 package id.ac.paramadina.absensi.reference.model;
 
+import org.json.JSONObject;
+
 import java.util.Calendar;
 
 import id.ac.paramadina.absensi.reference.enumeration.ClassMeetingType;
 
 public class ClassMeeting {
 	private ClassMeetingType type;
-	
+	private boolean verified;
+
 	private Course course;
 	private User lecturer;
 	private TeachingReport report;
 	private Schedule schedule;
+
+    /* Cache */
 	private Attendance[] attendances;
 	
 	private Calendar created;
 	private Calendar modified;
-	
+
+    public static ClassMeeting createInstance(JSONObject jsonObject) {
+        ClassMeeting classMeeting = new ClassMeeting();
+
+
+
+        return classMeeting;
+    }
+
 	public ClassMeetingType getType() {
 		return type;
 	}

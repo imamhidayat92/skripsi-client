@@ -6,13 +6,13 @@ import android.util.Log;
 import org.json.JSONObject;
 
 import id.ac.paramadina.absensi.helper.RequestHelper;
-import id.ac.paramadina.absensi.reference.spec.ClassMeetingDataSpec;
+import id.ac.paramadina.absensi.reference.spec.NewClassMeetingDataSpec;
 
 public class NewClassMeetingDataFetcher extends BaseFetcher {
 
-    ClassMeetingDataSpec spec;
+    NewClassMeetingDataSpec spec;
 
-    public NewClassMeetingDataFetcher(Activity activity, ClassMeetingDataSpec spec) {
+    public NewClassMeetingDataFetcher(Activity activity, NewClassMeetingDataSpec spec) {
         super(activity);
         this.spec = spec;
 
@@ -26,6 +26,7 @@ public class NewClassMeetingDataFetcher extends BaseFetcher {
         this.progress.show();
 
         super.onPreExecute();
+
     }
 
     @Override

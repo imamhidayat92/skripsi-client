@@ -4,30 +4,53 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class User {
+
+    public enum FIELDS {
+        NAME("name"),
+        DISPLAY_NAME("display_name"),
+        ID_NUMBER("id_number"),
+        IDENTIFIER("identifier"),
+        DISPLAY_PICTURE("display_picture");
+
+        private final String text;
+
+        private FIELDS(final String text) {
+            this.text = text;
+        }
+
+        @Override
+        public String toString() {
+            return this.text;
+        }
+    }
+
 	private String name;
 	private String displayName;
 	private String idNumber;
 	private String identifier;
-	private String avatar;
+	private String displayPicture;
 
     public static User createInstance(JSONObject response) throws JSONException {
         JSONObject userData = response.getJSONObject("result");
 
-        String name = userData.getString("name");
-        String displayName = userData.getString("display_name");
+        String name = userData.getString(FIELDS.NAME.toString());
+        String displayName = userData.getString(FIELDS.DISPLAY_NAME.toString());
         String idNumber = userData.getString("id_number");
         String identifier = userData.getString("identifier");
-        String avatar = userData.getString("avatar"); // TODO: Url?
+        String displayPicture = null;
+        if (userData.has("display_picture")) {
+            displayPicture = userData.getString("display_picture");
+        }
 
-        return new User(name, displayName, idNumber, identifier, avatar);
+        return new User(name, displayName, idNumber, identifier, displayPicture);
     }
 
-	public User(String name, String displayName, String idNumber, String identifier, String avatar) {
+	public User(String name, String displayName, String idNumber, String identifier, String displayPicture) {
 		this.setName(name);
 		this.setDisplayName(displayName);
 		this.setIdNumber(idNumber);
 		this.setIdentifier(identifier);
-		this.setAvatar(avatar);
+		this.setDisplayPicture(displayPicture);
 	}
 
 	public String getName() {
@@ -62,11 +85,11 @@ public class User {
 		this.identifier = identifier;
 	}
 
-	public String getAvatar() {
-		return avatar;
+	public String getDisplayPicture() {
+		return displayPicture;
 	}
 
-	public void setAvatar(String avatar) {
-		this.avatar = avatar;
+	public void setDisplayPicture(String displayPicture) {
+		this.displayPicture = displayPicture;
 	}
 }

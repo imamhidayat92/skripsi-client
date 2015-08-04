@@ -3,26 +3,38 @@ package id.ac.paramadina.absensi;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import id.ac.paramadina.absensi.fetcher.NewClassMeetingDataFetcher;
 import id.ac.paramadina.absensi.fetcher.ScheduleDetailFetcher;
 import id.ac.paramadina.absensi.reference.AsyncTaskListener;
+import id.ac.paramadina.absensi.reference.Constants;
+import id.ac.paramadina.absensi.reference.enumeration.ClassMeetingType;
+import id.ac.paramadina.absensi.reference.spec.NewClassMeetingDataSpec;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.util.concurrent.ExecutionException;
 
 public class ScheduleDetailActivity extends Activity {
 	
 	private String courseId;
 	private String scheduleId;
-	
+
+    private NewClassMeetingDataSpec spec;
+
 	/* Controls */
 	
 	private Button btnRecordAttendance;
+    private Spinner mClassMeetingType;
 	private TextView txtCourseName;
 	private TextView txtCourseDescription;
 	private TextView txtScheduleDetail;
@@ -34,16 +46,28 @@ public class ScheduleDetailActivity extends Activity {
 		
 		@Override
 		public void onClick(View v) {
-            // TODO: Need to contact server to create new ClassMeeting data.
-            // If something wrong, we can't record our data.
+            NewClassMeetingDataFetcher fetcher = new NewClassMeetingDataFetcher(ScheduleDetailActivity.this, ScheduleDetailActivity.this.spec);
+            try {
+                JSONObject response = fetcher.fetchAndGet();
+                JSONObject classMeetingRawData = response.getJSONObject("result");
 
-			Intent i = new Intent(ScheduleDetailActivity.this, DiscoverTagActivity.class);
-			i.putExtra("courseId", ScheduleDetailActivity.this.courseId);
-			i.putExtra("scheduleId", ScheduleDetailActivity.this.scheduleId);
-			i.putExtra("classMeetingId", "<to be filled by remote call response>");
+                Intent i = new Intent(ScheduleDetailActivity.this, DiscoverTagActivity.class);
+                i.putExtra("courseId", ScheduleDetailActivity.this.courseId);
+                i.putExtra("scheduleId", ScheduleDetailActivity.this.scheduleId);
+                i.putExtra("classMeetingId", classMeetingRawData.getString("_id"));
 
-			ScheduleDetailActivity.this.startActivity(i);
-		}
+                ScheduleDetailActivity.this.startActivity(i);
+            } catch (InterruptedException e) {
+                Log.d(Constants.LOGGER_TAG, "Error (InterruptedException)");
+                Log.d(Constants.LOGGER_TAG, e.getMessage());
+            } catch (ExecutionException e) {
+                Log.d(Constants.LOGGER_TAG, "Error (ExecutionException)");
+                Log.d(Constants.LOGGER_TAG, e.getMessage());
+            } catch (JSONException e) {
+                Log.d(Constants.LOGGER_TAG, "Error (JSONException)");
+                Log.d(Constants.LOGGER_TAG, e.getMessage());
+            }
+        }
 	};
 	
 	private class ScheduleDetailDataListener implements AsyncTaskListener<JSONObject> {
@@ -96,7 +120,13 @@ public class ScheduleDetailActivity extends Activity {
 
 		this.btnRecordAttendance = (Button) findViewById(R.id.btn_record_attendance);
         btnRecordAttendance.setOnClickListener(btnRecordAttendanceOnClickListener);
-		this.txtCourseName = (TextView) findViewById(R.id.lbl_course_title);
+        this.mClassMeetingType = (Spinner) findViewById(R.id.class_type_spinner);
+        String[] classMeetingTypes = new String[] {
+            "Harian", "Ujian Tengah Semester", "Ujian Akhir Semester"
+        };
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, classMeetingTypes);
+		mClassMeetingType.setAdapter(adapter);
+        this.txtCourseName = (TextView) findViewById(R.id.lbl_course_title);
 		this.txtCourseDescription = (TextView) findViewById(R.id.lbl_course_description);
 		this.txtScheduleDetail = (TextView) findViewById(R.id.lbl_schedule_detail);
 		this.txtScheduleEnrollmentCount = (TextView) findViewById(R.id.lbl_schedule_value_enrollments_count);
@@ -105,8 +135,10 @@ public class ScheduleDetailActivity extends Activity {
 	    
 	    this.courseId = getIntent().getExtras().getString("courseId");
 	    this.scheduleId = getIntent().getExtras().getString("scheduleId");
-	    
-	    ScheduleDetailDataListener listener = new ScheduleDetailDataListener();
+
+        this.spec = new NewClassMeetingDataSpec(ClassMeetingType.DEFAULT, this.courseId, this.scheduleId);
+
+        ScheduleDetailDataListener listener = new ScheduleDetailDataListener();
 	    
 	    ScheduleDetailFetcher fetcher = new ScheduleDetailFetcher(this, this.scheduleId);
 	    fetcher.setListener(listener);

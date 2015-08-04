@@ -12,14 +12,14 @@ import java.util.ArrayList;
 import id.ac.paramadina.absensi.R;
 import id.ac.paramadina.absensi.reference.model.ClassMeeting;
 
-public class ClassMeetingAdapter extends BaseAdapter {
+public class ClassMeetingListAdapter extends BaseAdapter {
 
     private Activity activity;
     private ArrayList<ClassMeeting> data;
 
     private static LayoutInflater inflater;
 
-    public ClassMeetingAdapter(Activity activity, ArrayList<ClassMeeting> data) {
+    public ClassMeetingListAdapter(Activity activity, ArrayList<ClassMeeting> data) {
         this.activity = activity;
         this.data = data;
 

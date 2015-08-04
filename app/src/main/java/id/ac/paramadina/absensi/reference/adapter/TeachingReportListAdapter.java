@@ -12,13 +12,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
-public class TeachingReportAdapter extends BaseAdapter {
+public class TeachingReportListAdapter extends BaseAdapter {
 
 	Activity activity;
 	ArrayList<TeachingReport> data;
 	LayoutInflater inflater = null;
 	
-	public TeachingReportAdapter(Activity activity, ArrayList<TeachingReport> data) {
+	public TeachingReportListAdapter(Activity activity, ArrayList<TeachingReport> data) {
 		this.activity = activity;
 		this.data = data;
 		

@@ -1,26 +1,25 @@
 package id.ac.paramadina.absensi.reference.adapter;
 
 import id.ac.paramadina.absensi.R;
-import id.ac.paramadina.absensi.reference.model.Course;
+import id.ac.paramadina.absensi.reference.model.Schedule;
 
 import java.util.ArrayList;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
-public class CourseAdapter extends BaseAdapter {
-	
+public class ScheduleListAdapter extends BaseAdapter {
 	private Activity activity;
-	private ArrayList<Course> data;
+	private ArrayList<Schedule> data;
 	private static LayoutInflater inflater = null;
 	
-	public CourseAdapter(Activity activity, ArrayList<Course> data) {
+	public ScheduleListAdapter(Activity activity, ArrayList<Schedule> data) {
 		this.activity = activity;
 		this.data = data;
 		
@@ -47,18 +46,20 @@ public class CourseAdapter extends BaseAdapter {
 		View view = arg1;
 		
 		if (arg1 == null) {
-			view = inflater.inflate(R.layout.listview_item_schedule, null);
+			view = inflater.inflate(R.layout.listview_item_schedule_big, null);
 		}
 		
-		LinearLayout majors = (LinearLayout) view.findViewById(R.id.majors);
+		TextView scheduleCourseName = (TextView) view.findViewById(R.id.lbl_schedule_course_name);
+		TextView scheduleDetail = (TextView) view.findViewById(R.id.lbl_schedule_detail);
+		TextView scheduleInfo = (TextView) view.findViewById(R.id.lbl_schedule_info);
 		
-		TextView courseTitle = (TextView) view.findViewById(R.id.lbl_course_title);
+		Schedule datum = data.get(arg0);		
 		
-		Course datum = data.get(arg0);
-				
-		courseTitle.setText(datum.getName());
+		scheduleCourseName.setText(datum.getCourse().getName());
+		scheduleCourseName.setBackgroundColor(Color.parseColor(datum.getCourse().getMajor().getColor()));
+		scheduleDetail.setText("Pertemuan ke-" + datum.getMeetingCount());
+		scheduleInfo.setText(datum.getInfo());
 		
 		return view;
 	}
-	
 }
