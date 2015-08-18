@@ -6,12 +6,14 @@ import java.util.concurrent.ExecutionException;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import id.ac.paramadina.absensi.fetcher.DeleteAttendanceDataFetcher;
 import id.ac.paramadina.absensi.fetcher.NewAttendanceDataFetcher;
 import id.ac.paramadina.absensi.fetcher.UserDataFetcher;
 import id.ac.paramadina.absensi.helper.CommonToastMessage;
-import id.ac.paramadina.absensi.helper.dialog.SimplePromptDialog;
+import id.ac.paramadina.absensi.reference.dialog.SimplePromptDialog;
 import id.ac.paramadina.absensi.reference.Constants;
 import id.ac.paramadina.absensi.reference.adapter.AttendanceListAdapter;
+import id.ac.paramadina.absensi.reference.dialog.UserDetailDialog;
 import id.ac.paramadina.absensi.reference.enumeration.UserIdentificationField;
 import id.ac.paramadina.absensi.reference.model.Attendance;
 import id.ac.paramadina.absensi.reference.model.User;
@@ -108,23 +110,52 @@ public class DiscoverTagActivity extends Activity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 try {
-                    String studentId = "";
+                    final Attendance attendance = (Attendance) adapterView.getItemAtPosition(i);
+
+                    String studentId = attendance.getStudent().getId();
                     UserDataFetcher fetcher = new UserDataFetcher(DiscoverTagActivity.this, studentId);
 
                     JSONObject response = fetcher.fetchAndGet();
                     if (response != null) {
                         if (response.has("success") && response.getBoolean("success")) {
-                            JSONObject rawUserData = response.getJSONObject("result");
+                            User user = User.createInstance(response.getJSONObject("result"));
 
-                            User user = User.createInstance(rawUserData);
+                            UserDetailDialog dialog = new UserDetailDialog().setUser(user);
+                            dialog.setListener(new UserDetailDialog.UserDetailDialogListener() {
+                                @Override
+                                public void onCloseButtonClick(DialogFragment dialog) {
+                                    dialog.dismiss();
+                                }
 
+                                @Override
+                                public void onRemoveButtonClick(DialogFragment dialog) {
+                                    try {
+                                        String attendanceId = attendance.getId();
+                                        DeleteAttendanceDataFetcher fetcher = new DeleteAttendanceDataFetcher(DiscoverTagActivity.this, attendanceId);
+                                        JSONObject response = fetcher.fetchAndGet();
+
+                                        if (response.has("success") && response.getBoolean("success")) {
+                                            JSONObject rawAttendanceData = response.getJSONObject("result");
+                                            Attendance attendance = Attendance.createInstance(rawAttendanceData);
+
+                                            Toast.makeText(DiscoverTagActivity.this, "Data kehadiran untuk " + attendance.getStudent().getDisplayName() + " berhasil dihapus.", Toast.LENGTH_LONG).show();
+                                        }
+                                    } catch (InterruptedException e) {
+                                        CommonToastMessage.showErrorGettingDataFromServerMessage(DiscoverTagActivity.this);
+                                    } catch (ExecutionException e) {
+                                        CommonToastMessage.showErrorGettingDataFromServerMessage(DiscoverTagActivity.this);
+                                    } catch (JSONException e) {
+                                        CommonToastMessage.showErrorGettingDataFromServerMessage(DiscoverTagActivity.this);
+                                    }
+                                }
+                            });
                         }
                         else {
                             CommonToastMessage.showErrorGettingDataFromServerMessage(DiscoverTagActivity.this);
                         }
                     }
                     else {
-
+                        CommonToastMessage.showErrorGettingDataFromServerMessage(DiscoverTagActivity.this);
                     }
                 } catch (InterruptedException e) {
                     CommonToastMessage.showErrorGettingDataFromServerMessage(DiscoverTagActivity.this);
@@ -133,8 +164,6 @@ public class DiscoverTagActivity extends Activity {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-
-
             }
         });
         registerForContextMenu(this.attendanceListView);
@@ -202,17 +231,17 @@ public class DiscoverTagActivity extends Activity {
             case R.id.action_add_manually:
                 SimplePromptDialog manualAddDialog = new SimplePromptDialog();
                 manualAddDialog
-                        .setMessage("")
-                        .setListener(new SimplePromptDialog.SimplePromptDialogListener() {
-                            @Override
-                            public void onPositiveButtonClick(DialogFragment dialog, String value) {
-                                getUserData(value, UserIdentificationField.ID_NUMBER);
-                            }
+                    .setMessage("")
+                    .setListener(new SimplePromptDialog.SimplePromptDialogListener() {
+                        @Override
+                        public void onPositiveButtonClick(DialogFragment dialog, String value) {
+                            getUserData(value, UserIdentificationField.ID_NUMBER);
+                        }
 
-                            @Override
-                            public void onNegativeButtonClick(DialogFragment dialog) {
-
-                            }
+                        @Override
+                        public void onNegativeButtonClick(DialogFragment dialog) {
+                            dialog.dismiss();
+                        }
                         });
                 manualAddDialog.show(this.getFragmentManager(), "prompt");
         }
@@ -227,24 +256,21 @@ public class DiscoverTagActivity extends Activity {
             JSONObject response = fetcher.fetchAndGet();
 
             if (response.has("success") && response.getBoolean("success")) {
-                User student = User.createInstance(response);
-
-                Attendance attendance = new Attendance();
-                attendance.setStudent(student);
-
+                Attendance attendance = Attendance.createInstance(response.getJSONObject("result"));
+                this.adapter.pushNewEntry(attendance);
             }
             else {
                 Toast.makeText(this, response.getString("message"), Toast.LENGTH_LONG).show();
             }
         } catch (InterruptedException e) {
             Toast.makeText(this, R.string.data_get_error, Toast.LENGTH_LONG).show();
-            e.printStackTrace();
+            Log.d(Constants.LOGGER_TAG, e.getMessage());
         } catch (ExecutionException e) {
             Toast.makeText(this, R.string.data_get_error, Toast.LENGTH_LONG).show();
-            e.printStackTrace();
+            Log.d(Constants.LOGGER_TAG, e.getMessage());
         } catch (JSONException e) {
             Toast.makeText(this, R.string.data_parse_error, Toast.LENGTH_LONG).show();
-            e.printStackTrace();
+            Log.d(Constants.LOGGER_TAG, e.getMessage());
         }
     }
 }

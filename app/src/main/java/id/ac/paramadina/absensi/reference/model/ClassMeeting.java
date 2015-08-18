@@ -1,5 +1,6 @@
 package id.ac.paramadina.absensi.reference.model;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Calendar;
@@ -7,6 +8,31 @@ import java.util.Calendar;
 import id.ac.paramadina.absensi.reference.enumeration.ClassMeetingType;
 
 public class ClassMeeting {
+    public enum Fields {
+        TYPE("type"),
+        VERIFIED("verified"),
+
+        COURSE("course"),
+        LECTURER("lecturer"),
+        REPORT("report"),
+        SCHEDULE("schedule"),
+
+        CREATED("created"),
+        CREATED_MILLISECONDS("created_ms"),
+        MODIFIED("modified"),
+        MODIFIED_MILLISECONDS("modified_ms");
+
+        private final String text;
+        private Fields(final String text) {
+            this.text = text;
+        }
+
+        @Override
+        public String toString() {
+            return this.text;
+        }
+    }
+
 	private ClassMeetingType type;
 	private boolean verified;
 
@@ -21,12 +47,32 @@ public class ClassMeeting {
 	private Calendar created;
 	private Calendar modified;
 
-    public static ClassMeeting createInstance(JSONObject jsonObject) {
-        ClassMeeting classMeeting = new ClassMeeting();
+    public static ClassMeeting createInstance(JSONObject response) throws JSONException {
+        ClassMeetingType type = ClassMeetingType.valueOf(response.getString(Fields.TYPE.toString()));
+        boolean verified = response.getBoolean(Fields.VERIFIED.toString());
+        long created = response.getLong(Fields.CREATED_MILLISECONDS.toString());
+        long modified = response.getLong(Fields.MODIFIED_MILLISECONDS.toString());
 
-
-
+        Course course = Course.createInstance(response.getJSONObject(Fields.COURSE.toString()));
+        User lecturer = User.createInstance(response.getJSONObject(Fields.LECTURER.toString()));
+        TeachingReport report = TeachingReport.createInstance(response.getJSONObject(Fields.REPORT.toString()));
+        Schedule schedule = Schedule.createInstance(response.getJSONObject(Fields.SCHEDULE.toString()));
+        
+        ClassMeeting classMeeting = new ClassMeeting(type, verified, created, modified);
+        classMeeting.setCourse(course);
+        classMeeting.setLecturer(lecturer);
+        classMeeting.setReport(report);
+        classMeeting.setSchedule(schedule);
         return classMeeting;
+    }
+
+    public ClassMeeting(ClassMeetingType type, boolean verified, long created, long modified) {
+        this.type = type;
+        this.verified = verified;
+        this.created = Calendar.getInstance();
+        this.created.setTimeInMillis(created);
+        this.modified = Calendar.getInstance();
+        this.modified.setTimeInMillis(modified);
     }
 
 	public ClassMeetingType getType() {

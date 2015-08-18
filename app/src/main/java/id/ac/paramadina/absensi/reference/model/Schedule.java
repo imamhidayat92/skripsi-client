@@ -1,8 +1,32 @@
 package id.ac.paramadina.absensi.reference.model;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class Schedule {
-	private String id;
-	
+	public enum Fields {
+        ID("_id"),
+
+        DAY_CODE("day_code"),
+        START_TIME("start_time"),
+        END_TIME("end_time"),
+
+        COURSE("course"),
+        CLASS_LOCATION("class_location");
+
+        private final String text;
+        private Fields(final String text) {
+            this.text = text;
+        }
+
+        @Override
+        public String toString() {
+            return this.text;
+        }
+    }
+
+    private String id;
+
 	private int dayCode;
 	private String startTime;
 	private String endTime;
@@ -11,11 +35,26 @@ public class Schedule {
 	private ClassLocation location;
 	
 	private int countMeeting;
-	
+
+    public static Schedule createInstance(JSONObject response) throws JSONException {
+        String id = response.getString(Fields.ID.toString());
+        int dayCode = response.getInt(Fields.DAY_CODE.toString());
+        String startTime = response.getString((Fields.START_TIME.toString()));;
+        String endTime = response.getString(Fields.END_TIME.toString());
+
+        Course course = Course.createInstance(response.getJSONObject("course"));
+        ClassLocation location = ClassLocation.createInstance(response.getJSONObject("location"));
+
+        int count = 1; // TODO: Count from server data.
+
+        Schedule schedule = new Schedule(id, dayCode, startTime, endTime, course, location, count);
+        return schedule;
+    }
+
 	public Schedule(String id,
 					int dayCode, 
-					String startTime, 
-					String endTime, 
+					String startTime,
+					String endTime,
 					Course course, 
 					ClassLocation location, 
 					int countMeeting) 

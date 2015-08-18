@@ -55,6 +55,7 @@ public class ScheduleDetailActivity extends Activity {
                 i.putExtra("courseId", ScheduleDetailActivity.this.courseId);
                 i.putExtra("scheduleId", ScheduleDetailActivity.this.scheduleId);
                 i.putExtra("classMeetingId", classMeetingRawData.getString("_id"));
+                i.putExtra("status", mClassMeetingType.getSelectedItem().toString());
 
                 ScheduleDetailActivity.this.startActivity(i);
             } catch (InterruptedException e) {

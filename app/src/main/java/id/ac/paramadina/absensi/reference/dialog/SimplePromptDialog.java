@@ -1,4 +1,4 @@
-package id.ac.paramadina.absensi.helper.dialog;
+package id.ac.paramadina.absensi.reference.dialog;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -21,7 +21,7 @@ public class SimplePromptDialog extends DialogFragment {
         public void onNegativeButtonClick(DialogFragment dialog);
     }
 
-    SimplePromptDialogListener mListener;
+    SimplePromptDialogListener listener;
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -38,13 +38,13 @@ public class SimplePromptDialog extends DialogFragment {
             .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
-                    mListener.onPositiveButtonClick(SimplePromptDialog.this, String.valueOf(txtInput.getText()));
+                    listener.onPositiveButtonClick(SimplePromptDialog.this, String.valueOf(txtInput.getText()));
                 }
             })
             .setNegativeButton("Batal", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
-                    mListener.onNegativeButtonClick(SimplePromptDialog.this);
+                    listener.onNegativeButtonClick(SimplePromptDialog.this);
                 }
             })
         ;
@@ -57,7 +57,7 @@ public class SimplePromptDialog extends DialogFragment {
         super.onAttach(activity);
 
         try {
-            mListener = (SimplePromptDialogListener) activity;
+            listener = (SimplePromptDialogListener) activity;
         }
         catch (ClassCastException ex) {
             throw new ClassCastException(activity.toString()
@@ -66,7 +66,7 @@ public class SimplePromptDialog extends DialogFragment {
     }
 
     public SimplePromptDialog setListener(SimplePromptDialogListener listener) {
-        this.mListener = listener;
+        this.listener = listener;
         return this;
     }
 

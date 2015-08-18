@@ -11,6 +11,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.TextView;
+
+import org.w3c.dom.Text;
 
 public class TeachingReportListAdapter extends BaseAdapter {
 
@@ -47,6 +50,14 @@ public class TeachingReportListAdapter extends BaseAdapter {
 		if (arg1 == null) {
 			view = inflater.inflate(R.layout.listview_item_teaching_report, null);
 		}
+
+        TextView teachingReportCount = (TextView) view.findViewById(R.id.teaching_report_count);
+        TextView teachingReportSubject = (TextView) view.findViewById(R.id.teaching_report_subject);
+
+        TeachingReport report = this.data.get(arg0);
+
+        teachingReportCount.setText("Pertemuan ##");
+        teachingReportSubject.setText(report.getSubject());
 		
 		return view;
 	}

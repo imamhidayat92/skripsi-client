@@ -5,7 +5,9 @@ import org.json.JSONObject;
 
 public class User {
 
-    public enum FIELDS {
+    public enum Fields {
+        ID("_id"),
+
         NAME("name"),
         DISPLAY_NAME("display_name"),
         ID_NUMBER("id_number"),
@@ -13,8 +15,7 @@ public class User {
         DISPLAY_PICTURE("display_picture");
 
         private final String text;
-
-        private FIELDS(final String text) {
+        private Fields(final String text) {
             this.text = text;
         }
 
@@ -23,6 +24,8 @@ public class User {
             return this.text;
         }
     }
+
+    private String id;
 
 	private String name;
 	private String displayName;
@@ -33,16 +36,18 @@ public class User {
     public static User createInstance(JSONObject response) throws JSONException {
         JSONObject userData = response.getJSONObject("result");
 
-        String name = userData.getString(FIELDS.NAME.toString());
-        String displayName = userData.getString(FIELDS.DISPLAY_NAME.toString());
-        String idNumber = userData.getString("id_number");
-        String identifier = userData.getString("identifier");
+        String id = userData.getString(Fields.ID.toString());
+        String name = userData.getString(Fields.NAME.toString());
+        String displayName = userData.getString(Fields.DISPLAY_NAME.toString());
+        String idNumber = userData.getString(Fields.ID_NUMBER.toString());
+        String identifier = userData.getString(Fields.IDENTIFIER.toString());
         String displayPicture = null;
-        if (userData.has("display_picture")) {
-            displayPicture = userData.getString("display_picture");
+        if (userData.has(Fields.DISPLAY_PICTURE.toString())) {
+            displayPicture = userData.getString(Fields.DISPLAY_PICTURE.toString());
         }
 
-        return new User(name, displayName, idNumber, identifier, displayPicture);
+        User user = new User(id, name, displayName, idNumber, identifier, displayPicture);
+        return user;
     }
 
 	public User(String name, String displayName, String idNumber, String identifier, String displayPicture) {
@@ -52,6 +57,15 @@ public class User {
 		this.setIdentifier(identifier);
 		this.setDisplayPicture(displayPicture);
 	}
+
+    public User(String id, String name, String displayName, String idNumber, String identifier, String displayPicture) {
+        this(name, displayName, idNumber, identifier, displayPicture);
+        this.id = id;
+    }
+
+    public String getId() {
+        return this.id;
+    }
 
 	public String getName() {
 		return name;

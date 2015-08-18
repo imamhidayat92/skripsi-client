@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -46,8 +47,18 @@ public class ClassMeetingListAdapter extends BaseAdapter {
         View view = argView;
 
         if (view == null) {
-            view = inflater.inflate(R.layout.listview_item_schedule, null);
+            view = inflater.inflate(R.layout.listview_item_class_meeting, null);
         }
+
+        TextView courseName = (TextView) view.findViewById(R.id.class_meeting_course_name);
+        TextView courseDetail = (TextView) view.findViewById(R.id.class_meeting_schedule_detail);
+        TextView created = (TextView) view.findViewById(R.id.class_meeting_time_info);
+
+        ClassMeeting classMeeting = this.data.get(i);
+
+        courseName.setText(classMeeting.getCourse().getName());
+        courseDetail.setText("");
+        created.setText(classMeeting.getCreated().getTime().toString());
 
         return view;
     }

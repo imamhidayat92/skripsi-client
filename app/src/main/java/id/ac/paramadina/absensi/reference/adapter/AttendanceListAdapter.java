@@ -88,4 +88,9 @@ public class AttendanceListAdapter extends BaseAdapter {
 		return view;
 	}
 
+    public void pushNewEntry(Attendance attendance) {
+        this.data.add(attendance);
+        this.notifyDataSetChanged();
+    }
+
 }

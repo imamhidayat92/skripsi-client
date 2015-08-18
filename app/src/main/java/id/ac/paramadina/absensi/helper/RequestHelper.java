@@ -218,7 +218,84 @@ public class RequestHelper {
 	{
 		return this.post(resourceUrl, params, data, new HashMap<String, String>());
 	}
-	
+
+    public JSONObject delete( String resourceUrl,
+            HashMap<String, String> params,
+            HashMap<String, String> headers)
+    {
+        StringBuilder rawData = new StringBuilder();
+
+        URL url = null;
+        HttpURLConnection urlConnection = null;
+
+        try {
+            int count = 0;
+            for (String s : params.keySet()) {
+                resourceUrl += count == 0 ? "?" + s + "=" + params.get(s) : "&" + s + "=" + params.get(s);
+                count++;
+            }
+
+            resourceUrl += urlSuffix;
+
+            url = new URL(this.rootUrl + resourceUrl);
+
+            Log.d("skripsi-client", "(GET) Connecting to " + this.rootUrl + resourceUrl);
+
+            urlConnection = (HttpURLConnection) url.openConnection();
+            urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+            urlConnection.setDoOutput(true);
+            urlConnection.setRequestMethod("DELETE");
+
+            if (headers.size() > 0) {
+                Set<String> headerKeys = headers.keySet();
+
+                for (String s: headerKeys) {
+                    urlConnection.setRequestProperty(s, headers.get(s));
+                }
+            }
+
+            urlConnection.connect();
+
+            InputStream inputStream = urlConnection.getInputStream();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+
+            String line = null;
+            while ((line = reader.readLine()) != null) {
+                rawData.append(line);
+            }
+
+            reader.close();
+            inputStream.close();
+
+            urlConnection.disconnect();
+
+            Log.d("skripsi-client", "Obtained data: " + rawData.toString());
+
+            JSONObject result = new JSONObject(rawData.toString());
+            return result;
+        }
+        catch (MalformedURLException e) {
+            Log.d("skripsi-client", "MalformedURLException: " + e.getMessage());
+            return this.getErrorStreamResponse(urlConnection);
+        }
+        catch (ProtocolException e) {
+            Log.d("skripsi-client", "ProtocolException: " + e.getMessage());
+            return this.getErrorStreamResponse(urlConnection);
+        }
+        catch (IOException e) {
+            Log.d("skripsi-client", "IOException: " + e.getMessage());
+            return this.getErrorStreamResponse(urlConnection);
+        }
+        catch (JSONException e) {
+            Log.d("skripsi-client", "JSONException: " + e.getMessage());
+            return this.getErrorStreamResponse(urlConnection);
+        }
+    }
+
+    public JSONObject delete(String resourceUrl, HashMap<String, String> params) {
+        return this.delete(resourceUrl, params, new HashMap<String, String>());
+    }
+
 	private JSONObject getErrorStreamResponse(HttpURLConnection connection) {
 		InputStream errorStream = connection.getErrorStream();
 		BufferedReader errorReader = new BufferedReader(new InputStreamReader(errorStream));

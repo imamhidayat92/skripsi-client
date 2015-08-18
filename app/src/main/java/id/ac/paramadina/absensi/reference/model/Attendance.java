@@ -1,5 +1,6 @@
 package id.ac.paramadina.absensi.reference.model;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.DateFormat;
@@ -11,7 +12,36 @@ import java.util.Date;
 import id.ac.paramadina.absensi.reference.enumeration.AttendanceStatusType;
 
 public class Attendance {
-	private AttendanceStatusType type;
+    public enum Fields {
+        ID("_id"),
+
+        STATUS("status"),
+        REMARKS("remarks"),
+
+        STUDENT("student"),
+        SCHEDULE("schedule"),
+        CLASS_MEETING("class_meeting"),
+
+        CREATED("created"),
+        MODIFIED("modified"),
+        CREATED_MILLISECONDS("created_ms"),
+        MODIFIED_MILLISECONDS("modified_ms");
+
+        private final String text;
+
+        private Fields(final String text) {
+            this.text = text;
+        }
+
+        @Override
+        public String toString() {
+            return this.text;
+        }
+    }
+
+    private String id;
+
+	private AttendanceStatusType status;
 	private String remarks;
 	
 	private ClassMeeting classMeeting;
@@ -21,18 +51,55 @@ public class Attendance {
 	private Calendar created;
 	private Calendar modified;
 
-    public static Attendance createInstance(JSONObject response) {
-        Attendance attendance = new Attendance();
+    public Attendance(AttendanceStatusType status, String remarks, long created) {
+        this.status = status;
+        this.remarks = remarks;
+
+        this.created = Calendar.getInstance();
+        this.created.setTimeInMillis(created);
+    }
+
+    public Attendance(String id, AttendanceStatusType status, String remarks, long created) {
+        this(status, remarks, created);
+        this.id = id;
+    }
+
+    public static Attendance createInstance(JSONObject response) throws JSONException {
+        JSONObject rawUserData = response.getJSONObject(Fields.STUDENT.toString());
+        JSONObject rawScheduleData = response.getJSONObject(Fields.SCHEDULE.toString());
+        JSONObject rawClassMeetingData = response.getJSONObject(Fields.CLASS_MEETING.toString());
+
+        User user = User.createInstance(rawUserData);
+        Schedule schedule = Schedule.createInstance(rawScheduleData);
+        ClassMeeting classMeeting = ClassMeeting.createInstance(rawClassMeetingData);
+
+        Attendance attendance = new Attendance(
+            response.getString(Fields.ID.toString()),
+            AttendanceStatusType.valueOf(response.getString(Fields.STATUS.toString())),
+            response.getString(Fields.REMARKS.toString()),
+            response.getLong(Fields.CREATED_MILLISECONDS.toString())
+        );
+        attendance.setStudent(user);
+        attendance.setSchedule(schedule);
+        attendance.setClassMeeting(classMeeting);
 
         return attendance;
     }
 
-	public AttendanceStatusType getType() {
-		return type;
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+	public AttendanceStatusType getStatus() {
+		return status;
 	}
 	
-	public void setType(AttendanceStatusType type) {
-		this.type = type;
+	public void setStatus(AttendanceStatusType status) {
+		this.status = status;
 	}
 
 	public String getRemarks() {
@@ -75,16 +142,12 @@ public class Attendance {
 		this.created = created;
 	}
 
-    public void setCreated(String strDate) {
+    public void setCreated(String strDate) throws ParseException {
         DateFormat formatter = new SimpleDateFormat("");
-        try {
-            Date date = formatter.parse(strDate);
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(date);
-            this.created = calendar;
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+        Date date = formatter.parse(strDate);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        this.created = calendar;
     }
 
 	public Calendar getModified() {
