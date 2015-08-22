@@ -12,7 +12,7 @@ import org.json.JSONObject;
 
 import java.util.concurrent.ExecutionException;
 
-import id.ac.paramadina.absensi.fetcher.NewTeachingReportFetcher;
+import id.ac.paramadina.absensi.fetcher.NewTeachingReportDataFetcher;
 import id.ac.paramadina.absensi.reference.spec.NewTeachingReportDataSpec;
 
 public class AddNewTeachingReportActivity extends Activity {
@@ -58,7 +58,7 @@ public class AddNewTeachingReportActivity extends Activity {
 
         NewTeachingReportDataSpec spec = new NewTeachingReportDataSpec(subject, description);
 
-        NewTeachingReportFetcher fetcher = new NewTeachingReportFetcher(this, this.classMeetingId, spec);
+        NewTeachingReportDataFetcher fetcher = new NewTeachingReportDataFetcher(this, this.classMeetingId, spec);
 
         try {
             JSONObject response = fetcher.fetchAndGet();

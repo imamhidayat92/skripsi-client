@@ -10,6 +10,7 @@ import id.ac.paramadina.absensi.fetcher.DeleteAttendanceDataFetcher;
 import id.ac.paramadina.absensi.fetcher.NewAttendanceDataFetcher;
 import id.ac.paramadina.absensi.fetcher.UserDataFetcher;
 import id.ac.paramadina.absensi.helper.CommonToastMessage;
+import id.ac.paramadina.absensi.reference.AsyncTaskListener;
 import id.ac.paramadina.absensi.reference.dialog.SimplePromptDialog;
 import id.ac.paramadina.absensi.reference.Constants;
 import id.ac.paramadina.absensi.reference.adapter.AttendanceListAdapter;
@@ -109,61 +110,76 @@ public class DiscoverTagActivity extends Activity {
         this.attendanceListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                try {
-                    final Attendance attendance = (Attendance) adapterView.getItemAtPosition(i);
 
-                    String studentId = attendance.getStudent().getId();
-                    UserDataFetcher fetcher = new UserDataFetcher(DiscoverTagActivity.this, studentId);
+                final Attendance attendance = (Attendance) adapterView.getItemAtPosition(i);
 
-                    JSONObject response = fetcher.fetchAndGet();
-                    if (response != null) {
-                        if (response.has("success") && response.getBoolean("success")) {
-                            User user = User.createInstance(response.getJSONObject("result"));
+                String studentId = attendance.getStudent().getId();
+                UserDataFetcher fetcher = new UserDataFetcher(DiscoverTagActivity.this, studentId);
 
-                            UserDetailDialog dialog = new UserDetailDialog().setUser(user);
-                            dialog.setListener(new UserDetailDialog.UserDetailDialogListener() {
-                                @Override
-                                public void onCloseButtonClick(DialogFragment dialog) {
-                                    dialog.dismiss();
-                                }
+                fetcher.setListener(new AsyncTaskListener<JSONObject>() {
+                    @Override
+                    public void onPreExecute() {
+                        // Do nothing for this time.
+                    }
 
-                                @Override
-                                public void onRemoveButtonClick(DialogFragment dialog) {
-                                    try {
-                                        String attendanceId = attendance.getId();
-                                        DeleteAttendanceDataFetcher fetcher = new DeleteAttendanceDataFetcher(DiscoverTagActivity.this, attendanceId);
-                                        JSONObject response = fetcher.fetchAndGet();
+                    @Override
+                    public void onPostExecute(JSONObject response) {
+                        try {
+                            if (response != null) {
+                                if (response.has("success") && response.getBoolean("success")) {
+                                    User user = User.createInstance(response.getJSONObject("result"));
 
-                                        if (response.has("success") && response.getBoolean("success")) {
-                                            JSONObject rawAttendanceData = response.getJSONObject("result");
-                                            Attendance attendance = Attendance.createInstance(rawAttendanceData);
-
-                                            Toast.makeText(DiscoverTagActivity.this, "Data kehadiran untuk " + attendance.getStudent().getDisplayName() + " berhasil dihapus.", Toast.LENGTH_LONG).show();
+                                    UserDetailDialog dialog = new UserDetailDialog().setUser(user);
+                                    dialog.setListener(new UserDetailDialog.UserDetailDialogListener() {
+                                        @Override
+                                        public void onCloseButtonClick(DialogFragment dialog) {
+                                            dialog.dismiss();
                                         }
-                                    } catch (InterruptedException e) {
-                                        CommonToastMessage.showErrorGettingDataFromServerMessage(DiscoverTagActivity.this);
-                                    } catch (ExecutionException e) {
-                                        CommonToastMessage.showErrorGettingDataFromServerMessage(DiscoverTagActivity.this);
-                                    } catch (JSONException e) {
-                                        CommonToastMessage.showErrorGettingDataFromServerMessage(DiscoverTagActivity.this);
-                                    }
+
+                                        @Override
+                                        public void onRemoveButtonClick(DialogFragment dialog) {
+                                            String attendanceId = attendance.getId();
+                                            DeleteAttendanceDataFetcher fetcher = new DeleteAttendanceDataFetcher(DiscoverTagActivity.this, attendanceId);
+
+                                            fetcher.setListener(new AsyncTaskListener<JSONObject>() {
+                                                @Override
+                                                public void onPreExecute() {
+                                                    // Do nothing for this time.
+                                                }
+
+                                                @Override
+                                                public void onPostExecute(JSONObject response) {
+                                                    try {
+                                                        if (response.has("success") && response.getBoolean("success")) {
+                                                            JSONObject rawAttendanceData = response.getJSONObject("result");
+                                                            Attendance attendance = Attendance.createInstance(rawAttendanceData);
+
+                                                            Toast.makeText(DiscoverTagActivity.this, "Data kehadiran untuk " + attendance.getStudent().getDisplayName() + " berhasil dihapus.", Toast.LENGTH_LONG).show();
+                                                        }
+                                                    }
+                                                    catch (JSONException e) {
+                                                        CommonToastMessage.showErrorGettingDataFromServerMessage(DiscoverTagActivity.this);
+                                                    }
+                                                }
+                                            });
+
+                                            fetcher.fetch();
+                                        }
+                                    });
+                                } else {
+                                    CommonToastMessage.showErrorGettingDataFromServerMessage(DiscoverTagActivity.this);
                                 }
-                            });
+                            } else {
+                                CommonToastMessage.showErrorGettingDataFromServerMessage(DiscoverTagActivity.this);
+                            }
                         }
-                        else {
+                        catch (JSONException e) {
                             CommonToastMessage.showErrorGettingDataFromServerMessage(DiscoverTagActivity.this);
                         }
                     }
-                    else {
-                        CommonToastMessage.showErrorGettingDataFromServerMessage(DiscoverTagActivity.this);
-                    }
-                } catch (InterruptedException e) {
-                    CommonToastMessage.showErrorGettingDataFromServerMessage(DiscoverTagActivity.this);
-                } catch (ExecutionException e) {
-                    e.printStackTrace();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                });
+
+                fetcher.fetch();
             }
         });
         registerForContextMenu(this.attendanceListView);
@@ -242,7 +258,7 @@ public class DiscoverTagActivity extends Activity {
                         public void onNegativeButtonClick(DialogFragment dialog) {
                             dialog.dismiss();
                         }
-                        });
+                    });
                 manualAddDialog.show(this.getFragmentManager(), "prompt");
         }
 
@@ -250,27 +266,31 @@ public class DiscoverTagActivity extends Activity {
     }
 
     private void getUserData(String id, UserIdentificationField field) {
-        try {
-            NewAttendanceDataSpec spec = new NewAttendanceDataSpec(id, field);
-            NewAttendanceDataFetcher fetcher = new NewAttendanceDataFetcher(this, this.classMeetingId, spec);
-            JSONObject response = fetcher.fetchAndGet();
+        NewAttendanceDataSpec spec = new NewAttendanceDataSpec(id, field);
+        NewAttendanceDataFetcher fetcher = new NewAttendanceDataFetcher(this, this.classMeetingId, spec);
 
-            if (response.has("success") && response.getBoolean("success")) {
-                Attendance attendance = Attendance.createInstance(response.getJSONObject("result"));
-                this.adapter.pushNewEntry(attendance);
+        fetcher.setListener(new AsyncTaskListener<JSONObject>() {
+            @Override
+            public void onPreExecute() {
+                // Do nothing for this time.
             }
-            else {
-                Toast.makeText(this, response.getString("message"), Toast.LENGTH_LONG).show();
+
+            @Override
+            public void onPostExecute(JSONObject response) {
+                try {
+                    if (response.has("success") && response.getBoolean("success")) {
+                        Attendance attendance = Attendance.createInstance(response.getJSONObject("result"));
+                        DiscoverTagActivity.this.adapter.pushNewEntry(attendance);
+                    }
+                    else {
+                        Toast.makeText(DiscoverTagActivity.this, response.getString("message"), Toast.LENGTH_LONG).show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
-        } catch (InterruptedException e) {
-            Toast.makeText(this, R.string.data_get_error, Toast.LENGTH_LONG).show();
-            Log.d(Constants.LOGGER_TAG, e.getMessage());
-        } catch (ExecutionException e) {
-            Toast.makeText(this, R.string.data_get_error, Toast.LENGTH_LONG).show();
-            Log.d(Constants.LOGGER_TAG, e.getMessage());
-        } catch (JSONException e) {
-            Toast.makeText(this, R.string.data_parse_error, Toast.LENGTH_LONG).show();
-            Log.d(Constants.LOGGER_TAG, e.getMessage());
-        }
+        });
+
+        fetcher.fetch();
     }
 }

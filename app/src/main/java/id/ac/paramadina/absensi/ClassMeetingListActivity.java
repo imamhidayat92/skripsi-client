@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import org.json.JSONArray;
@@ -15,9 +17,9 @@ import java.util.concurrent.ExecutionException;
 
 import id.ac.paramadina.absensi.fetcher.ClassMeetingListFetcher;
 import id.ac.paramadina.absensi.helper.CommonToastMessage;
+import id.ac.paramadina.absensi.reference.AsyncTaskListener;
 import id.ac.paramadina.absensi.reference.adapter.ClassMeetingListAdapter;
 import id.ac.paramadina.absensi.reference.model.ClassMeeting;
-
 
 public class ClassMeetingListActivity extends Activity {
 
@@ -29,6 +31,8 @@ public class ClassMeetingListActivity extends Activity {
         setContentView(R.layout.activity_class_meeting_list);
 
         this.classMeetingListView = (ListView) findViewById(R.id.listview_class_meeting);
+
+        this.getClassMeetingData();
     }
 
 
@@ -56,31 +60,48 @@ public class ClassMeetingListActivity extends Activity {
     }
 
     private void getClassMeetingData() {
-        try {
-            ClassMeetingListFetcher fetcher = new ClassMeetingListFetcher(this);
-            JSONObject response = fetcher.fetchAndGet();
+        ClassMeetingListFetcher fetcher = new ClassMeetingListFetcher(this);
 
-            if (response.has("success") && response.getBoolean("success")) {
-                JSONArray rawClassMeetingData = response.getJSONArray("results");
+        fetcher.setListener(new AsyncTaskListener<JSONObject>() {
+            @Override
+            public void onPreExecute() {
+                // Do nothing for this time.
+            }
 
-                ArrayList<ClassMeeting> data = new ArrayList<ClassMeeting>();
-                for (int i = 0; i < rawClassMeetingData.length(); i++) {
-                    ClassMeeting classMeeting = ClassMeeting.createInstance(rawClassMeetingData.getJSONObject(i));
-                    data.add(classMeeting);
+            @Override
+            public void onPostExecute(JSONObject response) {
+                try {
+                    if (response.has("success") && response.getBoolean("success")) {
+                        JSONArray rawClassMeetingData = response.getJSONArray("results");
+
+                        ArrayList<ClassMeeting> data = new ArrayList<ClassMeeting>();
+                        for (int i = 0; i < rawClassMeetingData.length(); i++) {
+                            ClassMeeting classMeeting = ClassMeeting.createInstance(rawClassMeetingData.getJSONObject(i));
+                            data.add(classMeeting);
+                        }
+
+                        ClassMeetingListActivity.this.setDataToView(data);
+                    }
+                    else {
+                        CommonToastMessage.showErrorGettingDataFromServerMessage(ClassMeetingListActivity.this);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
+            }
+        });
 
-                ClassMeetingListAdapter adapter = new ClassMeetingListAdapter(this, data);
-                this.classMeetingListView.setAdapter(adapter);
+        fetcher.fetch();
+    }
+
+    private void setDataToView(ArrayList<ClassMeeting> data) {
+        ClassMeetingListAdapter adapter = new ClassMeetingListAdapter(this, data);
+        this.classMeetingListView.setAdapter(adapter);
+        this.classMeetingListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
             }
-            else {
-                CommonToastMessage.showErrorGettingDataFromServerMessage(this);
-            }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        });
     }
 }

@@ -42,6 +42,6 @@ public class ClassMeetingDataFetcher extends BaseFetcher {
 	
 	@Override
 	protected void onPostExecute(JSONObject result) {
-
+        this.progress.dismiss();
 	}
 }

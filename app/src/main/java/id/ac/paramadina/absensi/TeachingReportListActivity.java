@@ -31,7 +31,7 @@ public class TeachingReportListActivity extends Activity {
 
         this.teachingReportListView = (ListView) findViewById(R.id.teaching_report_listview);
 
-        getTeachingReportData();
+        this.getTeachingReportData();
 	}
 
 	@Override

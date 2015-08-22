@@ -5,6 +5,13 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import id.ac.paramadina.absensi.fetcher.ClassMeetingDataFetcher;
+import id.ac.paramadina.absensi.reference.AsyncTaskListener;
+import id.ac.paramadina.absensi.reference.model.ClassMeeting;
+
 
 public class ClassMeetingDetailActivity extends Activity {
 
@@ -12,6 +19,10 @@ public class ClassMeetingDetailActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_class_meeting_detail);
+
+        String classMeetingId = getIntent().getExtras().getString("classMeetingId");
+
+        this.getClassMeetingDetail(classMeetingId);
     }
 
 
@@ -30,5 +41,31 @@ public class ClassMeetingDetailActivity extends Activity {
         int id = item.getItemId();
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void getClassMeetingDetail(String classMeetingId) {
+        ClassMeetingDataFetcher fetcher = new ClassMeetingDataFetcher(this, classMeetingId);
+        fetcher.setListener(new AsyncTaskListener<JSONObject>() {
+            @Override
+            public void onPreExecute() {
+                // Do nothing for this time.
+            }
+
+            @Override
+            public void onPostExecute(JSONObject result) {
+                try {
+                    ClassMeeting classMeeting = ClassMeeting.createInstance(result);
+
+                    ClassMeetingDetailActivity.this.setDataToView(classMeeting);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        fetcher.fetch();
+    }
+
+    private void setDataToView(ClassMeeting data) {
+
     }
 }

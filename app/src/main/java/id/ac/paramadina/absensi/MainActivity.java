@@ -101,7 +101,7 @@ public class MainActivity extends Activity {
         
         mMenuItems.add(new DrawerMenuItem("Kuliah Hari Ini"));
         mMenuItems.add(new DrawerMenuItem("Arsip Laporan Mengajar"));
-        mMenuItems.add(new DrawerMenuItem("Keluar"));
+        mMenuItems.add(new DrawerMenuItem("Arsip Data Pertemuan"));
         
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerListView = (ListView) findViewById(R.id.left_drawer);

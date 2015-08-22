@@ -47,27 +47,33 @@ public class ScheduleDetailActivity extends Activity {
 		@Override
 		public void onClick(View v) {
             NewClassMeetingDataFetcher fetcher = new NewClassMeetingDataFetcher(ScheduleDetailActivity.this, ScheduleDetailActivity.this.spec);
-            try {
-                JSONObject response = fetcher.fetchAndGet();
-                JSONObject classMeetingRawData = response.getJSONObject("result");
 
-                Intent i = new Intent(ScheduleDetailActivity.this, DiscoverTagActivity.class);
-                i.putExtra("courseId", ScheduleDetailActivity.this.courseId);
-                i.putExtra("scheduleId", ScheduleDetailActivity.this.scheduleId);
-                i.putExtra("classMeetingId", classMeetingRawData.getString("_id"));
-                i.putExtra("status", mClassMeetingType.getSelectedItem().toString());
+            fetcher.setListener(new AsyncTaskListener<JSONObject>() {
+                @Override
+                public void onPreExecute() {
+                    // Do nothing for this time.
+                }
 
-                ScheduleDetailActivity.this.startActivity(i);
-            } catch (InterruptedException e) {
-                Log.d(Constants.LOGGER_TAG, "Error (InterruptedException)");
-                Log.d(Constants.LOGGER_TAG, e.getMessage());
-            } catch (ExecutionException e) {
-                Log.d(Constants.LOGGER_TAG, "Error (ExecutionException)");
-                Log.d(Constants.LOGGER_TAG, e.getMessage());
-            } catch (JSONException e) {
-                Log.d(Constants.LOGGER_TAG, "Error (JSONException)");
-                Log.d(Constants.LOGGER_TAG, e.getMessage());
-            }
+                @Override
+                public void onPostExecute(JSONObject response) {
+                    try {
+                        JSONObject classMeetingRawData = response.getJSONObject("result");
+
+                        Intent i = new Intent(ScheduleDetailActivity.this, DiscoverTagActivity.class);
+                        i.putExtra("courseId", ScheduleDetailActivity.this.courseId);
+                        i.putExtra("scheduleId", ScheduleDetailActivity.this.scheduleId);
+                        i.putExtra("classMeetingId", classMeetingRawData.getString("_id"));
+                        i.putExtra("status", mClassMeetingType.getSelectedItem().toString());
+
+                        ScheduleDetailActivity.this.startActivity(i);
+                    } catch (JSONException e) {
+                        Log.d(Constants.LOGGER_TAG, "Error (JSONException)");
+                        Log.d(Constants.LOGGER_TAG, e.getMessage());
+                    }
+                }
+            });
+
+            fetcher.fetch();
         }
 	};
 	
@@ -127,6 +133,7 @@ public class ScheduleDetailActivity extends Activity {
         };
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, classMeetingTypes);
 		mClassMeetingType.setAdapter(adapter);
+
         this.txtCourseName = (TextView) findViewById(R.id.lbl_course_title);
 		this.txtCourseDescription = (TextView) findViewById(R.id.lbl_course_description);
 		this.txtScheduleDetail = (TextView) findViewById(R.id.lbl_schedule_detail);

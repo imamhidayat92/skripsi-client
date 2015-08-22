@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
 import id.ac.paramadina.absensi.fetcher.PendingClassMeetingDataFetcher;
+import id.ac.paramadina.absensi.reference.AsyncTaskListener;
 import id.ac.paramadina.absensi.reference.adapter.ClassMeetingListAdapter;
 import id.ac.paramadina.absensi.reference.model.ClassMeeting;
 
@@ -30,7 +31,7 @@ public class PendingClassMeetingListActivity extends Activity {
 
         this.pendingClassMeetings = (ListView) findViewById(R.id.listview_pending_class_meeting);
 
-        getPendingClassMeetingData();
+        this.getPendingClassMeetingData();
     }
 
 
@@ -53,6 +54,26 @@ public class PendingClassMeetingListActivity extends Activity {
 
     private void getPendingClassMeetingData() {
         PendingClassMeetingDataFetcher fetcher = new PendingClassMeetingDataFetcher(this);
+        fetcher.setListener(new AsyncTaskListener<JSONObject>() {
+            @Override
+            public void onPreExecute() {
+                // Do nothing for this time.
+            }
+
+            @Override
+            public void onPostExecute(JSONObject result) {
+                try {
+                    if (result.has("success") && result.getBoolean("success")) {
+
+                    }
+                    else {
+
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
         try {
             JSONObject response = fetcher.fetchAndGet();
             if (response.getBoolean("success")) {

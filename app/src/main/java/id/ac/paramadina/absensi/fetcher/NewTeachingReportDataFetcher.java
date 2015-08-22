@@ -7,12 +7,12 @@ import org.json.JSONObject;
 import id.ac.paramadina.absensi.helper.RequestHelper;
 import id.ac.paramadina.absensi.reference.spec.NewTeachingReportDataSpec;
 
-public class NewTeachingReportFetcher extends BaseFetcher {
+public class NewTeachingReportDataFetcher extends BaseFetcher {
 
     private String classMeetingId;
     private NewTeachingReportDataSpec spec;
 
-    public NewTeachingReportFetcher(Activity activity, String classMeetingId, NewTeachingReportDataSpec spec) {
+    public NewTeachingReportDataFetcher(Activity activity, String classMeetingId, NewTeachingReportDataSpec spec) {
         super(activity);
 
         this.classMeetingId = classMeetingId;

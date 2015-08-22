@@ -15,6 +15,8 @@ import id.ac.paramadina.absensi.reference.model.TeachingReport;
 
 public class TeachingReportDetailActivity extends Activity {
 
+
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
