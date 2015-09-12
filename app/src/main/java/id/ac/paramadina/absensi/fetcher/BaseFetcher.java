@@ -89,11 +89,6 @@ public abstract class BaseFetcher extends AsyncTask<String, Void, JSONObject> {
 	public void fetch() {
 		this.execute(this.API_ADDRESS, this.API_RESOURCE_URL);
 	}
-	
-	public JSONObject fetchAndGet() throws InterruptedException, ExecutionException {
-		Log.d(Constants.LOGGER_TAG, "Fetching " + this.API_ADDRESS + ", " + this.API_RESOURCE_URL);
-        return this.execute(this.API_ADDRESS, this.API_RESOURCE_URL).get();
-	}
 
 	@Override
 	protected void onPreExecute() {
@@ -108,4 +103,9 @@ public abstract class BaseFetcher extends AsyncTask<String, Void, JSONObject> {
 			listener.onPostExecute(result);
 		}
 	}
+
+    @Override
+    protected void onCancelled() {
+        // TODO: What?
+    }
 }

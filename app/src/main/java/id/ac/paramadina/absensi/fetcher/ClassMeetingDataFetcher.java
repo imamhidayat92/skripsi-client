@@ -22,7 +22,7 @@ public class ClassMeetingDataFetcher extends BaseFetcher {
 	@Override
 	protected void onPreExecute() {
         this.progress.setTitle("Harap Tunggu");
-        this.progress.setMessage("Sedang mengambil data pertemuan..");
+        this.progress.setMessage("Sedang mengambil data pertemuan kelas..");
         this.progress.show();
 
         super.onPreExecute();

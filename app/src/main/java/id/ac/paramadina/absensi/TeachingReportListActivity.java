@@ -20,7 +20,7 @@ import id.ac.paramadina.absensi.reference.AsyncTaskListener;
 import id.ac.paramadina.absensi.reference.adapter.TeachingReportListAdapter;
 import id.ac.paramadina.absensi.reference.model.TeachingReport;
 
-public class TeachingReportListActivity extends Activity {
+public class TeachingReportListActivity extends BaseActivity {
 
 	private ListView teachingReportListView;
 	

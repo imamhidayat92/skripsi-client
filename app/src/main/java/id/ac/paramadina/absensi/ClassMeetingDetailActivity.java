@@ -13,7 +13,7 @@ import id.ac.paramadina.absensi.reference.AsyncTaskListener;
 import id.ac.paramadina.absensi.reference.model.ClassMeeting;
 
 
-public class ClassMeetingDetailActivity extends Activity {
+public class ClassMeetingDetailActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

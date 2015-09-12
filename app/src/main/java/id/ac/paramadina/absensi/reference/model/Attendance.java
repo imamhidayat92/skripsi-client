@@ -64,6 +64,15 @@ public class Attendance {
         this.id = id;
     }
 
+    public static AttendanceStatusType getAttendanceStatusType(String value) {
+        for (AttendanceStatusType type : AttendanceStatusType.values()) {
+            if (type.toString().equals(value)) {
+                return type;
+            }
+        }
+        return null;
+    }
+
     public static Attendance createInstance(JSONObject response) throws JSONException {
         JSONObject rawUserData = response.getJSONObject(Fields.STUDENT.toString());
         JSONObject rawScheduleData = response.getJSONObject(Fields.SCHEDULE.toString());
@@ -75,7 +84,7 @@ public class Attendance {
 
         Attendance attendance = new Attendance(
             response.getString(Fields.ID.toString()),
-            AttendanceStatusType.valueOf(response.getString(Fields.STATUS.toString())),
+            getAttendanceStatusType(response.getString(Fields.STATUS.toString())),
             response.getString(Fields.REMARKS.toString()),
             response.getLong(Fields.CREATED_MILLISECONDS.toString())
         );

@@ -8,7 +8,7 @@ import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.widget.Toast;
 
-public class SplashActivity extends Activity {
+public class SplashActivity extends BaseActivity {
 	private static final int SPLASH_TIME_OUT = 3000;
 	
 	@Override

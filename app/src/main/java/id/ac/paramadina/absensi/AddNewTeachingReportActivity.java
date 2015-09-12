@@ -3,9 +3,11 @@ package id.ac.paramadina.absensi;
 import android.os.Bundle;
 import android.app.Activity;
 import android.telephony.SmsManager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -13,9 +15,11 @@ import org.json.JSONObject;
 import java.util.concurrent.ExecutionException;
 
 import id.ac.paramadina.absensi.fetcher.NewTeachingReportDataFetcher;
+import id.ac.paramadina.absensi.reference.AsyncTaskListener;
+import id.ac.paramadina.absensi.reference.Constants;
 import id.ac.paramadina.absensi.reference.spec.NewTeachingReportDataSpec;
 
-public class AddNewTeachingReportActivity extends Activity {
+public class AddNewTeachingReportActivity extends BaseActivity {
 
     private String classMeetingId;
 
@@ -60,23 +64,31 @@ public class AddNewTeachingReportActivity extends Activity {
 
         NewTeachingReportDataFetcher fetcher = new NewTeachingReportDataFetcher(this, this.classMeetingId, spec);
 
-        try {
-            JSONObject response = fetcher.fetchAndGet();
-            if (response.getBoolean("success")) {
-                SmsManager smsManager = SmsManager.getDefault();
+        fetcher.setListener(new AsyncTaskListener<JSONObject>() {
+            @Override
+            public void onPreExecute() {
+                // Do nothing for this time.
+            }
+
+            @Override
+            public void onPostExecute(JSONObject response) {
+                try {
+                    if (response.getBoolean("success")) {
+                        SmsManager smsManager = SmsManager.getDefault();
 
 
+                    }
+                    else {
+                        Log.d(Constants.LOGGER_TAG, "Error on parsing response from server.");
+                    }
+                }
+                catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
-            else {
-                // Something wrong happened.
-            }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        });
+
+        fetcher.fetch();
     }
 
 }

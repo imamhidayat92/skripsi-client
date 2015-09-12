@@ -18,7 +18,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-public class MainActivity extends Activity {
+public class MainActivity extends BaseActivity {
 
 	/* Controls */
 	
@@ -41,6 +41,7 @@ public class MainActivity extends Activity {
 			 * 1. Jadwal Hari Ini
 			 * 2. Pertemuan yang Tertunda
 			 * 3. Pertemuan Kelas
+			 * 4. Daftar Laporan Mengajar
 			 */
             Intent i;
 			

@@ -20,7 +20,7 @@ import id.ac.paramadina.absensi.reference.adapter.ClassMeetingListAdapter;
 import id.ac.paramadina.absensi.reference.model.ClassMeeting;
 
 
-public class PendingClassMeetingListActivity extends Activity {
+public class PendingClassMeetingListActivity extends BaseActivity {
 
     private ListView pendingClassMeetings;
 
@@ -61,46 +61,37 @@ public class PendingClassMeetingListActivity extends Activity {
             }
 
             @Override
-            public void onPostExecute(JSONObject result) {
+            public void onPostExecute(JSONObject response) {
                 try {
-                    if (result.has("success") && result.getBoolean("success")) {
+                    if (response.has("success") && response.getBoolean("success")) {
+                        ArrayList<ClassMeeting> data = new ArrayList<ClassMeeting>();
+                        JSONArray rawClassMeetingData = response.getJSONArray("results");
+                        for (int i = 0; i < rawClassMeetingData.length(); i++) {
+                            JSONObject rawClassMeeting = rawClassMeetingData.getJSONObject(i);
+                            ClassMeeting classMeeting = ClassMeeting.createInstance(rawClassMeeting);
+                            data.add(classMeeting);
+                        }
 
+                        PendingClassMeetingListActivity.this.setDataToView(data);
                     }
                     else {
-
+                        Toast.makeText(PendingClassMeetingListActivity.this, "Gagal mengambil data.", Toast.LENGTH_LONG).show();
                     }
-                } catch (JSONException e) {
+                }
+                catch (JSONException e) {
                     e.printStackTrace();
                 }
             }
         });
-        try {
-            JSONObject response = fetcher.fetchAndGet();
-            if (response.getBoolean("success")) {
-                ArrayList<ClassMeeting> listViewData = new ArrayList<ClassMeeting>();
-                JSONArray rawClassMeetingData = response.getJSONArray("results");
-                for (int i = 0; i < rawClassMeetingData.length(); i++) {
-                    JSONObject rawClassMeeting = rawClassMeetingData.getJSONObject(i);
-                    ClassMeeting classMeeting = ClassMeeting.createInstance(rawClassMeeting);
-                    listViewData.add(classMeeting);
-                }
+    }
 
-                ClassMeetingListAdapter adapter = new ClassMeetingListAdapter(this, listViewData);
-                this.pendingClassMeetings.setAdapter(adapter);
-
-                if (rawClassMeetingData.length() == 0) {
-                    Toast.makeText(this, "Tidak ada data.", Toast.LENGTH_LONG).show();
-                }
-            }
-            else {
-                Toast.makeText(this, "Gagal mengambil data.", Toast.LENGTH_LONG).show();
-            }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
-            e.printStackTrace();
+    private void setDataToView(ArrayList<ClassMeeting> data) {
+        if (data.size() == 0) {
+            Toast.makeText(this, "Tidak ada data.", Toast.LENGTH_LONG).show();
+        }
+        else {
+            ClassMeetingListAdapter adapter = new ClassMeetingListAdapter(this, data);
+            this.pendingClassMeetings.setAdapter(adapter);
         }
     }
 }

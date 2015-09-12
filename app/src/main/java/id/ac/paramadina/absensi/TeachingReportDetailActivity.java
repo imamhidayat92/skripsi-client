@@ -13,7 +13,7 @@ import id.ac.paramadina.absensi.helper.CommonToastMessage;
 import id.ac.paramadina.absensi.reference.AsyncTaskListener;
 import id.ac.paramadina.absensi.reference.model.TeachingReport;
 
-public class TeachingReportDetailActivity extends Activity {
+public class TeachingReportDetailActivity extends BaseActivity {
 
 
 

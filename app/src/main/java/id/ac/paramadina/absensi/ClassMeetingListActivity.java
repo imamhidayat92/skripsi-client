@@ -21,7 +21,7 @@ import id.ac.paramadina.absensi.reference.AsyncTaskListener;
 import id.ac.paramadina.absensi.reference.adapter.ClassMeetingListAdapter;
 import id.ac.paramadina.absensi.reference.model.ClassMeeting;
 
-public class ClassMeetingListActivity extends Activity {
+public class ClassMeetingListActivity extends BaseActivity {
 
     private ListView classMeetingListView;
 

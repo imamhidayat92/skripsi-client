@@ -3,6 +3,8 @@ package id.ac.paramadina.absensi.reference.model;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import id.ac.paramadina.absensi.reference.enumeration.UserRoleType;
+
 public class User {
 
     public enum Fields {
@@ -48,6 +50,15 @@ public class User {
 
         User user = new User(id, name, displayName, idNumber, identifier, displayPicture);
         return user;
+    }
+
+    public static UserRoleType getClassMeetingType(String value) {
+        for (UserRoleType type : UserRoleType.values()) {
+            if (type.toString().equals(value)) {
+                return type;
+            }
+        }
+        return null;
     }
 
 	public User(String name, String displayName, String idNumber, String identifier, String displayPicture) {

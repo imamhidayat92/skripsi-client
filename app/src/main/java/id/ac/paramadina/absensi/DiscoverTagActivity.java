@@ -6,6 +6,7 @@ import java.util.concurrent.ExecutionException;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import id.ac.paramadina.absensi.fetcher.ClassMeetingDataFetcher;
 import id.ac.paramadina.absensi.fetcher.DeleteAttendanceDataFetcher;
 import id.ac.paramadina.absensi.fetcher.NewAttendanceDataFetcher;
 import id.ac.paramadina.absensi.fetcher.UserDataFetcher;
@@ -17,6 +18,7 @@ import id.ac.paramadina.absensi.reference.adapter.AttendanceListAdapter;
 import id.ac.paramadina.absensi.reference.dialog.UserDetailDialog;
 import id.ac.paramadina.absensi.reference.enumeration.UserIdentificationField;
 import id.ac.paramadina.absensi.reference.model.Attendance;
+import id.ac.paramadina.absensi.reference.model.ClassMeeting;
 import id.ac.paramadina.absensi.reference.model.User;
 import id.ac.paramadina.absensi.reference.spec.NewAttendanceDataSpec;
 
@@ -35,9 +37,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
-public class DiscoverTagActivity extends Activity {
+public class DiscoverTagActivity extends BaseActivity {
 
     /* General Data */
 
@@ -56,7 +59,9 @@ public class DiscoverTagActivity extends Activity {
 	private AttendanceListAdapter adapter;
 	
 	/* Controls */
-	
+
+    private TextView courseTitle;
+
 	private ListView attendanceListView;
 	
 	/* Event Listener */
@@ -100,6 +105,7 @@ public class DiscoverTagActivity extends Activity {
         this.courseId = getIntent().getExtras().getString("courseId");
         this.scheduleId = getIntent().getExtras().getString("scheduleId");
 
+        this.courseTitle = (TextView) findViewById(R.id.course_title);
 		this.attendanceListView = (ListView) findViewById(R.id.attendance_list);
 		
 		this.attendanceData = new ArrayList<Attendance>();
@@ -183,6 +189,8 @@ public class DiscoverTagActivity extends Activity {
             }
         });
         registerForContextMenu(this.attendanceListView);
+
+        this.getClassMeetingData();
 	}
 
     @Override
@@ -265,6 +273,44 @@ public class DiscoverTagActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
+    private void getClassMeetingData() {
+        ClassMeetingDataFetcher fetcher = new ClassMeetingDataFetcher(this, this.classMeetingId);
+
+        fetcher.setListener(new AsyncTaskListener<JSONObject>() {
+            @Override
+            public void onPreExecute() {
+                // Do nothing for this time.
+            }
+
+            @Override
+            public void onPostExecute(JSONObject response) {
+                if (response != null) {
+                    try {
+                        if (response.has("success") && response.getBoolean("success")) {
+                            ClassMeeting classMeeting = ClassMeeting.createInstance(response);
+
+                            DiscoverTagActivity.this.setDataToView(classMeeting);
+                        }
+                        else {
+                            Toast.makeText(DiscoverTagActivity.this, R.string.data_get_error, Toast.LENGTH_LONG).show();
+                        }
+                    } catch (JSONException e) {
+                        Toast.makeText(DiscoverTagActivity.this, R.string.data_parse_error, Toast.LENGTH_LONG);
+                    }
+                }
+                else {
+                    Toast.makeText(DiscoverTagActivity.this, "Tidak dapat mengambil data (null).", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+
+        fetcher.fetch();
+    }
+
+    private void setDataToView(ClassMeeting classMeeting) {
+        this.courseTitle.setText(classMeeting.getCourse().getName());
+    }
+
     private void getUserData(String id, UserIdentificationField field) {
         NewAttendanceDataSpec spec = new NewAttendanceDataSpec(id, field);
         NewAttendanceDataFetcher fetcher = new NewAttendanceDataFetcher(this, this.classMeetingId, spec);
@@ -277,16 +323,21 @@ public class DiscoverTagActivity extends Activity {
 
             @Override
             public void onPostExecute(JSONObject response) {
-                try {
-                    if (response.has("success") && response.getBoolean("success")) {
-                        Attendance attendance = Attendance.createInstance(response.getJSONObject("result"));
-                        DiscoverTagActivity.this.adapter.pushNewEntry(attendance);
+                if (response != null) {
+                    try {
+                        if (response.has("success") && response.getBoolean("success")) {
+                            Attendance attendance = Attendance.createInstance(response.getJSONObject("result"));
+                            DiscoverTagActivity.this.adapter.pushNewEntry(attendance);
+                        }
+                        else {
+                            Toast.makeText(DiscoverTagActivity.this, response.getString("message"), Toast.LENGTH_LONG).show();
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
-                    else {
-                        Toast.makeText(DiscoverTagActivity.this, response.getString("message"), Toast.LENGTH_LONG).show();
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                }
+                else {
+                    Toast.makeText(DiscoverTagActivity.this, "Tidak dapat mengambil data dari server (null). Kabari ini pada pengembang.", Toast.LENGTH_LONG).show();
                 }
             }
         });

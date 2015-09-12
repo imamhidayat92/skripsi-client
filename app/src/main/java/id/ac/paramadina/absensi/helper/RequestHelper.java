@@ -22,6 +22,8 @@ import org.json.JSONObject;
 import android.util.Log;
 
 public class RequestHelper {
+    final private int TIMEOUT_LIMIT = 30000;
+
 	private String rootUrl;
 	private String urlSuffix;
 	
@@ -69,7 +71,10 @@ public class RequestHelper {
 					urlConnection.setRequestProperty(s, headers.get(s));
 				}				
 			}
-			
+
+            urlConnection.setConnectTimeout(this.TIMEOUT_LIMIT);
+            urlConnection.setReadTimeout(this.TIMEOUT_LIMIT);
+
 			urlConnection.connect();
 			
 			InputStream inputStream = urlConnection.getInputStream();
@@ -178,7 +183,10 @@ public class RequestHelper {
 			outputStream.close();
 			
 			Log.d("skripsi-client", "Posted data: " + strPostedData.toString());
-			
+
+            urlConnection.setConnectTimeout(this.TIMEOUT_LIMIT);
+            urlConnection.setReadTimeout(this.TIMEOUT_LIMIT);
+
 			urlConnection.connect();
 			
 			InputStream inputStream = urlConnection.getInputStream();
@@ -229,6 +237,8 @@ public class RequestHelper {
             HashMap<String, String> params,
             HashMap<String, String> headers)
     {
+        JSONObject result;
+
         StringBuilder rawData = new StringBuilder();
 
         URL url = null;
@@ -260,6 +270,9 @@ public class RequestHelper {
                 }
             }
 
+            urlConnection.setConnectTimeout(this.TIMEOUT_LIMIT);
+            urlConnection.setReadTimeout(this.TIMEOUT_LIMIT);
+
             urlConnection.connect();
 
             InputStream inputStream = urlConnection.getInputStream();
@@ -277,8 +290,7 @@ public class RequestHelper {
 
             Log.d("skripsi-client", "Obtained data: " + rawData.toString());
 
-            JSONObject result = new JSONObject(rawData.toString());
-            return result;
+            result = new JSONObject(rawData.toString());
         }
         catch (MalformedURLException e) {
             Log.d("skripsi-client", "MalformedURLException: " + e.getMessage());
@@ -296,6 +308,8 @@ public class RequestHelper {
             Log.d("skripsi-client", "JSONException: " + e.getMessage());
             return this.getErrorStreamResponse(urlConnection);
         }
+
+        return result;
     }
 
     public JSONObject delete(String resourceUrl, HashMap<String, String> params) {
@@ -303,34 +317,31 @@ public class RequestHelper {
     }
 
 	private JSONObject getErrorStreamResponse(HttpURLConnection connection) {
-		JSONObject response;
+		JSONObject response = null;
+        StringBuilder rawData = new StringBuilder();
+        String line;
 
-        InputStream errorStream = connection.getErrorStream();
-		BufferedReader errorReader = new BufferedReader(new InputStreamReader(errorStream));
-		
-		StringBuilder rawData = new StringBuilder();
-		String line;
-		
-		try {
-			while ((line = errorReader.readLine()) != null) {
-				rawData.append(line);
-			}
-			
-			errorStream.close();
-			errorReader.close();
-			connection.disconnect();
-			
-			response = new JSONObject(rawData.toString());
+        try {
+            InputStream errorStream = connection.getErrorStream();
+            if (errorStream != null) {
+                BufferedReader errorReader = new BufferedReader(new InputStreamReader(errorStream));
+
+                while ((line = errorReader.readLine()) != null) {
+                    rawData.append(line);
+                }
+
+                errorStream.close();
+                errorReader.close();
+                connection.disconnect();
+
+                response = new JSONObject(rawData.toString());
+            }
 		}
         catch (IOException e) {
 			Log.d("skripsi-client", "Error while reading error stream.");
-			e.printStackTrace();
-			return null;
 		}
         catch (JSONException e) {
 			Log.d("skripsi-client", "Error while parsing JSON. Raw data content: " + rawData.toString());
-			e.printStackTrace();
-			return null;
 		}
 
         return response;

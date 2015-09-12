@@ -8,6 +8,7 @@ import id.ac.paramadina.absensi.fetcher.ScheduleDetailFetcher;
 import id.ac.paramadina.absensi.reference.AsyncTaskListener;
 import id.ac.paramadina.absensi.reference.Constants;
 import id.ac.paramadina.absensi.reference.enumeration.ClassMeetingType;
+import id.ac.paramadina.absensi.reference.model.ClassMeeting;
 import id.ac.paramadina.absensi.reference.spec.NewClassMeetingDataSpec;
 
 import android.app.Activity;
@@ -24,7 +25,7 @@ import android.widget.Toast;
 
 import java.util.concurrent.ExecutionException;
 
-public class ScheduleDetailActivity extends Activity {
+public class ScheduleDetailActivity extends BaseActivity {
 	
 	private String courseId;
 	private String scheduleId;
@@ -58,17 +59,17 @@ public class ScheduleDetailActivity extends Activity {
                 public void onPostExecute(JSONObject response) {
                     try {
                         JSONObject classMeetingRawData = response.getJSONObject("result");
+                        ClassMeeting classMeeting = ClassMeeting.createInstance(classMeetingRawData);
 
                         Intent i = new Intent(ScheduleDetailActivity.this, DiscoverTagActivity.class);
                         i.putExtra("courseId", ScheduleDetailActivity.this.courseId);
                         i.putExtra("scheduleId", ScheduleDetailActivity.this.scheduleId);
-                        i.putExtra("classMeetingId", classMeetingRawData.getString("_id"));
+                        i.putExtra("classMeetingId", classMeeting.getId());
                         i.putExtra("status", mClassMeetingType.getSelectedItem().toString());
 
                         ScheduleDetailActivity.this.startActivity(i);
                     } catch (JSONException e) {
-                        Log.d(Constants.LOGGER_TAG, "Error (JSONException)");
-                        Log.d(Constants.LOGGER_TAG, e.getMessage());
+                        Log.d(Constants.LOGGER_TAG, "Error (JSONException): " + e.getMessage());
                     }
                 }
             });

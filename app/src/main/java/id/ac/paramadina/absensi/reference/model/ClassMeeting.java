@@ -9,6 +9,8 @@ import id.ac.paramadina.absensi.reference.enumeration.ClassMeetingType;
 
 public class ClassMeeting {
     public enum Fields {
+        ID("_id"),
+
         TYPE("type"),
         VERIFIED("verified"),
 
@@ -33,6 +35,8 @@ public class ClassMeeting {
         }
     }
 
+    private String id;
+
 	private ClassMeetingType type;
 	private boolean verified;
 
@@ -47,17 +51,38 @@ public class ClassMeeting {
 	private Calendar created;
 	private Calendar modified;
 
+    public static ClassMeetingType getClassMeetingType(String value) {
+        for (ClassMeetingType type : ClassMeetingType.values()) {
+            if (type.toString().equals(value)) {
+                return type;
+            }
+        }
+        return null;
+    }
+
     public static ClassMeeting createInstance(JSONObject response) throws JSONException {
-        ClassMeetingType type = ClassMeetingType.valueOf(response.getString(Fields.TYPE.toString()));
+        ClassMeetingType type = getClassMeetingType(Fields.TYPE.toString());
         boolean verified = response.getBoolean(Fields.VERIFIED.toString());
         long created = response.getLong(Fields.CREATED_MILLISECONDS.toString());
         long modified = response.getLong(Fields.MODIFIED_MILLISECONDS.toString());
 
-        Course course = Course.createInstance(response.getJSONObject(Fields.COURSE.toString()));
-        User lecturer = User.createInstance(response.getJSONObject(Fields.LECTURER.toString()));
-        TeachingReport report = TeachingReport.createInstance(response.getJSONObject(Fields.REPORT.toString()));
-        Schedule schedule = Schedule.createInstance(response.getJSONObject(Fields.SCHEDULE.toString()));
-        
+        Course course = null;
+        if (response.has(Fields.COURSE.toString())) {
+            course = Course.createInstance(response.getJSONObject(Fields.COURSE.toString()));
+        }
+        User lecturer = null;
+        if (response.has(Fields.LECTURER.toString())) {
+            lecturer = User.createInstance(response.getJSONObject(Fields.LECTURER.toString()));
+        }
+        TeachingReport report = null;
+        if (response.has(Fields.REPORT.toString())) {
+            report = TeachingReport.createInstance(response.getJSONObject(Fields.REPORT.toString()));
+        }
+        Schedule schedule = null;
+        if (response.has(Fields.SCHEDULE.toString())) {
+            schedule = Schedule.createInstance(response.getJSONObject(Fields.SCHEDULE.toString()));
+        }
+
         ClassMeeting classMeeting = new ClassMeeting(type, verified, created, modified);
         classMeeting.setCourse(course);
         classMeeting.setLecturer(lecturer);
@@ -73,6 +98,15 @@ public class ClassMeeting {
         this.created.setTimeInMillis(created);
         this.modified = Calendar.getInstance();
         this.modified.setTimeInMillis(modified);
+    }
+
+    public ClassMeeting(String id, ClassMeetingType type, boolean verified, long created, long modified) {
+        this(type, verified, created, modified);
+        this.id = id;
+    }
+
+    public String getId() {
+        return this.id;
     }
 
 	public ClassMeetingType getType() {
