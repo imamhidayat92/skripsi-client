@@ -325,7 +325,7 @@ public class DiscoverTagActivity extends BaseActivity {
             public void onPostExecute(JSONObject response) {
                 if (response != null) {
                     try {
-                        if (response.has("success") && response.getBoolean("success")) {
+                        if (response.has("success") && response.has("result") && response.getBoolean("success")) {
                             Attendance attendance = Attendance.createInstance(response.getJSONObject("result"));
                             DiscoverTagActivity.this.adapter.pushNewEntry(attendance);
                         }

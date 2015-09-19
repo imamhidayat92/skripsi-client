@@ -7,6 +7,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -70,23 +71,28 @@ public class ClassMeetingListActivity extends BaseActivity {
 
             @Override
             public void onPostExecute(JSONObject response) {
-                try {
-                    if (response.has("success") && response.getBoolean("success")) {
-                        JSONArray rawClassMeetingData = response.getJSONArray("results");
+                if (response == null) {
+                    Toast.makeText(ClassMeetingListActivity.this, ClassMeetingListActivity.this.getString(R.string.unknown_error), Toast.LENGTH_LONG).show();
+                }
+                else {
+                    try {
+                        if (response.has("success") && response.has("success") && response.getBoolean("success")) {
+                            JSONArray rawClassMeetingData = response.getJSONArray("results");
 
-                        ArrayList<ClassMeeting> data = new ArrayList<ClassMeeting>();
-                        for (int i = 0; i < rawClassMeetingData.length(); i++) {
-                            ClassMeeting classMeeting = ClassMeeting.createInstance(rawClassMeetingData.getJSONObject(i));
-                            data.add(classMeeting);
+                            ArrayList<ClassMeeting> data = new ArrayList<ClassMeeting>();
+                            for (int i = 0; i < rawClassMeetingData.length(); i++) {
+                                ClassMeeting classMeeting = ClassMeeting.createInstance(rawClassMeetingData.getJSONObject(i));
+                                data.add(classMeeting);
+                            }
+
+                            ClassMeetingListActivity.this.setDataToView(data);
                         }
-
-                        ClassMeetingListActivity.this.setDataToView(data);
+                        else {
+                            CommonToastMessage.showErrorGettingDataFromServerMessage(ClassMeetingListActivity.this);
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
-                    else {
-                        CommonToastMessage.showErrorGettingDataFromServerMessage(ClassMeetingListActivity.this);
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
                 }
             }
         });

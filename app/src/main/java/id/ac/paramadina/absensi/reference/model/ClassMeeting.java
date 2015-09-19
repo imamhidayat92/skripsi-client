@@ -5,6 +5,7 @@ import org.json.JSONObject;
 
 import java.util.Calendar;
 
+import id.ac.paramadina.absensi.helper.CommonDataHelper;
 import id.ac.paramadina.absensi.reference.enumeration.ClassMeetingType;
 
 public class ClassMeeting {
@@ -61,29 +62,30 @@ public class ClassMeeting {
     }
 
     public static ClassMeeting createInstance(JSONObject response) throws JSONException {
-        ClassMeetingType type = getClassMeetingType(Fields.TYPE.toString());
+        String id = response.getString("_id");
+        ClassMeetingType type = getClassMeetingType(response.getString(Fields.TYPE.toString()));
         boolean verified = response.getBoolean(Fields.VERIFIED.toString());
         long created = response.getLong(Fields.CREATED_MILLISECONDS.toString());
         long modified = response.getLong(Fields.MODIFIED_MILLISECONDS.toString());
 
         Course course = null;
-        if (response.has(Fields.COURSE.toString())) {
+        if (response.has(Fields.COURSE.toString()) && CommonDataHelper.isPopulatedObject(response, Fields.COURSE.toString())) {
             course = Course.createInstance(response.getJSONObject(Fields.COURSE.toString()));
         }
         User lecturer = null;
-        if (response.has(Fields.LECTURER.toString())) {
+        if (response.has(Fields.LECTURER.toString()) && CommonDataHelper.isPopulatedObject(response, Fields.LECTURER.toString())) {
             lecturer = User.createInstance(response.getJSONObject(Fields.LECTURER.toString()));
         }
         TeachingReport report = null;
-        if (response.has(Fields.REPORT.toString())) {
+        if (response.has(Fields.REPORT.toString()) && CommonDataHelper.isPopulatedObject(response, Fields.REPORT.toString())) {
             report = TeachingReport.createInstance(response.getJSONObject(Fields.REPORT.toString()));
         }
         Schedule schedule = null;
-        if (response.has(Fields.SCHEDULE.toString())) {
+        if (response.has(Fields.SCHEDULE.toString()) && CommonDataHelper.isPopulatedObject(response, Fields.SCHEDULE.toString())) {
             schedule = Schedule.createInstance(response.getJSONObject(Fields.SCHEDULE.toString()));
         }
 
-        ClassMeeting classMeeting = new ClassMeeting(type, verified, created, modified);
+        ClassMeeting classMeeting = new ClassMeeting(id, type, verified, created, modified);
         classMeeting.setCourse(course);
         classMeeting.setLecturer(lecturer);
         classMeeting.setReport(report);

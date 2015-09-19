@@ -17,6 +17,7 @@
     <string name="data_get_message">Sedang mengambil data..</string>
     <string name="data_parse_error">Gagal mengolah data dari server.</string>
     <string name="loading_message">Harap tunggu..</string>
+    <string name="unknown_error">Terjadi kesalahan.</string>
 
     <!-- Internationalization -->
 

@@ -3,6 +3,8 @@ package id.ac.paramadina.absensi.reference.model;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import id.ac.paramadina.absensi.helper.CommonDataHelper;
+
 public class Schedule {
 	public enum Fields {
         ID("_id"),
@@ -42,8 +44,15 @@ public class Schedule {
         String startTime = response.getString((Fields.START_TIME.toString()));;
         String endTime = response.getString(Fields.END_TIME.toString());
 
-        Course course = Course.createInstance(response.getJSONObject("course"));
-        ClassLocation location = ClassLocation.createInstance(response.getJSONObject("location"));
+        Course course = null;
+        if (response.has(Fields.COURSE.toString()) && CommonDataHelper.isPopulatedObject(response, Fields.COURSE.toString())) {
+            course = Course.createInstance(response.getJSONObject(Fields.COURSE.toString()));
+        }
+
+        ClassLocation location = null;
+        if (response.has(Fields.COURSE.toString()) && CommonDataHelper.isPopulatedObject(response, Fields.COURSE.toString())) {
+            location = ClassLocation.createInstance(response.getJSONObject("location"));
+        }
 
         int count = 1; // TODO: Count from server data.
 

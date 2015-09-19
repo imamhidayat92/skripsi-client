@@ -36,16 +36,14 @@ public class User {
 	private String displayPicture;
 
     public static User createInstance(JSONObject response) throws JSONException {
-        JSONObject userData = response.getJSONObject("result");
-
-        String id = userData.getString(Fields.ID.toString());
-        String name = userData.getString(Fields.NAME.toString());
-        String displayName = userData.getString(Fields.DISPLAY_NAME.toString());
-        String idNumber = userData.getString(Fields.ID_NUMBER.toString());
-        String identifier = userData.getString(Fields.IDENTIFIER.toString());
+        String id = response.getString(Fields.ID.toString());
+        String name = response.getString(Fields.NAME.toString());
+        String displayName = response.getString(Fields.DISPLAY_NAME.toString());
+        String idNumber = response.getString(Fields.ID_NUMBER.toString());
+        String identifier = response.getString(Fields.IDENTIFIER.toString());
         String displayPicture = null;
-        if (userData.has(Fields.DISPLAY_PICTURE.toString())) {
-            displayPicture = userData.getString(Fields.DISPLAY_PICTURE.toString());
+        if (response.has(Fields.DISPLAY_PICTURE.toString())) {
+            displayPicture = response.getString(Fields.DISPLAY_PICTURE.toString());
         }
 
         User user = new User(id, name, displayName, idNumber, identifier, displayPicture);

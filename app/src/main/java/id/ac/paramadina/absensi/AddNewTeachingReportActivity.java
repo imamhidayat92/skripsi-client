@@ -72,18 +72,23 @@ public class AddNewTeachingReportActivity extends BaseActivity {
 
             @Override
             public void onPostExecute(JSONObject response) {
-                try {
-                    if (response.getBoolean("success")) {
-                        SmsManager smsManager = SmsManager.getDefault();
-
-
-                    }
-                    else {
-                        Log.d(Constants.LOGGER_TAG, "Error on parsing response from server.");
-                    }
+                if (response == null) {
+                    Toast.makeText(AddNewTeachingReportActivity.this.getParent(), AddNewTeachingReportActivity.this.getString(R.string.unknown_error), Toast.LENGTH_LONG).show();
                 }
-                catch (JSONException e) {
-                    e.printStackTrace();
+                else {
+                    try {
+                        if (response.has("success") && response.has("result") && response.getBoolean("success")) {
+                            SmsManager smsManager = SmsManager.getDefault();
+
+
+                        }
+                        else {
+                            Log.d(Constants.LOGGER_TAG, "Error on parsing response from server.");
+                        }
+                    }
+                    catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         });

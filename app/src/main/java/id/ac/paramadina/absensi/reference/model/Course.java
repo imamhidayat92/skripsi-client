@@ -3,6 +3,8 @@ package id.ac.paramadina.absensi.reference.model;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import id.ac.paramadina.absensi.helper.CommonDataHelper;
+
 public class Course {
     public enum Fields {
         ID("_id"),
@@ -37,7 +39,10 @@ public class Course {
         String description = response.getString("description");
         int credits = response.getInt("credits");
 
-        Major major = Major.createInstance(response.getJSONObject("major"));
+        Major major = null;
+        if (response.has(Fields.MAJOR.toString()) && CommonDataHelper.isPopulatedObject(response, Fields.MAJOR.toString())) {
+            major = Major.createInstance(response.getJSONObject(Fields.MAJOR.toString()));
+        }
 
         Course course = new Course(id, name, description, credits, major);
         return course;

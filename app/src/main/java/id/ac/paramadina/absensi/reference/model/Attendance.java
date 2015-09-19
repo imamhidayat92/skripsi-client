@@ -9,6 +9,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+import id.ac.paramadina.absensi.helper.CommonDataHelper;
 import id.ac.paramadina.absensi.reference.enumeration.AttendanceStatusType;
 
 public class Attendance {
@@ -74,13 +75,20 @@ public class Attendance {
     }
 
     public static Attendance createInstance(JSONObject response) throws JSONException {
-        JSONObject rawUserData = response.getJSONObject(Fields.STUDENT.toString());
-        JSONObject rawScheduleData = response.getJSONObject(Fields.SCHEDULE.toString());
-        JSONObject rawClassMeetingData = response.getJSONObject(Fields.CLASS_MEETING.toString());
+        User user = null;
+        if (response.has(Fields.STUDENT.toString()) && CommonDataHelper.isPopulatedObject(response, Fields.STUDENT.toString())) {
+            user = User.createInstance(response.getJSONObject(Fields.STUDENT.toString()));
+        }
 
-        User user = User.createInstance(rawUserData);
-        Schedule schedule = Schedule.createInstance(rawScheduleData);
-        ClassMeeting classMeeting = ClassMeeting.createInstance(rawClassMeetingData);
+        Schedule schedule = null;
+        if (response.has(Fields.SCHEDULE.toString()) && CommonDataHelper.isPopulatedObject(response, Fields.SCHEDULE.toString())) {
+            schedule = Schedule.createInstance(response.getJSONObject(Fields.SCHEDULE.toString()));
+        }
+
+        ClassMeeting classMeeting = null;
+        if (response.has(Fields.CLASS_MEETING.toString()) && CommonDataHelper.isPopulatedObject(response, Fields.CLASS_MEETING.toString())) {
+            classMeeting = ClassMeeting.createInstance(response.getJSONObject(Fields.CLASS_MEETING.toString()));
+        }
 
         Attendance attendance = new Attendance(
             response.getString(Fields.ID.toString()),

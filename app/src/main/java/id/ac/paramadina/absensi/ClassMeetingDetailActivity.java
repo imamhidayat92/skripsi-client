@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -52,13 +53,18 @@ public class ClassMeetingDetailActivity extends BaseActivity {
             }
 
             @Override
-            public void onPostExecute(JSONObject result) {
-                try {
-                    ClassMeeting classMeeting = ClassMeeting.createInstance(result);
+            public void onPostExecute(JSONObject response) {
+                if (response == null) {
+                    Toast.makeText(ClassMeetingDetailActivity.this, ClassMeetingDetailActivity.this.getString(R.string.unknown_error), Toast.LENGTH_LONG).show();
+                }
+                else {
+                    try {
+                        ClassMeeting classMeeting = ClassMeeting.createInstance(response);
 
-                    ClassMeetingDetailActivity.this.setDataToView(classMeeting);
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                        ClassMeetingDetailActivity.this.setDataToView(classMeeting);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         });
