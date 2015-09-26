@@ -47,29 +47,7 @@ public class ScheduleListDataListener implements AsyncTaskListener<JSONObject> {
 			for (int i = 0; i < results.length(); i++) {
                 // TODO: Replace with createInstance(...) for consistency.
 				JSONObject jsonSchedule = results.getJSONObject(i);
-				JSONObject jsonCourse = results.getJSONObject(i).getJSONObject("course");
-				JSONObject jsonMajor = results.getJSONObject(i).getJSONObject("course").getJSONObject("major");
-				
-				Major major = new Major( jsonMajor.getString("name"),
-										 jsonMajor.getString("color"));
-				
-				ClassLocation location = new ClassLocation(	jsonSchedule.getJSONObject("location").getString("name"),
-															jsonSchedule.getJSONObject("location").getString("description"));
-				
-				Course course = new Course(	jsonCourse.getString("_id"),
-											jsonCourse.getString("name"), 
-											jsonCourse.getString("description"), 
-											jsonCourse.getInt("credits"), 
-											major);
-				
-				Schedule schedule = new Schedule( 	jsonSchedule.getString("_id"),
-													jsonSchedule.getInt("day_code"),
-													jsonSchedule.getString("start_time"),
-													jsonSchedule.getString("end_time"),
-													course,
-													location,
-													jsonSchedule.getJSONArray("meetings").length() + 1);
-				
+				Schedule schedule = Schedule.createInstance(jsonSchedule);
 				schedules.add(schedule);
 			}
 			

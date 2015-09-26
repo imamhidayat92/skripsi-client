@@ -72,7 +72,7 @@ public class AttendanceListAdapter extends BaseAdapter {
 
         if (datum.getStudent().getDisplayPicture() != null) {
             Glide.with(this.activity)
-                .load(this.API_ADDRESS + datum.getStudent().getDisplayPicture())
+                .load(this.API_ADDRESS + "/" + datum.getStudent().getDisplayPicture())
                 .centerCrop()
                 .crossFade()
                 .into(displayPicture);
@@ -90,6 +90,18 @@ public class AttendanceListAdapter extends BaseAdapter {
 
     public void pushNewEntry(Attendance attendance) {
         this.data.add(attendance);
+        this.notifyDataSetChanged();
+    }
+
+    public void pushNewEntries(ArrayList<Attendance> attendances) {
+        for (Attendance a : attendances) {
+            this.data.add(a);
+        }
+        this.notifyDataSetChanged();
+    }
+
+    public void reset() {
+        this.data = new ArrayList<Attendance>();
         this.notifyDataSetChanged();
     }
 

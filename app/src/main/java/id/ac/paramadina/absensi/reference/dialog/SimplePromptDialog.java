@@ -38,31 +38,22 @@ public class SimplePromptDialog extends DialogFragment {
             .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
-                    listener.onPositiveButtonClick(SimplePromptDialog.this, String.valueOf(txtInput.getText()));
+                    if (listener != null) {
+                        listener.onPositiveButtonClick(SimplePromptDialog.this, String.valueOf(txtInput.getText()));
+                    }
                 }
             })
             .setNegativeButton("Batal", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
-                    listener.onNegativeButtonClick(SimplePromptDialog.this);
+                    if (listener != null) {
+                        listener.onNegativeButtonClick(SimplePromptDialog.this);
+                    }
                 }
             })
         ;
 
         return builder.create();
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-
-        try {
-            listener = (SimplePromptDialogListener) activity;
-        }
-        catch (ClassCastException ex) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement SimplePromptDialogListener");
-        }
     }
 
     public SimplePromptDialog setListener(SimplePromptDialogListener listener) {

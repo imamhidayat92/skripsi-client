@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import id.ac.paramadina.absensi.R;
 import id.ac.paramadina.absensi.reference.AsyncTaskListener;
+import id.ac.paramadina.absensi.reference.Constants;
 import id.ac.paramadina.absensi.reference.GlobalData;
 
 public class AuthenticationDataListener implements AsyncTaskListener<JSONObject> {
@@ -49,7 +50,7 @@ public class AuthenticationDataListener implements AsyncTaskListener<JSONObject>
 
                     editor.commit();
 
-                    Log.d("skripsi-client", "Login information obtained. Access Token = " + loginData.getString("token"));
+                    Log.d(Constants.LOGGER_TAG, "Login information obtained. Access Token = " + loginData.getString("token"));
 
                     Intent i = new Intent(this.activity, mainActivityClass);
                     this.activity.startActivity(i);

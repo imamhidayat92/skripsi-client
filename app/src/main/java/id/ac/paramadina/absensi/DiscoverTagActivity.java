@@ -1,11 +1,12 @@
 package id.ac.paramadina.absensi;
 
 import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import id.ac.paramadina.absensi.fetcher.AttendanceDataFetcher;
 import id.ac.paramadina.absensi.fetcher.ClassMeetingDataFetcher;
 import id.ac.paramadina.absensi.fetcher.DeleteAttendanceDataFetcher;
 import id.ac.paramadina.absensi.fetcher.NewAttendanceDataFetcher;
@@ -22,7 +23,6 @@ import id.ac.paramadina.absensi.reference.model.ClassMeeting;
 import id.ac.paramadina.absensi.reference.model.User;
 import id.ac.paramadina.absensi.reference.spec.NewAttendanceDataSpec;
 
-import android.app.Activity;
 import android.app.DialogFragment;
 import android.app.PendingIntent;
 import android.content.Intent;
@@ -268,9 +268,51 @@ public class DiscoverTagActivity extends BaseActivity {
                         }
                     });
                 manualAddDialog.show(this.getFragmentManager(), "prompt");
+                break;
+            case R.id.action_refresh:
+                this.getAttendanceData();
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void getAttendanceData() {
+        AttendanceDataFetcher fetcher = new AttendanceDataFetcher(this, this.classMeetingId);
+
+        fetcher.setListener(new AsyncTaskListener<JSONObject>() {
+            @Override
+            public void onPreExecute() {
+                // Do nothing for this time.
+            }
+
+            @Override
+            public void onPostExecute(JSONObject response) {
+                if (response == null) {
+                    Toast.makeText(DiscoverTagActivity.this, DiscoverTagActivity.this.getString(R.string.unknown_error), Toast.LENGTH_LONG).show();
+                }
+                else {
+                    try {
+                        if (response.has("success") && response.has("results") && response.getBoolean("success")) {
+                            JSONArray rawAttendancesData = response.getJSONArray("results");
+                            ArrayList<Attendance> attendances = new ArrayList<Attendance>();
+                            for (int i = 0; i < rawAttendancesData.length(); i++) {
+                                Attendance attendance = Attendance.createInstance(rawAttendancesData.getJSONObject(i));
+                                attendances.add(attendance);
+                            }
+                            DiscoverTagActivity.this.adapter.reset();
+                            DiscoverTagActivity.this.adapter.pushNewEntries(attendances);
+                        }
+                        else {
+                            Toast.makeText(DiscoverTagActivity.this, DiscoverTagActivity.this.getString(R.string.data_get_error), Toast.LENGTH_LONG).show();
+                        }
+                    } catch (JSONException e) {
+                        Log.d(Constants.LOGGER_TAG, e.getMessage());
+                    }
+                }
+            }
+        });
+
+        fetcher.fetch();
     }
 
     private void getClassMeetingData() {
@@ -286,9 +328,8 @@ public class DiscoverTagActivity extends BaseActivity {
             public void onPostExecute(JSONObject response) {
                 if (response != null) {
                     try {
-                        if (response.has("success") && response.getBoolean("success")) {
-                            ClassMeeting classMeeting = ClassMeeting.createInstance(response);
-
+                        if (response.has("success") && response.has("result") && response.getBoolean("success")) {
+                            ClassMeeting classMeeting = ClassMeeting.createInstance(response.getJSONObject("result"));
                             DiscoverTagActivity.this.setDataToView(classMeeting);
                         }
                         else {
@@ -299,7 +340,7 @@ public class DiscoverTagActivity extends BaseActivity {
                     }
                 }
                 else {
-                    Toast.makeText(DiscoverTagActivity.this, "Tidak dapat mengambil data (null).", Toast.LENGTH_LONG).show();
+                    Toast.makeText(DiscoverTagActivity.this, DiscoverTagActivity.this.getString(R.string.data_get_error), Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -337,7 +378,7 @@ public class DiscoverTagActivity extends BaseActivity {
                     }
                 }
                 else {
-                    Toast.makeText(DiscoverTagActivity.this, "Tidak dapat mengambil data dari server (null). Kabari ini pada pengembang.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(DiscoverTagActivity.this, DiscoverTagActivity.this.getString(R.string.unknown_error), Toast.LENGTH_LONG).show();
                 }
             }
         });
