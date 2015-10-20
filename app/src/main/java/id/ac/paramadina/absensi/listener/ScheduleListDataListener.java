@@ -45,7 +45,6 @@ public class ScheduleListDataListener implements AsyncTaskListener<JSONObject> {
 			JSONArray results = response.getJSONArray("results");
 			
 			for (int i = 0; i < results.length(); i++) {
-                // TODO: Replace with createInstance(...) for consistency.
 				JSONObject jsonSchedule = results.getJSONObject(i);
 				Schedule schedule = Schedule.createInstance(jsonSchedule);
 				schedules.add(schedule);

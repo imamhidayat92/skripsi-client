@@ -1,5 +1,6 @@
 package id.ac.paramadina.absensi;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.app.Activity;
 import android.telephony.SmsManager;
@@ -9,14 +10,22 @@ import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
+import id.ac.paramadina.absensi.fetcher.AttendanceDataFetcher;
 import id.ac.paramadina.absensi.fetcher.NewTeachingReportDataFetcher;
+import id.ac.paramadina.absensi.helper.CommonDataHelper;
+import id.ac.paramadina.absensi.helper.SmsHelper;
 import id.ac.paramadina.absensi.reference.AsyncTaskListener;
 import id.ac.paramadina.absensi.reference.Constants;
+import id.ac.paramadina.absensi.reference.enumeration.AttendanceStatusType;
+import id.ac.paramadina.absensi.reference.model.Attendance;
+import id.ac.paramadina.absensi.reference.model.User;
 import id.ac.paramadina.absensi.reference.spec.NewTeachingReportDataSpec;
 
 public class AddNewTeachingReportActivity extends BaseActivity {
@@ -35,6 +44,8 @@ public class AddNewTeachingReportActivity extends BaseActivity {
 		
 		txtSubject = (EditText) findViewById(R.id.txt_subject);
 		txtDescription = (EditText) findViewById(R.id.txt_description);
+
+        this.classMeetingId = getIntent().getExtras().getString("classMeetingId");
 	}
 
 	@Override
@@ -61,10 +72,11 @@ public class AddNewTeachingReportActivity extends BaseActivity {
 		String description = this.txtDescription.getText().toString();
 
         NewTeachingReportDataSpec spec = new NewTeachingReportDataSpec(subject, description);
+        NewTeachingReportDataFetcher newTeachingReportFetcher = new NewTeachingReportDataFetcher(this, this.classMeetingId, spec);
 
-        NewTeachingReportDataFetcher fetcher = new NewTeachingReportDataFetcher(this, this.classMeetingId, spec);
+        final AttendanceDataFetcher attendanceDataFetcher = new AttendanceDataFetcher(this, this.classMeetingId);
 
-        fetcher.setListener(new AsyncTaskListener<JSONObject>() {
+        newTeachingReportFetcher.setListener(new AsyncTaskListener<JSONObject>() {
             @Override
             public void onPreExecute() {
                 // Do nothing for this time.
@@ -77,23 +89,80 @@ public class AddNewTeachingReportActivity extends BaseActivity {
                 }
                 else {
                     try {
-                        if (response.has("success") && response.has("result") && response.getBoolean("success")) {
-                            SmsManager smsManager = SmsManager.getDefault();
-
-
+                        if (CommonDataHelper.isValidResponse(CommonDataHelper.DataResultType.SINGLE_RESULT, response)) {
+                            Toast.makeText(AddNewTeachingReportActivity.this, "Laporan mengajar berhasil disimpan.", Toast.LENGTH_LONG).show();
+                            attendanceDataFetcher.fetch();
                         }
                         else {
+                            Toast.makeText(AddNewTeachingReportActivity.this, R.string.data_get_error, Toast.LENGTH_LONG).show();
                             Log.d(Constants.LOGGER_TAG, "Error on parsing response from server.");
                         }
-                    }
-                    catch (JSONException e) {
+                    } catch (JSONException e) {
+                        Toast.makeText(AddNewTeachingReportActivity.this, R.string.data_parse_error, Toast.LENGTH_LONG).show();
                         e.printStackTrace();
                     }
                 }
             }
         });
 
-        fetcher.fetch();
+        attendanceDataFetcher.setListener(new AsyncTaskListener<JSONObject>() {
+            @Override
+            public void onPreExecute() {
+                // Do nothing for this time.
+            }
+
+            @Override
+            public void onPostExecute(JSONObject response) {
+                if (response == null) {
+                    Toast.makeText(AddNewTeachingReportActivity.this.getParent(), AddNewTeachingReportActivity.this.getString(R.string.unknown_error), Toast.LENGTH_LONG).show();
+                }
+                else {
+                    try {
+                        if (CommonDataHelper.isValidResponse(CommonDataHelper.DataResultType.MULTIPLE_RESULTS, response)) {
+                            JSONArray rawAttendancesData = response.getJSONArray("results");
+                            ArrayList<Attendance> attendances = Attendance.createInstances(rawAttendancesData);
+
+                            SmsHelper smsHelper = new SmsHelper();
+
+                            int smsSent = 0;
+                            for (Attendance attendance : attendances) {
+                                if (attendance.getStatus() == AttendanceStatusType.UNKNOWN) {
+                                    User user = attendance.getStudent();
+
+                                    // TODO: Need revisions on how to save user contact info data.
+                                    String message = "Anak lu nggak masuk ya?";
+                                    if (smsHelper.sendMessage(user, message)) {
+                                        smsSent++;
+                                    }
+                                }
+                            }
+
+                            if (smsSent > 0) {
+                                Toast.makeText(AddNewTeachingReportActivity.this, smsSent + " SMS terkirim.", Toast.LENGTH_LONG).show();
+                            }
+
+                            AddNewTeachingReportActivity.this.finishOperation();
+                        }
+                        else {
+                            Log.d(Constants.LOGGER_TAG, "Error on parsing response from server.");
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+
+        newTeachingReportFetcher.fetch();
+    }
+
+    private void finishOperation() {
+        // TODO: It's better if after the report has been sent successfully,
+        // TODO: the lecturer will get a summary about all processed operations.
+
+        Intent i = new Intent(AddNewTeachingReportActivity.this, MainActivity.class);
+        this.startActivity(i);
+        this.finish();
     }
 
 }

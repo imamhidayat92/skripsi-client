@@ -1,8 +1,10 @@
 package id.ac.paramadina.absensi.reference.model;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 
 import id.ac.paramadina.absensi.helper.CommonDataHelper;
@@ -91,6 +93,18 @@ public class ClassMeeting {
         classMeeting.setReport(report);
         classMeeting.setSchedule(schedule);
         return classMeeting;
+    }
+
+    public static ArrayList<ClassMeeting> createInstances(JSONArray results) throws JSONException {
+        ArrayList<ClassMeeting> classMeetings = new ArrayList<ClassMeeting>();
+
+        for (int i = 0; i < results.length(); i++) {
+            JSONObject rawClassMeeting = results.getJSONObject(i);
+            ClassMeeting classMeeting = ClassMeeting.createInstance(rawClassMeeting);
+            classMeetings.add(classMeeting);
+        }
+
+        return classMeetings;
     }
 
     public ClassMeeting(ClassMeetingType type, boolean verified, long created, long modified) {

@@ -1,13 +1,16 @@
 package id.ac.paramadina.absensi.reference.model;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import id.ac.paramadina.absensi.helper.CommonDataHelper;
 import id.ac.paramadina.absensi.reference.enumeration.AttendanceStatusType;
@@ -101,6 +104,18 @@ public class Attendance {
         attendance.setClassMeeting(classMeeting);
 
         return attendance;
+    }
+
+    public static ArrayList<Attendance> createInstances(JSONArray response) throws JSONException {
+        ArrayList<Attendance> results = new ArrayList<Attendance>();
+
+        for (int i = 0; i < response.length(); i++) {
+            JSONObject rawAttendanceData = response.getJSONObject(i);
+            Attendance attendance = Attendance.createInstance(rawAttendanceData);
+            results.add(attendance);
+        }
+
+        return results;
     }
 
     public String getId() {

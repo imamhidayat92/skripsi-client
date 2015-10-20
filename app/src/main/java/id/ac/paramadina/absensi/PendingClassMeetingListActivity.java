@@ -1,9 +1,11 @@
 package id.ac.paramadina.absensi;
 
-import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -12,13 +14,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
 
 import id.ac.paramadina.absensi.fetcher.PendingClassMeetingDataFetcher;
+import id.ac.paramadina.absensi.helper.CommonDataHelper;
 import id.ac.paramadina.absensi.reference.AsyncTaskListener;
 import id.ac.paramadina.absensi.reference.adapter.ClassMeetingListAdapter;
 import id.ac.paramadina.absensi.reference.model.ClassMeeting;
-
 
 public class PendingClassMeetingListActivity extends BaseActivity {
 
@@ -62,24 +63,24 @@ public class PendingClassMeetingListActivity extends BaseActivity {
 
             @Override
             public void onPostExecute(JSONObject response) {
-                try {
-                    if (response.has("success") && response.getBoolean("success")) {
-                        ArrayList<ClassMeeting> data = new ArrayList<ClassMeeting>();
-                        JSONArray rawClassMeetingData = response.getJSONArray("results");
-                        for (int i = 0; i < rawClassMeetingData.length(); i++) {
-                            JSONObject rawClassMeeting = rawClassMeetingData.getJSONObject(i);
-                            ClassMeeting classMeeting = ClassMeeting.createInstance(rawClassMeeting);
-                            data.add(classMeeting);
-                        }
-
-                        PendingClassMeetingListActivity.this.setDataToView(data);
-                    }
-                    else {
-                        Toast.makeText(PendingClassMeetingListActivity.this, "Gagal mengambil data.", Toast.LENGTH_LONG).show();
-                    }
+                if (response == null) {
+                    Toast.makeText(PendingClassMeetingListActivity.this, R.string.data_get_error, Toast.LENGTH_LONG).show();
                 }
-                catch (JSONException e) {
-                    e.printStackTrace();
+                else {
+                    try {
+                        if (CommonDataHelper.isValidResponse(CommonDataHelper.DataResultType.MULTIPLE_RESULTS, response)) {
+                            JSONArray rawClassMeetingData = response.getJSONArray("results");
+                            ArrayList<ClassMeeting> data = ClassMeeting.createInstances(rawClassMeetingData);
+
+                            PendingClassMeetingListActivity.this.setDataToView(data);
+                        }
+                        else {
+                            Toast.makeText(PendingClassMeetingListActivity.this, "Gagal mengambil data.", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                    catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         });
@@ -92,6 +93,20 @@ public class PendingClassMeetingListActivity extends BaseActivity {
         else {
             ClassMeetingListAdapter adapter = new ClassMeetingListAdapter(this, data);
             this.pendingClassMeetings.setAdapter(adapter);
+
+            this.pendingClassMeetings.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int p, long l) {
+                    ClassMeeting classMeeting = (ClassMeeting) PendingClassMeetingListActivity.this.pendingClassMeetings.getAdapter().getItem(p);
+
+                    Intent i = new Intent(PendingClassMeetingListActivity.this, DiscoverTagActivity.class);
+                    i.putExtra("classMeetingId", classMeeting.getId());
+                    i.putExtra("courseId", classMeeting.getCourse().getId());
+                    i.putExtra("scheduleId", classMeeting.getSchedule().getId());
+
+                    PendingClassMeetingListActivity.this.startActivity(i);
+                }
+            });
         }
     }
 }

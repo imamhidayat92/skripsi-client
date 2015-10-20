@@ -3,6 +3,7 @@ package id.ac.paramadina.absensi.reference.model;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import id.ac.paramadina.absensi.helper.CommonDataHelper;
 import id.ac.paramadina.absensi.reference.enumeration.UserRoleType;
 
 public class User {
@@ -14,7 +15,10 @@ public class User {
         DISPLAY_NAME("display_name"),
         ID_NUMBER("id_number"),
         IDENTIFIER("identifier"),
-        DISPLAY_PICTURE("display_picture");
+        DISPLAY_PICTURE("display_picture"),
+        PHONE("phone"),
+
+        MAJOR("major");
 
         private final String text;
         private Fields(final String text) {
@@ -34,6 +38,9 @@ public class User {
 	private String idNumber;
 	private String identifier;
 	private String displayPicture;
+	private String phone;
+
+    private Major major;
 
     public static User createInstance(JSONObject response) throws JSONException {
         String id = response.getString(Fields.ID.toString());
@@ -46,11 +53,17 @@ public class User {
             displayPicture = response.getString(Fields.DISPLAY_PICTURE.toString());
         }
 
+        Major major = null;
+        if (response.has(Fields.MAJOR.toString()) && CommonDataHelper.isPopulatedObject(response, Fields.MAJOR.toString())) {
+            major = Major.createInstance(response.getJSONObject(Fields.MAJOR.toString()));
+        }
+
         User user = new User(id, name, displayName, idNumber, identifier, displayPicture);
+        user.setMajor(major);
         return user;
     }
 
-    public static UserRoleType getClassMeetingType(String value) {
+    public static UserRoleType getRoleType(String value) {
         for (UserRoleType type : UserRoleType.values()) {
             if (type.toString().equals(value)) {
                 return type;
@@ -115,4 +128,20 @@ public class User {
 	public void setDisplayPicture(String displayPicture) {
 		this.displayPicture = displayPicture;
 	}
+
+    public String getPhone() {
+        return this.phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public void setMajor(Major major) {
+        this.major = major;
+    }
+
+    public Major getMajor() {
+        return this.major;
+    }
 }

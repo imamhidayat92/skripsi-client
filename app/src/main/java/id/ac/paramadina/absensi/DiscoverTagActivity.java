@@ -10,7 +10,9 @@ import id.ac.paramadina.absensi.fetcher.AttendanceDataFetcher;
 import id.ac.paramadina.absensi.fetcher.ClassMeetingDataFetcher;
 import id.ac.paramadina.absensi.fetcher.DeleteAttendanceDataFetcher;
 import id.ac.paramadina.absensi.fetcher.NewAttendanceDataFetcher;
+import id.ac.paramadina.absensi.fetcher.UpdatedClassMeetingDataFetcher;
 import id.ac.paramadina.absensi.fetcher.UserDataFetcher;
+import id.ac.paramadina.absensi.helper.CommonDataHelper;
 import id.ac.paramadina.absensi.helper.CommonToastMessage;
 import id.ac.paramadina.absensi.reference.AsyncTaskListener;
 import id.ac.paramadina.absensi.reference.dialog.SimplePromptDialog;
@@ -22,6 +24,7 @@ import id.ac.paramadina.absensi.reference.model.Attendance;
 import id.ac.paramadina.absensi.reference.model.ClassMeeting;
 import id.ac.paramadina.absensi.reference.model.User;
 import id.ac.paramadina.absensi.reference.spec.NewAttendanceDataSpec;
+import id.ac.paramadina.absensi.reference.spec.UpdateClassMeetingDataSpec;
 
 import android.app.DialogFragment;
 import android.app.PendingIntent;
@@ -132,7 +135,7 @@ public class DiscoverTagActivity extends BaseActivity {
                     public void onPostExecute(JSONObject response) {
                         try {
                             if (response != null) {
-                                if (response.has("success") && response.getBoolean("success")) {
+                                if (CommonDataHelper.isValidResponse(CommonDataHelper.DataResultType.SINGLE_RESULT, response)) {
                                     User user = User.createInstance(response.getJSONObject("result"));
 
                                     UserDetailDialog dialog = new UserDetailDialog().setUser(user);
@@ -156,7 +159,7 @@ public class DiscoverTagActivity extends BaseActivity {
                                                 @Override
                                                 public void onPostExecute(JSONObject response) {
                                                     try {
-                                                        if (response.has("success") && response.getBoolean("success")) {
+                                                        if (CommonDataHelper.isValidResponse(CommonDataHelper.DataResultType.SINGLE_RESULT, response)) {
                                                             JSONObject rawAttendanceData = response.getJSONObject("result");
                                                             Attendance attendance = Attendance.createInstance(rawAttendanceData);
 
@@ -172,6 +175,7 @@ public class DiscoverTagActivity extends BaseActivity {
                                             fetcher.fetch();
                                         }
                                     });
+                                    dialog.show(DiscoverTagActivity.this.getFragmentManager(), "user-detail-prompt");
                                 } else {
                                     CommonToastMessage.showErrorGettingDataFromServerMessage(DiscoverTagActivity.this);
                                 }
@@ -255,7 +259,7 @@ public class DiscoverTagActivity extends BaseActivity {
             case R.id.action_add_manually:
                 SimplePromptDialog manualAddDialog = new SimplePromptDialog();
                 manualAddDialog
-                    .setMessage("")
+                    .setMessage(this.getString(R.string.add_manually_message))
                     .setListener(new SimplePromptDialog.SimplePromptDialogListener() {
                         @Override
                         public void onPositiveButtonClick(DialogFragment dialog, String value) {
@@ -267,10 +271,16 @@ public class DiscoverTagActivity extends BaseActivity {
                             dialog.dismiss();
                         }
                     });
-                manualAddDialog.show(this.getFragmentManager(), "prompt");
+                manualAddDialog.show(this.getFragmentManager(), "add-manual-prompt");
+                break;
+            case R.id.action_send:
+                this.verifyAttendanceData();
                 break;
             case R.id.action_refresh:
                 this.getAttendanceData();
+                break;
+            default:
+                break;
         }
 
         return super.onOptionsItemSelected(item);
@@ -292,7 +302,7 @@ public class DiscoverTagActivity extends BaseActivity {
                 }
                 else {
                     try {
-                        if (response.has("success") && response.has("results") && response.getBoolean("success")) {
+                        if (CommonDataHelper.isValidResponse(CommonDataHelper.DataResultType.MULTIPLE_RESULTS, response)) {
                             JSONArray rawAttendancesData = response.getJSONArray("results");
                             ArrayList<Attendance> attendances = new ArrayList<Attendance>();
                             for (int i = 0; i < rawAttendancesData.length(); i++) {
@@ -328,7 +338,7 @@ public class DiscoverTagActivity extends BaseActivity {
             public void onPostExecute(JSONObject response) {
                 if (response != null) {
                     try {
-                        if (response.has("success") && response.has("result") && response.getBoolean("success")) {
+                        if (CommonDataHelper.isValidResponse(CommonDataHelper.DataResultType.SINGLE_RESULT, response)) {
                             ClassMeeting classMeeting = ClassMeeting.createInstance(response.getJSONObject("result"));
                             DiscoverTagActivity.this.setDataToView(classMeeting);
                         }
@@ -383,6 +393,43 @@ public class DiscoverTagActivity extends BaseActivity {
             }
         });
 
+        fetcher.fetch();
+    }
+
+    private void verifyAttendanceData() {
+        UpdateClassMeetingDataSpec spec = new UpdateClassMeetingDataSpec(null, true);
+        UpdatedClassMeetingDataFetcher fetcher = new UpdatedClassMeetingDataFetcher(this, this.classMeetingId, spec);
+        fetcher.setListener(new AsyncTaskListener<JSONObject>() {
+            @Override
+            public void onPreExecute() {
+                // Do nothing for this time.
+            }
+
+            @Override
+            public void onPostExecute(JSONObject response) {
+                if (response == null) {
+                    Toast.makeText(DiscoverTagActivity.this, DiscoverTagActivity.this.getString(R.string.unknown_error), Toast.LENGTH_LONG).show();
+                }
+                else {
+                    try {
+                        if (CommonDataHelper.isValidResponse(CommonDataHelper.DataResultType.SINGLE_RESULT, response)) {
+                            ClassMeeting classMeeting = ClassMeeting.createInstance(response.getJSONObject("result"));
+
+                            Intent i = new Intent(DiscoverTagActivity.this, AddNewTeachingReportActivity.class);
+                            i.putExtra("classMeetingId", classMeeting.getId());
+
+                            DiscoverTagActivity.this.startActivity(i);
+                            DiscoverTagActivity.this.finish();
+                        }
+                        else {
+                            Toast.makeText(DiscoverTagActivity.this, response.getString("message"), Toast.LENGTH_LONG).show();
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
         fetcher.fetch();
     }
 }

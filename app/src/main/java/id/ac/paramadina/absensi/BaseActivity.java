@@ -13,6 +13,7 @@ public class BaseActivity extends Activity {
         Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
             public void uncaughtException(Thread paramThread, Throwable paramThrowable) {
                 Log.d(Constants.LOGGER_TAG, "Uncaught Exception: " + Thread.currentThread().getStackTrace()[2], paramThrowable);
+                Log.d(Constants.LOGGER_TAG, "Cycle ended.");
             }
         });
     }

@@ -13,8 +13,10 @@
 
     <!-- Messages -->
 
+    <string name="add_manually_message">Masukkan Nomor Induk Mahasiswa</string>
     <string name="data_get_error">Gagal mengambil data. Cobalah beberapa saat lagi.</string>
     <string name="data_get_message">Sedang mengambil data..</string>
+    <string name="data_invalid">Data dari server tidak valid. Kontak pengembang.</string>
     <string name="data_parse_error">Gagal mengolah data dari server.</string>
     <string name="loading_message">Harap tunggu..</string>
     <string name="unknown_error">Terjadi kesalahan.</string>
