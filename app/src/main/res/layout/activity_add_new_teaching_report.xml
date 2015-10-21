@@ -5,7 +5,7 @@
     tools:context=".AddNewTeachingReportActivity" >
 
     <TextView
-        android:id="@+id/textView1"
+        android:id="@+id/txt_course_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
@@ -21,9 +21,9 @@
         android:id="@+id/txt_subject"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/textView1"
+        android:layout_alignLeft="@+id/txt_course_title"
         android:layout_alignParentRight="true"
-        android:layout_below="@+id/textView1"
+        android:layout_below="@+id/txt_course_title"
         android:ems="10"
         android:hint="Topik Pengajaran" />
 

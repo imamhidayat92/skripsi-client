@@ -5,6 +5,7 @@ import org.json.JSONObject;
 
 import id.ac.paramadina.absensi.fetcher.NewClassMeetingDataFetcher;
 import id.ac.paramadina.absensi.fetcher.ScheduleDetailFetcher;
+import id.ac.paramadina.absensi.helper.CommonDataHelper;
 import id.ac.paramadina.absensi.helper.CommonToastMessage;
 import id.ac.paramadina.absensi.reference.AsyncTaskListener;
 import id.ac.paramadina.absensi.reference.Constants;
@@ -60,7 +61,7 @@ public class ScheduleDetailActivity extends BaseActivity {
                     }
                     else {
                         try {
-                            if (response.has("success") && response.has("result") && response.getBoolean("success")) {
+                            if (CommonDataHelper.isValidResponse(CommonDataHelper.DataResultType.SINGLE_RESULT, response)) {
                                 JSONObject classMeetingRawData = response.getJSONObject("result");
                                 ClassMeeting classMeeting = ClassMeeting.createInstance(classMeetingRawData);
 
