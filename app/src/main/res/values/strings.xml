@@ -47,5 +47,6 @@
     <string name="title_activity_class_meeting_list">ClassMeetingListActivity</string>
     <string name="title_activity_class_meeting_detail">ClassMeetingDetailActivity</string>
     <string name="title_activity_pending_class_meeting">PendingClassMeetingActivity</string>
+    <string name="title_activity_attendance_list">AttendanceListActivity</string>
 
 </resources>

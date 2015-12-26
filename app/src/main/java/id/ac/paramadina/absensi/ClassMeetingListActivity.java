@@ -1,6 +1,6 @@
 package id.ac.paramadina.absensi;
 
-import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -14,9 +14,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
 
 import id.ac.paramadina.absensi.fetcher.ClassMeetingListFetcher;
+import id.ac.paramadina.absensi.helper.CommonDataHelper;
 import id.ac.paramadina.absensi.helper.CommonToastMessage;
 import id.ac.paramadina.absensi.reference.AsyncTaskListener;
 import id.ac.paramadina.absensi.reference.adapter.ClassMeetingListAdapter;
@@ -76,7 +76,7 @@ public class ClassMeetingListActivity extends BaseActivity {
                 }
                 else {
                     try {
-                        if (response.has("success") && response.has("success") && response.getBoolean("success")) {
+                        if (CommonDataHelper.isValidResponse(CommonDataHelper.DataResultType.MULTIPLE_RESULTS, response)) {
                             JSONArray rawClassMeetingData = response.getJSONArray("results");
 
                             ArrayList<ClassMeeting> data = new ArrayList<ClassMeeting>();
@@ -105,8 +105,12 @@ public class ClassMeetingListActivity extends BaseActivity {
         this.classMeetingListView.setAdapter(adapter);
         this.classMeetingListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                ClassMeeting selectedClassMeeting = (ClassMeeting) ClassMeetingListActivity.this.classMeetingListView.getAdapter().getItem(position);
 
+                Intent i = new Intent(ClassMeetingListActivity.this, ClassMeetingDetailActivity.class);
+                i.putExtra("classMeetingId", selectedClassMeeting.getId());
+                ClassMeetingListActivity.this.startActivity(i);
             }
         });
     }

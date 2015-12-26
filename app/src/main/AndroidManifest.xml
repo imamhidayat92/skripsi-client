@@ -91,6 +91,10 @@
             android:name=".PendingClassMeetingListActivity"
             android:label="@string/title_activity_pending_class_meeting" >
         </activity>
+        <activity
+            android:name=".AttendanceListActivity"
+            android:label="@string/title_activity_attendance_list" >
+        </activity>
     </application>
 
 </manifest>

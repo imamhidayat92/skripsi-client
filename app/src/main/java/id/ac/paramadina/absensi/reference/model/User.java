@@ -14,9 +14,11 @@ public class User {
         NAME("name"),
         DISPLAY_NAME("display_name"),
         ID_NUMBER("id_number"),
+        EMAIL("email"),
         IDENTIFIER("identifier"),
         DISPLAY_PICTURE("display_picture"),
         PHONE("phone"),
+        ADDRESS("address"),
 
         MAJOR("major");
 
@@ -35,10 +37,12 @@ public class User {
 
 	private String name;
 	private String displayName;
+    private String email;
 	private String idNumber;
 	private String identifier;
 	private String displayPicture;
 	private String phone;
+    private String address;
 
     private Major major;
 
@@ -48,7 +52,20 @@ public class User {
         String displayName = response.getString(Fields.DISPLAY_NAME.toString());
         String idNumber = response.getString(Fields.ID_NUMBER.toString());
         String identifier = response.getString(Fields.IDENTIFIER.toString());
+        String email = null;
+        String phone = null;
+        String address = null;
         String displayPicture = null;
+
+        if (response.has(Fields.EMAIL.toString())) {
+            email = response.getString(Fields.EMAIL.toString());
+        }
+        if (response.has(Fields.PHONE.toString())) {
+            phone = response.getString(Fields.PHONE.toString());
+        }
+        if (response.has(Fields.ADDRESS.toString())) {
+            address = response.getString(Fields.ADDRESS.toString());
+        }
         if (response.has(Fields.DISPLAY_PICTURE.toString())) {
             displayPicture = response.getString(Fields.DISPLAY_PICTURE.toString());
         }
@@ -60,6 +77,9 @@ public class User {
 
         User user = new User(id, name, displayName, idNumber, identifier, displayPicture);
         user.setMajor(major);
+        user.setEmail(email);
+        user.setPhone(phone);
+        user.setAddress(address);
         return user;
     }
 
@@ -113,6 +133,14 @@ public class User {
 		this.idNumber = idNumber;
 	}
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
 	public String getIdentifier() {
 		return identifier;
 	}
@@ -135,6 +163,14 @@ public class User {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public void setMajor(Major major) {

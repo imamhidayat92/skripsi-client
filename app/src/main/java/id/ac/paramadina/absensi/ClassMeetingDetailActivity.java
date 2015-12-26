@@ -1,9 +1,12 @@
 package id.ac.paramadina.absensi;
 
-import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONException;
@@ -16,12 +19,27 @@ import id.ac.paramadina.absensi.reference.model.ClassMeeting;
 
 public class ClassMeetingDetailActivity extends BaseActivity {
 
+    private String classMeetingId;
+
+    private TextView classMeetingCourseTitle;
+    private TextView classMeetingInfo;
+    private TextView teachingReportSubject;
+    private TextView teachingReportSummary;
+
+    private Button viewAttendanceList;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_class_meeting_detail);
 
-        String classMeetingId = getIntent().getExtras().getString("classMeetingId");
+        this.classMeetingCourseTitle = (TextView) findViewById(R.id.txt_course_title);
+        this.classMeetingInfo = (TextView) findViewById(R.id.txt_class_meeting_info);
+        this.teachingReportSubject = (TextView) findViewById(R.id.txt_teaching_report_subject);
+        this.teachingReportSummary = (TextView) findViewById(R.id.txt_teaching_report_summary);
+        this.viewAttendanceList = (Button) findViewById(R.id.btn_view_attendance_list);
+
+        this.classMeetingId = getIntent().getExtras().getString("classMeetingId");
 
         this.getClassMeetingDetail(classMeetingId);
     }
@@ -72,6 +90,19 @@ public class ClassMeetingDetailActivity extends BaseActivity {
     }
 
     private void setDataToView(ClassMeeting data) {
+        this.classMeetingCourseTitle.setText(data.getCourse().getName());
+        this.classMeetingInfo.setText("Pertemuan Ke-1");
+        this.teachingReportSubject.setText(data.getReport().getSubject());
+        this.teachingReportSummary.setText(data.getReport().getDescription());
 
+        viewAttendanceList.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(ClassMeetingDetailActivity.this, AttendanceListActivity.class);
+                i.putExtra("classMeetingId", ClassMeetingDetailActivity.this.classMeetingId);
+
+                ClassMeetingDetailActivity.this.startActivity(i);
+            }
+        });
     }
 }

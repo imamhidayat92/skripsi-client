@@ -4,6 +4,7 @@ import id.ac.paramadina.absensi.R;
 import id.ac.paramadina.absensi.reference.GlobalData;
 import id.ac.paramadina.absensi.reference.model.Attendance;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import android.app.Activity;
@@ -68,7 +69,9 @@ public class AttendanceListAdapter extends BaseAdapter {
 		
 		attendanceUserName.setText(datum.getStudent().getName());
 		attendanceUserIdNumber.setText(datum.getStudent().getIdNumber());
-		attendanceCreated.setText(datum.getCreated().getTime().toString());
+
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        attendanceCreated.setText(formatter.format(datum.getCreated().getTime()));
 
         if (datum.getStudent().getDisplayPicture() != null) {
             Glide.with(this.activity)
