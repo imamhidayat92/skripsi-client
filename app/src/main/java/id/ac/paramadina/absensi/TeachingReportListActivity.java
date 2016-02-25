@@ -92,6 +92,11 @@ public class TeachingReportListActivity extends BaseActivity {
                     CommonToastMessage.showErrorGettingDataFromServerMessage(TeachingReportListActivity.this);
                 }
             }
+
+            @Override
+            public void onError(String message, Object data) {
+
+            }
         });
 
         fetcher.fetch();

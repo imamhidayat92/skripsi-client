@@ -7,7 +7,7 @@ import android.app.Activity;
 import id.ac.paramadina.absensi.ScheduleDetailActivity;
 import id.ac.paramadina.absensi.reference.AsyncTaskListener;
 
-public class ScheduleDetailDataListener implements AsyncTaskListener<JSONObject> {
+public class ScheduleDetailDataListener extends BaseListener {
 
 	private Activity activity;
 	

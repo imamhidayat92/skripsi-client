@@ -15,7 +15,7 @@ import id.ac.paramadina.absensi.reference.AsyncTaskListener;
 import id.ac.paramadina.absensi.reference.Constants;
 import id.ac.paramadina.absensi.reference.GlobalData;
 
-public class AuthenticationDataListener implements AsyncTaskListener<JSONObject> {
+public class AuthenticationDataListener extends BaseListener {
 
 	private Activity activity;
 	private Class mainActivityClass;

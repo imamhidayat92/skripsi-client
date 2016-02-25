@@ -17,7 +17,7 @@ import id.ac.paramadina.absensi.reference.model.Course;
 import id.ac.paramadina.absensi.reference.model.Major;
 import id.ac.paramadina.absensi.reference.model.Schedule;
 
-public class ScheduleListDataListener implements AsyncTaskListener<JSONObject> {
+public class ScheduleListDataListener extends BaseListener {
 
 	private Activity activity;
 	private ListView listView;

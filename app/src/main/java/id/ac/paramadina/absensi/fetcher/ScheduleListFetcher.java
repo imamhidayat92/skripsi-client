@@ -12,7 +12,7 @@ public class ScheduleListFetcher extends BaseFetcher {
 	public ScheduleListFetcher(Activity activity) {
 		super(activity);
 		
-		this.setResourceUrl("/schedules");
+		this.setResourceUrl("/schedules/today");
 	}
 	
 	public void fetch() {

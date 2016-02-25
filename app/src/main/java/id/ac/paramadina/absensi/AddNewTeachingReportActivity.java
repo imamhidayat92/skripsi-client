@@ -99,6 +99,11 @@ public class AddNewTeachingReportActivity extends BaseActivity {
                     Toast.makeText(AddNewTeachingReportActivity.this, AddNewTeachingReportActivity.this.getString(R.string.data_get_error), Toast.LENGTH_LONG).show();
                 }
             }
+
+            @Override
+            public void onError(String message, Object data) {
+
+            }
         });
 
         fetcher.fetch();
@@ -147,6 +152,11 @@ public class AddNewTeachingReportActivity extends BaseActivity {
                         }
                     }
                 }
+
+                @Override
+                public void onError(String message, Object data) {
+
+                }
             });
 
             attendanceDataFetcher.setListener(new AsyncTaskListener<JSONObject>() {
@@ -194,6 +204,11 @@ public class AddNewTeachingReportActivity extends BaseActivity {
                             e.printStackTrace();
                         }
                     }
+                }
+
+                @Override
+                public void onError(String message, Object data) {
+
                 }
             });
 

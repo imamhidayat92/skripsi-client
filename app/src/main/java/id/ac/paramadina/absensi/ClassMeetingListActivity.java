@@ -95,6 +95,11 @@ public class ClassMeetingListActivity extends BaseActivity {
                     }
                 }
             }
+
+            @Override
+            public void onError(String message, Object data) {
+
+            }
         });
 
         fetcher.fetch();

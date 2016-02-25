@@ -7,6 +7,7 @@ import id.ac.paramadina.absensi.fetcher.NewClassMeetingDataFetcher;
 import id.ac.paramadina.absensi.fetcher.ScheduleDetailFetcher;
 import id.ac.paramadina.absensi.helper.CommonDataHelper;
 import id.ac.paramadina.absensi.helper.CommonToastMessage;
+import id.ac.paramadina.absensi.listener.BaseListener;
 import id.ac.paramadina.absensi.reference.AsyncTaskListener;
 import id.ac.paramadina.absensi.reference.Constants;
 import id.ac.paramadina.absensi.reference.enumeration.ClassMeetingType;
@@ -82,13 +83,18 @@ public class ScheduleDetailActivity extends BaseActivity {
                         }
                     }
                 }
+
+                @Override
+                public void onError(String message, Object data) {
+
+                }
             });
 
             fetcher.fetch();
         }
 	};
 	
-	private class ScheduleDetailDataListener implements AsyncTaskListener<JSONObject> {
+	private class ScheduleDetailDataListener extends BaseListener {
 
 		@Override
 		public void onPreExecute() {

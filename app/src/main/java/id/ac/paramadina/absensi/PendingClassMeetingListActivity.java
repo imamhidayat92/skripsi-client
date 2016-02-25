@@ -83,6 +83,11 @@ public class PendingClassMeetingListActivity extends BaseActivity {
                     }
                 }
             }
+
+            @Override
+            public void onError(String message, Object data) {
+
+            }
         });
     }
 

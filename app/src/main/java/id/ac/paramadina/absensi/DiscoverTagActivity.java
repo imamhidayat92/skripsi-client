@@ -170,6 +170,11 @@ public class DiscoverTagActivity extends BaseActivity {
                                                         CommonToastMessage.showErrorGettingDataFromServerMessage(DiscoverTagActivity.this);
                                                     }
                                                 }
+
+                                                @Override
+                                                public void onError(String message, Object data) {
+
+                                                }
                                             });
 
                                             fetcher.fetch();
@@ -186,6 +191,11 @@ public class DiscoverTagActivity extends BaseActivity {
                         catch (JSONException e) {
                             CommonToastMessage.showErrorGettingDataFromServerMessage(DiscoverTagActivity.this);
                         }
+                    }
+
+                    @Override
+                    public void onError(String message, Object data) {
+
                     }
                 });
 
@@ -320,6 +330,11 @@ public class DiscoverTagActivity extends BaseActivity {
                     }
                 }
             }
+
+            @Override
+            public void onError(String message, Object data) {
+
+            }
         });
 
         fetcher.fetch();
@@ -352,6 +367,11 @@ public class DiscoverTagActivity extends BaseActivity {
                 else {
                     Toast.makeText(DiscoverTagActivity.this, DiscoverTagActivity.this.getString(R.string.data_get_error), Toast.LENGTH_LONG).show();
                 }
+            }
+
+            @Override
+            public void onError(String message, Object data) {
+
             }
         });
 
@@ -391,6 +411,11 @@ public class DiscoverTagActivity extends BaseActivity {
                     Toast.makeText(DiscoverTagActivity.this, DiscoverTagActivity.this.getString(R.string.unknown_error), Toast.LENGTH_LONG).show();
                 }
             }
+
+            @Override
+            public void onError(String message, Object data) {
+
+            }
         });
 
         fetcher.fetch();
@@ -428,6 +453,11 @@ public class DiscoverTagActivity extends BaseActivity {
                         e.printStackTrace();
                     }
                 }
+            }
+
+            @Override
+            public void onError(String message, Object data) {
+
             }
         });
         fetcher.fetch();
