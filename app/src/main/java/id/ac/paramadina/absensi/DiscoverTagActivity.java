@@ -160,10 +160,9 @@ public class DiscoverTagActivity extends BaseActivity {
                                                 public void onPostExecute(JSONObject response) {
                                                     try {
                                                         if (CommonDataHelper.isValidResponse(CommonDataHelper.DataResultType.SINGLE_RESULT, response)) {
-                                                            JSONObject rawAttendanceData = response.getJSONObject("result");
-                                                            Attendance attendance = Attendance.createInstance(rawAttendanceData);
-
                                                             Toast.makeText(DiscoverTagActivity.this, "Data kehadiran untuk " + attendance.getStudent().getDisplayName() + " berhasil dihapus.", Toast.LENGTH_LONG).show();
+
+                                                            DiscoverTagActivity.this.getAttendanceData();
                                                         }
                                                     }
                                                     catch (JSONException e) {
@@ -242,6 +241,7 @@ public class DiscoverTagActivity extends BaseActivity {
     @Override
 	protected void onResume() {
 		super.onResume();
+        this.getAttendanceData();
 		mNfcAdapter.enableForegroundDispatch(this, pendingIntent, filters, new String[][]{});
 	}
 	
@@ -294,6 +294,11 @@ public class DiscoverTagActivity extends BaseActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
     }
 
     private void getAttendanceData() {

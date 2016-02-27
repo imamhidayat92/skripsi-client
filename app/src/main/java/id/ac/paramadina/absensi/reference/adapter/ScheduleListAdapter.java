@@ -57,7 +57,7 @@ public class ScheduleListAdapter extends BaseAdapter {
 		
 		scheduleCourseName.setText(datum.getCourse().getName());
 		scheduleCourseName.setBackgroundColor(Color.parseColor(datum.getCourse().getMajor().getColor()));
-		scheduleDetail.setText("Pertemuan ke-" + datum.getMeetingCount());
+		scheduleDetail.setText("Pertemuan ke-" + datum.getClassMeetingCount());
 		scheduleInfo.setText(datum.getInfo());
 		
 		return view;

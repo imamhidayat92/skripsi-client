@@ -21,6 +21,7 @@ public class Attendance {
 
         STATUS("status"),
         REMARKS("remarks"),
+        MODE("mode"),
 
         STUDENT("student"),
         SCHEDULE("schedule"),

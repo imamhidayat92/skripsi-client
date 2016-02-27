@@ -30,6 +30,10 @@ public class PendingClassMeetingListActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pending_class_meeting);
 
+        getActionBar().setDisplayHomeAsUpEnabled(true);
+        getActionBar().setHomeButtonEnabled(true);
+        getActionBar().setTitle("Kelas yang Sedang Berlangsung");
+
         this.pendingClassMeetings = (ListView) findViewById(R.id.listview_pending_class_meeting);
 
         this.getPendingClassMeetingData();
@@ -49,6 +53,12 @@ public class PendingClassMeetingListActivity extends BaseActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
+
+        switch (id) {
+            case R.id.action_refresh:
+                this.getPendingClassMeetingData();
+                break;
+        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -89,6 +99,8 @@ public class PendingClassMeetingListActivity extends BaseActivity {
 
             }
         });
+
+        fetcher.fetch();
     }
 
     private void setDataToView(ArrayList<ClassMeeting> data) {

@@ -21,6 +21,7 @@ public class CommonDataHelper {
     }
 
     public static boolean isValidResponse(DataResultType type, JSONObject response) throws JSONException {
+        if (response == null) return false;
         switch (type) {
             case SINGLE_RESULT:
                 return response.has("success") && response.has("result") && response.getBoolean("success");

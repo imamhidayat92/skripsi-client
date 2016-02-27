@@ -17,7 +17,7 @@ public class SmsHelper {
             return false;
         }
         String phoneNumber = user.getPhone();
-        if (phoneNumber == null) {
+        if (phoneNumber == null || phoneNumber.trim().length() == 0) {
             return false;
         }
         try {

@@ -183,7 +183,6 @@ public class AddNewTeachingReportActivity extends BaseActivity {
                                     if (attendance.getStatus() == AttendanceStatusType.UNKNOWN) {
                                         User user = attendance.getStudent();
 
-                                        // TODO: Need revisions on how to save user contact info data.
                                         String message = "Anak lu nggak masuk ya?";
                                         if (smsHelper.sendMessage(user, message)) {
                                             smsSent++;

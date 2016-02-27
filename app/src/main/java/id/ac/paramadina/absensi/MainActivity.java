@@ -39,25 +39,28 @@ public class MainActivity extends BaseActivity {
 			/* 
 			 * Menu from Top to Bottom
 			 * 1. Jadwal Hari Ini
-			 * 2. Pertemuan yang Tertunda
+			 * 2. Sedang Berlangsung
 			 * 3. Pertemuan Kelas
 			 * 4. Daftar Laporan Mengajar
 			 */
-            Intent i;
+            Intent i = null;
 			
 			switch (position) {
 				case 0:
                     i = new Intent(MainActivity.this, MainActivity.class);
-                    MainActivity.this.startActivity(i);
                     break;
 				case 1:
                     i = new Intent(MainActivity.this, PendingClassMeetingListActivity.class);
-                    MainActivity.this.startActivity(i);                    break;
+                    break;
 				case 2:
                     i = new Intent(MainActivity.this, ClassMeetingListActivity.class);
-                    MainActivity.this.startActivity(i);
 					break;
+                case 3:
+                    i = new Intent(MainActivity.this, TeachingReportListActivity.class);
+                    break;
 			}
+
+            MainActivity.this.startActivity(i);
 		}
 	}
 	
@@ -100,10 +103,11 @@ public class MainActivity extends BaseActivity {
     
         mMenuItems = new ArrayList<DrawerMenuItem>();
         
-        mMenuItems.add(new DrawerMenuItem("Kuliah Hari Ini"));
-        mMenuItems.add(new DrawerMenuItem("Arsip Laporan Mengajar"));
-        mMenuItems.add(new DrawerMenuItem("Arsip Data Pertemuan"));
-        
+        mMenuItems.add(new DrawerMenuItem("Jadwal Mengajar Hari Ini"));
+        mMenuItems.add(new DrawerMenuItem("Kelas yang Sedang Berlangsung"));
+        mMenuItems.add(new DrawerMenuItem("Daftar Pertemuan Kelas"));
+        mMenuItems.add(new DrawerMenuItem("Daftar Laporan Mengajar"));
+
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerListView = (ListView) findViewById(R.id.left_drawer);
 

@@ -372,7 +372,6 @@ public class RequestHelper {
 
             urlConnection = (HttpURLConnection) url.openConnection();
             urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-            urlConnection.setDoOutput(true);
             urlConnection.setRequestMethod("DELETE");
 
             if (headers.size() > 0) {

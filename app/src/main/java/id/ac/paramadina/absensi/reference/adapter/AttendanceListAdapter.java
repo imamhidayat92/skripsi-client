@@ -75,7 +75,7 @@ public class AttendanceListAdapter extends BaseAdapter {
 
         if (datum.getStudent().getDisplayPicture() != null) {
             Glide.with(this.activity)
-                .load(this.API_ADDRESS + "/" + datum.getStudent().getDisplayPicture())
+                .load(this.API_ADDRESS + "/" + datum.getStudent().getDisplayPicture() + "?" + System.currentTimeMillis())
                 .centerCrop()
                 .crossFade()
                 .into(displayPicture);
