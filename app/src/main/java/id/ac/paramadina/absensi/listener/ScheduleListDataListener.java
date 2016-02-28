@@ -60,6 +60,7 @@ public class ScheduleListDataListener extends BaseListener {
 	        this.listView.setOnItemClickListener(this.listener);
 		}
 		catch (JSONException x) {
+            Toast.makeText(this.activity, "Gagal mengolah data dari server.", Toast.LENGTH_LONG).show();
 			x.printStackTrace();
 		}
 	}

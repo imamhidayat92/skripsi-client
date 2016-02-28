@@ -55,7 +55,9 @@ public class Schedule {
         END_TIME("end_time"),
 
         COURSE("course"),
-        CLASS_LOCATION("class_location");
+        CLASS_LOCATION("class_location"),
+
+        EXTRAS("___extras");
 
         private final String text;
         private Fields(final String text) {
@@ -95,7 +97,18 @@ public class Schedule {
             location = ClassLocation.createInstance(response.getJSONObject("location"));
         }
 
+        ScheduleExtras extras = null;
+        if (response.has(Fields.EXTRAS.toString())) {
+            JSONObject rawExtras = response.getJSONObject(Fields.EXTRAS.toString());
+            extras = ScheduleExtras.createInstance(rawExtras);
+        }
+
         Schedule schedule = new Schedule(id, dayCode, startTime, endTime, course, location);
+
+        if (extras != null) {
+            schedule.setExtras(extras);
+        }
+
         return schedule;
     }
 
