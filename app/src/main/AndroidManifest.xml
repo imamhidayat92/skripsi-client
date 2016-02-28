@@ -87,7 +87,8 @@
         <activity
             android:name=".ClassMeetingDetailActivity"
             android:label="@string/title_activity_class_meeting_detail"
-            android:parentActivityName=".ClassMeetingListActivity" >
+            android:parentActivityName=".ClassMeetingListActivity"
+            android:launchMode="singleTop" >
         </activity>
         <activity
             android:name=".PendingClassMeetingListActivity"
@@ -96,7 +97,8 @@
         </activity>
         <activity
             android:name=".AttendanceListActivity"
-            android:label="@string/title_activity_attendance_list" >
+            android:label="@string/title_activity_attendance_list"
+            android:parentActivityName=".ClassMeetingDetailActivity" >
         </activity>
     </application>
 

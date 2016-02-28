@@ -111,8 +111,8 @@ public class ClassMeetingDetailActivity extends BaseActivity {
         this.classMeetingInfo.setText("Pertemuan Ke-1");
         TeachingReport report = data.getReport();
         if (report != null) {
-            this.teachingReportSubject.setText(data.getReport().getSubject());
-            this.teachingReportSummary.setText(data.getReport().getDescription());
+            this.teachingReportSubject.setText(report.getSubject());
+            this.teachingReportSummary.setText(report.getDescription());
         }
 
         viewAttendanceList.setOnClickListener(new View.OnClickListener() {
