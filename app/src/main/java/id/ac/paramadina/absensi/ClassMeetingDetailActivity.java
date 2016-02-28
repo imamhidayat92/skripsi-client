@@ -16,6 +16,7 @@ import id.ac.paramadina.absensi.fetcher.ClassMeetingDataFetcher;
 import id.ac.paramadina.absensi.helper.CommonDataHelper;
 import id.ac.paramadina.absensi.reference.AsyncTaskListener;
 import id.ac.paramadina.absensi.reference.model.ClassMeeting;
+import id.ac.paramadina.absensi.reference.model.TeachingReport;
 
 
 public class ClassMeetingDetailActivity extends BaseActivity {
@@ -108,8 +109,11 @@ public class ClassMeetingDetailActivity extends BaseActivity {
     private void setDataToView(ClassMeeting data) {
         this.classMeetingCourseTitle.setText(data.getCourse().getName());
         this.classMeetingInfo.setText("Pertemuan Ke-1");
-        this.teachingReportSubject.setText(data.getReport().getSubject());
-        this.teachingReportSummary.setText(data.getReport().getDescription());
+        TeachingReport report = data.getReport();
+        if (report != null) {
+            this.teachingReportSubject.setText(data.getReport().getSubject());
+            this.teachingReportSummary.setText(data.getReport().getDescription());
+        }
 
         viewAttendanceList.setOnClickListener(new View.OnClickListener() {
             @Override
