@@ -31,11 +31,14 @@ public class ClassMeetingListActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_class_meeting_list);
 
+        getActionBar().setDisplayHomeAsUpEnabled(true);
+        getActionBar().setHomeButtonEnabled(true);
+        getActionBar().setTitle("Daftar Pertemuan Kelas");
+
         this.classMeetingListView = (ListView) findViewById(R.id.listview_class_meeting);
 
         this.getClassMeetingData();
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -91,6 +94,7 @@ public class ClassMeetingListActivity extends BaseActivity {
                             CommonToastMessage.showErrorGettingDataFromServerMessage(ClassMeetingListActivity.this);
                         }
                     } catch (JSONException e) {
+                        Toast.makeText(ClassMeetingListActivity.this, "Gagal mengolah data dari server.", Toast.LENGTH_LONG).show();
                         e.printStackTrace();
                     }
                 }

@@ -13,6 +13,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import id.ac.paramadina.absensi.fetcher.ClassMeetingDataFetcher;
+import id.ac.paramadina.absensi.helper.CommonDataHelper;
 import id.ac.paramadina.absensi.reference.AsyncTaskListener;
 import id.ac.paramadina.absensi.reference.model.ClassMeeting;
 
@@ -40,6 +41,10 @@ public class ClassMeetingDetailActivity extends BaseActivity {
         this.viewAttendanceList = (Button) findViewById(R.id.btn_view_attendance_list);
 
         this.classMeetingId = getIntent().getExtras().getString("classMeetingId");
+
+        getActionBar().setDisplayHomeAsUpEnabled(true);
+        getActionBar().setHomeButtonEnabled(true);
+        getActionBar().setTitle("Detail Pertemuan Kelas");
 
         this.getClassMeetingDetail(classMeetingId);
     }
@@ -77,10 +82,16 @@ public class ClassMeetingDetailActivity extends BaseActivity {
                 }
                 else {
                     try {
-                        ClassMeeting classMeeting = ClassMeeting.createInstance(response);
+                        if (CommonDataHelper.isValidResponse(CommonDataHelper.DataResultType.SINGLE_RESULT, response)) {
+                            ClassMeeting classMeeting = ClassMeeting.createInstance(response.getJSONObject("result"));
 
-                        ClassMeetingDetailActivity.this.setDataToView(classMeeting);
+                            ClassMeetingDetailActivity.this.setDataToView(classMeeting);
+                        }
+                        else {
+                            Toast.makeText(ClassMeetingDetailActivity.this, "Data dari server tidak valid.", Toast.LENGTH_LONG).show();
+                        }
                     } catch (JSONException e) {
+                        Toast.makeText(ClassMeetingDetailActivity.this, "Tidak dapat mengolah data dari server.", Toast.LENGTH_LONG).show();
                         e.printStackTrace();
                     }
                 }

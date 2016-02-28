@@ -81,15 +81,18 @@
         </activity>
         <activity
             android:name=".ClassMeetingListActivity"
-            android:label="@string/title_activity_class_meeting_list" >
+            android:label="@string/title_activity_class_meeting_list"
+            android:parentActivityName=".MainActivity" >
         </activity>
         <activity
             android:name=".ClassMeetingDetailActivity"
-            android:label="@string/title_activity_class_meeting_detail" >
+            android:label="@string/title_activity_class_meeting_detail"
+            android:parentActivityName=".ClassMeetingListActivity" >
         </activity>
         <activity
             android:name=".PendingClassMeetingListActivity"
-            android:label="@string/title_activity_pending_class_meeting" >
+            android:label="@string/title_activity_pending_class_meeting"
+            android:parentActivityName=".MainActivity" >
         </activity>
         <activity
             android:name=".AttendanceListActivity"
