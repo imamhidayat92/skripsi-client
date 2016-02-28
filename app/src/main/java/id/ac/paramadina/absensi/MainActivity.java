@@ -106,7 +106,6 @@ public class MainActivity extends BaseActivity {
         mMenuItems.add(new DrawerMenuItem("Jadwal Mengajar Hari Ini"));
         mMenuItems.add(new DrawerMenuItem("Kelas yang Sedang Berlangsung"));
         mMenuItems.add(new DrawerMenuItem("Daftar Pertemuan Kelas"));
-        mMenuItems.add(new DrawerMenuItem("Daftar Laporan Mengajar"));
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerListView = (ListView) findViewById(R.id.left_drawer);

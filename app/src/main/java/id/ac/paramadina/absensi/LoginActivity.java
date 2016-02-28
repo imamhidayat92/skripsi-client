@@ -136,13 +136,13 @@ public class LoginActivity extends BaseActivity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case R.id.action_settings:
-			Intent i = new Intent(this, SettingsActivity.class);
-			startActivity(i);
-			
-			return true;
-		default:
-			return super.onOptionsItemSelected(item);
+            case R.id.action_settings:
+                Intent i = new Intent(this, SettingsActivity.class);
+                startActivity(i);
+
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
 		}
 	}
 }

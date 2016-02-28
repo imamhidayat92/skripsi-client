@@ -9,6 +9,11 @@
             android:title="@string/settings_api_address_title"
             android:summary="@string/settings_api_address_summary"
             android:defaultValue="http://hosting.morenite.com/imam/skripsi-server/api" />
-        
+        <CheckBoxPreference
+            android:key="settings_send_sms"
+            android:title="@string/settings_send_sms"
+            android:summary="@string/settings_send_sms_summary"
+            android:defaultValue="false" />
+
     </PreferenceCategory>
 </PreferenceScreen>

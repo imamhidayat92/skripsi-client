@@ -1,7 +1,10 @@
 package id.ac.paramadina.absensi;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,6 +25,7 @@ import id.ac.paramadina.absensi.helper.CommonDataHelper;
 import id.ac.paramadina.absensi.helper.SmsHelper;
 import id.ac.paramadina.absensi.reference.AsyncTaskListener;
 import id.ac.paramadina.absensi.reference.Constants;
+import id.ac.paramadina.absensi.reference.GlobalData;
 import id.ac.paramadina.absensi.reference.enumeration.AttendanceStatusType;
 import id.ac.paramadina.absensi.reference.model.Attendance;
 import id.ac.paramadina.absensi.reference.model.ClassMeeting;
@@ -35,12 +39,20 @@ public class AddNewTeachingReportActivity extends BaseActivity {
     private TextView txtCourseTitle;
 	private EditText txtSubject;
 	private EditText txtDescription;
+
+    protected SharedPreferences preferences;
+    protected SharedPreferences userPreferences;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_add_new_teaching_report);
-		
+
+        /* Get Preferences */
+
+        this.preferences = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
+        this.userPreferences = this.getSharedPreferences(GlobalData.PREFERENCE_ID, Context.MODE_PRIVATE);
+
 		/* Assigning Control */
 
         txtCourseTitle = (TextView) findViewById(R.id.txt_course_title);
@@ -176,22 +188,26 @@ public class AddNewTeachingReportActivity extends BaseActivity {
                                 JSONArray rawAttendancesData = response.getJSONArray("results");
                                 ArrayList<Attendance> attendances = Attendance.createInstances(rawAttendancesData);
 
-                                SmsHelper smsHelper = new SmsHelper();
+                                boolean shouldSendSMS = AddNewTeachingReportActivity.this.userPreferences.getBoolean(GlobalData.PREFERENCE_SEND_SMS, false);
 
-                                int smsSent = 0;
-                                for (Attendance attendance : attendances) {
-                                    if (attendance.getStatus() == AttendanceStatusType.UNKNOWN) {
-                                        User user = attendance.getStudent();
+                                if (shouldSendSMS) {
+                                    SmsHelper smsHelper = new SmsHelper();
 
-                                        String message = "Anak lu nggak masuk ya?";
-                                        if (smsHelper.sendMessage(user, message)) {
-                                            smsSent++;
+                                    int smsSent = 0;
+                                    for (Attendance attendance : attendances) {
+                                        if (attendance.getStatus() == AttendanceStatusType.UNKNOWN) {
+                                            User user = attendance.getStudent();
+
+                                            String message = "Anak lu nggak masuk ya?";
+                                            if (smsHelper.sendMessage(user, message)) {
+                                                smsSent++;
+                                            }
                                         }
                                     }
-                                }
 
-                                if (smsSent > 0) {
-                                    Toast.makeText(AddNewTeachingReportActivity.this, smsSent + " SMS terkirim.", Toast.LENGTH_LONG).show();
+                                    if (smsSent > 0) {
+                                        Toast.makeText(AddNewTeachingReportActivity.this, smsSent + " SMS terkirim.", Toast.LENGTH_LONG).show();
+                                    }
                                 }
 
                                 AddNewTeachingReportActivity.this.finishOperation();
